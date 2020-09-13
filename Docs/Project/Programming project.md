@@ -11,7 +11,7 @@ Classes:
 - Config
   - AppSettings.cs
     - public AppSettings(string path = null)
-    - private Validate()
+    - private bool Validate()
     - public Load()
     - public Config.Models.Settings Get()
   - Models:
@@ -43,11 +43,28 @@ Configuration schema:
 
 - appsettings.schema.json
 
-## CoreTests
+## CoreTests (xUnit)
 
 What do I want to test?
 
 - Config file validation.
+
+Namespace:
+
+- Lexica.Core.Tests
+
+Classes:
+
+- AppSettingsTests.cs
+  [Theory]
+  [InlineData("")]
+  - public void Init_NotExistedPath_ThrowsArgumentException(string notExistedPath)
+  [Theory]
+  [InlineData("")]
+  - public void Validate_WrongConfiguration_ThrowsConfigurationException(string configPath)
+  [Theory]
+  [InlineData("")]
+  - public void Validate_ProperConfiguration_ReturnsSettingsObject(string configPath)
 
 ## WordsManager.dll
 
@@ -95,6 +112,22 @@ Classes:
       - public int EntryId
       - public string Word - MaxLength(50)
       - public string Translation - MaxLength(50)
+
+## WordsManagerTests (xUnit)
+
+What do I want to test?
+
+- Importing sets to database.
+- Getting list of sets.
+- Operation on sets (changing name, changing namespace and removing).
+
+Namespace:
+
+- Lexica.Words.Tests
+
+Classes:
+
+- 
 
 ## SpellingMode.dll
 
