@@ -1,0 +1,74 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://lexica.com/schemas/appsettings.json",
+  "title": "Lexica CLI schema",
+  "definitions": {
+    "Option": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "Shortcut": {
+          "type": "string"
+        },
+        "HasValue": {
+          "type": "boolean"
+        },
+        "MinOccurs": {
+          "type": "integer"
+        },
+        "MaxOccurs": {
+          "type": "integer"
+        },
+        "Groups": {
+          "type": "array",
+          "items": { 
+            "type": "string"
+          }
+        }
+      },
+      "required": ["Name", "Shortcut", "HasValue", "MinOccurs", "MaxOccurs", "Groups"]
+    },
+    "Command": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "Shortcut": {
+          "type": "string"
+        },
+        "Options": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Option"
+          }
+        },
+        "Commands": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Command"
+          }
+        }
+      },
+      "required": ["Name", "Shortcut", "Options", "Commands"]
+    }
+  },
+  "type": "object",
+  "properties": {
+    "Options": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Option"
+      }
+    },
+    "Commands": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Command"
+      }
+    }
+  },
+  "required": ["Options", "Commands"]
+}
