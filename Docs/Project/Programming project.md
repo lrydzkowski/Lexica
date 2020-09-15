@@ -34,6 +34,21 @@ Classes:
   - AnswerResult.cs
     - bool Result
     - List\<string\> Answers
+  - AppException.cs
+    - string Code
+    - string Message
+  - AppException\<T\> : AppException.cs
+    - T Data
+  - Error.cs
+    - string Code
+    - string Message
+  - Error\<T\> : Error.cs
+    - T Data
+  - OperationResult.cs
+    - bool Result
+    - List\<Error\> Errors
+  - OperationResult\<T\> : OperationResult.cs
+    - T Data
 
 Sample configuration:
 
@@ -45,10 +60,6 @@ Configuration schema:
 
 ## CoreTests (xUnit)
 
-What do I want to test?
-
-- Config file validation.
-
 Namespace:
 
 - Lexica.Core.Tests
@@ -58,13 +69,13 @@ Classes:
 - AppSettingsTests.cs
   [Theory]
   [InlineData("")]
-  - public void Init_NotExistedPath_ThrowsArgumentException(string notExistedPath)
+  - public void Init_NotExistedPath_ThrowsAppException(string notExistedPath)
   [Theory]
   [InlineData("")]
-  - public void Validate_WrongConfiguration_ThrowsConfigurationException(string configPath)
+  - public void Validate_WrongConfiguration_ThrowsAppException(string configPath)
   [Theory]
   [InlineData("")]
-  - public void Validate_ProperConfiguration_ReturnsSettingsObject(string configPath)
+  - public void Get_CorrectConfiguration_ReturnsSettingsObject(string configPath)
 
 ## WordsManager.dll
 
@@ -76,13 +87,15 @@ Classes:
 
 - Manager.cs
   - public List\<SetInfo\> GetSetsInfo()
-  - public Set GetSet(int setId)
-  - public Set GetSet(List\<string\> setIds)
-  - public bool ChangeSetName(string oldFullSetName, string newFullSetName)
-  - public bool ChangeNamespaceName(string oldName, string newName)
-  - public bool RemoveSet(string fullSetName)
+  - public OperationResult\<Set\> GetSet(int setId)
+  - public OperationResult\<Set\> GetSet(List\<string\> setsIds)
+  - public OperationResult ChangeSetName(string oldFullSetName, string newFullSetName)
+  - public OperationResult ChangeNamespaceName(string oldName, string newName)
+  - public OperationResult RemoveSet(string fullSetName)
 - Importer.cs
   - public static bool Import(string directoryPath)
+- WordsException
+  - WrongFileStructureException
 - Models:
   - Entry.cs
     - string Id
@@ -113,21 +126,68 @@ Classes:
       - public string Word - MaxLength(50)
       - public string Translation - MaxLength(50)
 
-## WordsManagerTests (xUnit)
-
-What do I want to test?
-
-- Importing sets to database.
-- Getting list of sets.
-- Operation on sets (changing name, changing namespace and removing).
+## WordsManagerIntegrationTests (xUnit)
 
 Namespace:
 
-- Lexica.Words.Tests
+- Lexica.Words.IntegrationTests
 
 Classes:
 
-- 
+- CreatingTests.cs
+  [Theory]
+  - public void Import_NotExistedDirPath_ThrowsAppException(string notExistedDirPath)
+  [Theory]
+  - public void Import_WrongFileStructure_WrongFileStructureException(string directoryPath)
+  [Theory]
+  - public void Import_CorrectDirectoryPath_CorrectImport(string directoryPath)
+- SelectingTests.cs
+  [Fact]
+  - public void GetList_CorrectConditions_GetCorrectList()
+  [Theory]
+  - public void GetSet_NotExistedSet_ReturnsFalseResult(int notExistedSetId)
+  [Theory]
+  - public void GetSet_NotExistedSets_ReturnsFalseResult(List\<string\> notExistedSetsIds)
+  [Theory]
+  - public void GetSet_CorrectSetId_ReturnsTrueResult(int setId)
+  [Theory]
+  - public void GetSet_CorrectSetsIds_ReturnsTrueResult(List\<string\> setsIds)
+- ChangingTests.cs
+  [Theory]
+  - public void ChangeSetName_WrongCurrentSetName_ReturnsFalseResult(
+      string wrongOldFullSetName,
+      string newFullSetName
+    )
+  [Theory]
+  - public void ChangeSetName_WrongCharsInNewName_ReturnsFalseResult(
+      string oldFullSetName,
+      string wrongNewFullSetName
+    )
+  [Theory]
+  - public void ChangeSetName_CorrectNames_ReturnsTrueResult(
+      string oldFullSetName,
+      string newFullSetName
+    )
+  [Theory]
+  - public void ChangeNamespaceName_WrongCurrentNamespaceName_ReturnsFalseResult(
+      string wrongOldName,
+      string newName
+    )
+  [Theory]
+  - public void ChangeNamespaceName_WrongCharsInNamespaceName_ReturnsFalseResult(
+      string oldName,
+      string wrongNewName
+    )
+  [Theory]
+  - public void ChangeNamespaceName_CorrectNames_ReturnsTrueResult(
+      string oldName,
+      string newName
+    )
+- RemovingTests.cs
+  [Theory]
+  - public void RemoveSet_NotExistedName_ReturnsFalseResult(string notExistedFullSetName)
+  [Theory]
+  - public void RemoveSet_CorrectName_ReturnsTrueResult(string fullSetName)
 
 ## SpellingMode.dll
 
@@ -139,9 +199,9 @@ Classes:
 
 - Manager.cs
   - public Manager(string setId, Config.Models.Spelling cfg)
-  - public Manager(List\<string\> setIds, Config.Models.Spelling cfg)
+  - public Manager(List\<string\> setsIds, Config.Models.Spelling cfg)
   - public Lexica.Core.Models.Question GetQuestion()
-  - public Lexica.Core.Models.AnswerResult VerifyAnswer(string input)
+  - public Lexica.Core.Models.AnswerResult VerifyAnswer(string answer)
 - Data
   - Models:
     - SpellingHistory
@@ -152,6 +212,33 @@ Classes:
       - public bool IsTranslation
       - public long NumOfCorrectAnswers
       - public long NumOfMistakes
+
+## SpellingModeIntegrationTests (xUnit)
+
+Namespace:
+
+- Lexica.Spelling.IntegrationTests
+
+Classes:
+
+- ManagerTests.cs
+  [Theory]
+  - public void Init_NotExistedSetId_ThrowsAppException(
+      string notExistedSetId,
+      Config.Models.Spelling cfg
+    )
+  [Theory]
+  - public void Init_NotExistedSetsIds_ThrowsAppException(
+      List\<string\> notExistedSetsIds,
+      Config.Models.Spelling cfg
+    )
+  )
+  [Theory]
+  - public void VerifyAnswer_WrongAnswer_ReturnsFalseAnswerResult(string wrongAnswer)
+  [Theory]
+  - public void VerifyAnswer_CorrectAnswer_ReturnsTrueAnswerResult(string answer)
+  [Fact]
+  - public void QuestionsRandomness_CorrectData_QuestionsInRandomOrder()
 
 ## LearningMode.dll
 
@@ -179,6 +266,35 @@ Classes:
       - public long NumOfCorrectAnswersClosedQuestion
       - public long NumOfMistakesClosedQuestion
 
+## LearningModeIntegrationTests (xUnit)
+
+Namespace:
+
+- Lexica.Learning.IntegrationTests
+
+Classes:
+
+- MangerTests.cs
+  [Theory]
+  - public void Init_NotExistedSetId_ThrowsAppException(
+      string notExistedSetId,
+      Config.Models.Learning cfg
+    )
+  [Theory]
+  - public void Init_NotExistedSetsIds_ThrowsAppException(
+      List\<string\> notExistedSetsIds,
+      Config.Models.Learning cfg
+    )
+  )
+  [Theory]
+  - public void VerifyAnswer_WrongAnswer_ReturnsFalseAnswerResult(string wrongAnswer)
+  [Theory]
+  - public void VerifyAnswer_CorrectAnswer_ReturnsTrueAnswerResult(string answer)
+  [Fact]
+  - public void QuestionsOrder_CorrectData_QuestionsInCorrectOrder()
+  [Fact]
+  - public void QuestionsRandomness_CorrectData_QuestionsInRandomOrder()
+
 ## MaintainingMode.dll
 
 Namespace:
@@ -202,6 +318,33 @@ Classes:
       - public bool IsTranslation
       - public long NumOfCorrectAnswers
       - public long NumOfMistakes
+
+## MaintainingModeIntegrationTests (xUnit)
+
+Namespace:
+
+- Lexica.Maintaining.IntegrationTests
+
+Classes:
+
+- ManagerTests.cs
+  [Theory]
+  - public void Init_NotExistedSetId_ThrowsAppException(
+      string notExistedSetId,
+      Config.Models.Maintaining cfg
+    )
+  [Theory]
+  - public void Init_NotExistedSetsIds_ThrowsAppException(
+      List\<string\> notExistedSetsIds,
+      Config.Models.Maintaining cfg
+    )
+  )
+  [Theory]
+  - public void VerifyAnswer_WrongAnswer_ReturnsFalseAnswerResult(string wrongAnswer)
+  [Theory]
+  - public void VerifyAnswer_CorrectAnswer_ReturnsTrueAnswerResult(string answer)
+  [Fact]
+  - public void QuestionsRandomness_CorrectData_QuestionsInRandomOrder()
 
 ## CLI
 
@@ -301,7 +444,7 @@ Progress: 0/20
 #
 
 Summary:
-  Proper answers:  0  / 20
+  Correct answers: 0  / 20
   Wrong answers:   20 / 20
 ```
 
@@ -325,10 +468,10 @@ PS C:\> Lexica run -m Learning
 
 Summary:
   Closed questions:
-    Proper answers:   5  / 20
+    Correct answers:  5  / 20
     Wrong answers:    15 / 20
   Open questions:
-    Proper answers:   10 / 20
+    Correct answers:  10 / 20
     Wrong answers:    10 / 20
 ```
 
