@@ -1,0 +1,86 @@
+{
+  "Options": [
+    {
+      "Name": "--help",
+      "Shortcut": "-h",
+      "HasValue": false,
+      "MinOccurs": 0,
+      "MaxOccurs": 1,
+      "Groups": [
+        "g1"
+      ]
+    },
+    {
+      "Name": "--version",
+      "Shortcut": "-v",
+      "HasValue": false,
+      "MinOccurs": 0,
+      "MaxOccurs": 1,
+      "Groups": [
+        "g2"
+      ]
+    }
+  ],
+  "Commands": [
+    {
+      "Name": "list",
+      "Shortcut": "ls",
+      "Options": [],
+      "Commands": []
+    },
+    {
+      "Name": "wlist",
+      "Shortcut": "wls",
+      "Options": [
+        {
+          "Name": "--help",
+          "Shortcut": "-h",
+          "HasValue": false,
+          "MinOccurs": 0,
+          "MaxOccurs": 1,
+          "Groups": [
+            "g1"
+          ]
+        },
+        {
+          "Name": "--set",
+          "Shortcut": "-s",
+          "HasValue": true,
+          "MinOccurs": 1,
+          "MaxOccurs": -1,
+          "Groups": [
+            "g2"
+          ]
+        }
+      ],
+      "Commands": []
+    },
+    {
+      "Name": "run",
+      "Shortcut": "r",
+      "Options": [
+        {
+          "Name": "--help",
+          "Shortcut": "-h",
+          "HasValue": false,
+          "MinOccurs": 0,
+          "MaxOccurs": 1,
+          "Groups": [
+            "g1"
+          ]
+        },
+        {
+          "Name": "--mode",
+          "Shortcut": "-m",
+          "HasValue": true,
+          "MinOccurs": 1,
+          "MaxOccurs": 1,
+          "Groups": [
+            "g2"
+          ]
+        }
+      ],
+      "Commands": []
+    }
+  ]
+}
