@@ -11,7 +11,7 @@ Classes:
 - Config
   - AppSettings.cs
     - public AppSettings(string path = null)
-    - private bool Validate()
+    - private void Validate()
     - public Load()
     - public Config.Models.Settings Get()
   - Models:
@@ -23,6 +23,13 @@ Classes:
     - Maintaining.cs
 - Data
   - LexicaContext.cs
+- CoreException
+  - AppException.cs
+    - string Code
+    - string Message
+  - AppException\<T\> : AppException.cs
+    - T Data
+  - WrongConfigException : AppException.cs
 - Models:
   - QuestionTypeEnum.cs
     - Open
@@ -34,11 +41,6 @@ Classes:
   - AnswerResult.cs
     - bool Result
     - List\<string\> Answers
-  - AppException.cs
-    - string Code
-    - string Message
-  - AppException\<T\> : AppException.cs
-    - T Data
   - Error.cs
     - string Code
     - string Message
@@ -72,7 +74,7 @@ Classes:
   - public void Init_NotExistedPath_ThrowsAppException(string notExistedPath)
   [Theory]
   [InlineData("")]
-  - public void Validate_WrongConfiguration_ThrowsAppException(string configPath)
+  - public void Load_WrongConfiguration_ThrowsWrongConfigException(string configPath)
   [Theory]
   [InlineData("")]
   - public void Get_CorrectConfiguration_ReturnsSettingsObject(string configPath)
@@ -107,7 +109,7 @@ Classes:
     - string Name
     - List\<Entry\> Entries
     - public Randomize()
-    - public Entry Get(int id)
+    - public Entry Get(int setId, int id)
     - public Entry GetNext()
   - SetInfo.cs
     - long Id
@@ -250,7 +252,7 @@ Classes:
 
 - Manager.cs
   - public Manager(string setId, Config.Models.Learning cfg)
-  - public Manager(List\<string\> setIds, Config.Models.Learning cfg)
+  - public Manager(List\<string\> setsIds, Config.Models.Learning cfg)
   - public Lexica.Core.Models.Question GetQuestion()
   - public Lexica.Core.Models.AnswerResult VerifyAnswer(string input)
 - Data:
@@ -305,7 +307,7 @@ Classes:
 
 - Manager.cs
   - public Manager(string setId, Config.Models.Maintaining cfg)
-  - public Manager(List\<string\> setIds, Config.Models.Maintaining cfg)
+  - public Manager(List\<string\> setsIds, Config.Models.Maintaining cfg)
   - public Lexica.Core.Models.Question GetQuestion()
   - public Lexica.Core.Models.AnswerResult VerifyAswer(string input)
 - Data:
@@ -494,12 +496,14 @@ Classes:
 - Map
   - Models
     - CLIDefinition.cs
+      - public List\<Option\> Options
+      - public List\<Command\> Commands
     - Option.cs
     - Command.cs
   - AppCLIDefinition.cs
     - public AppCLIDefinition(string path = null)
-    - private Validate()
-    - public Load()
+    - private void Validate()
+    - public void Load()
     - public Map.Models.CLIDefinition Get()
 - Services
   - Help.cs
