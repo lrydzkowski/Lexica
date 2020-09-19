@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NLog" Version="4.7.4" />
+    <PackageReference Include="NLog.Schema" Version="4.7.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Loco.Tools.Log">
+      <HintPath>..\..\..\LOCO\SharpLicense\SharpLicenseCore\Dll\Loco.Tools.Log.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="NLog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

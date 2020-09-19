@@ -348,7 +348,7 @@ Classes:
   [Fact]
   - public void QuestionsRandomness_CorrectData_QuestionsInRandomOrder()
 
-## CLI
+## LexicaCLI
 
 CLI Interface:
 
