@@ -7,4 +7,6 @@ Currently this project is under construction.
 
 - [NLog](https://www.nuget.org/packages/NLog/) - Logging library. It is able to save into .log files information about 
 errors.
-- [NLog.Schema](https://www.nuget.org/packages/NLog.Schema/) - Intellisense in NLog configuration file. 
+- [NLog.Schema](https://www.nuget.org/packages/NLog.Schema/) - Intellisense in NLog configuration file.
+- [Microsoft.Extensions.DependencyInjection](https://www.nuget.org/packages/Microsoft.Extensions.DependencyInjection/) -
+Dependency Injection for .NET Core.
