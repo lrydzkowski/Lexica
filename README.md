@@ -10,3 +10,4 @@ errors.
 - [NLog.Schema](https://www.nuget.org/packages/NLog.Schema/) - Intellisense in NLog configuration file.
 - [Microsoft.Extensions.DependencyInjection](https://www.nuget.org/packages/Microsoft.Extensions.DependencyInjection/) -
 Dependency Injection for .NET Core.
+- [ResourceLoader](https://www.nuget.org/packages/ResourceLoader/) - A utility for reading embedded resources.

@@ -2,9 +2,13 @@
 using Lexica.CLI.Managers;
 using Lexica.CLI.Models;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using NLog;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Lexica.CLI
@@ -24,6 +28,22 @@ namespace Lexica.CLI
                 var orderManager = serviceProvider.GetService<IOrderManager>();
                 var order = CreateOrder();
                 await orderManager.Transmit(order);
+
+                // Get embedded resource.
+                var fileProvider = serviceProvider.GetService<IFileProvider>();
+                var fileInfo = fileProvider.GetFileInfo("Assets/test.txt");
+                string fileContent = null;
+                if (fileInfo.Exists)
+                {
+                    using Stream stream = fileInfo.CreateReadStream();
+                    using StreamReader reader = new StreamReader(stream, Encoding.UTF8);
+                    fileContent = reader.ReadToEnd();
+                }
+                var resourceLoader = serviceProvider.GetService<IResourceLoader>();
+                fileContent = resourceLoader.GetEmbeddedResourceString(
+                    Assembly.GetExecutingAssembly(),
+                    "Assets.test.txt"
+                );
 
                 // Logging.
                 log.Debug("Debug message");
@@ -53,6 +73,8 @@ namespace Lexica.CLI
 
             services.AddTransient<IOrderSender, HttpOrderSender>();
             services.AddTransient<IOrderManager, OrderManager>();
+            services.AddSingleton<IFileProvider>(x => new EmbeddedFileProvider(Assembly.GetExecutingAssembly()));
+            services.AddSingleton<IResourceLoader, ResourceLoader>();
 
             serviceProvider = services.BuildServiceProvider();
         }

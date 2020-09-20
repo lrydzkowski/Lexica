@@ -17,7 +17,7 @@ namespace Lexica.CLI.Managers
             var stringContent = new StringContent(jsonOrder, UnicodeEncoding.UTF8, "application/json");
 
             //This statement calls a not existing URL. This is just an example...
-            var response = await httpClient.PostAsync("https://mymicroservice.lan/myendpoint", stringContent);
+            var response = await httpClient.PostAsync("https://google.com", stringContent);
 
             return response.Content.ReadAsStringAsync().Result;
 
