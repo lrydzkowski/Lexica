@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Lexica.CLI.Interfaces;
 using Lexica.CLI.Models;
+using Lexica.CLI.Models.Config;
 
 namespace Lexica.CLI.Managers
 {
@@ -8,7 +9,7 @@ namespace Lexica.CLI.Managers
     {
         private readonly IOrderSender orderSender;
 
-        public OrderManager(IOrderSender sender)
+        public OrderManager(IOrderSender sender, AppSettings settings)
         {
             orderSender = sender;
         }

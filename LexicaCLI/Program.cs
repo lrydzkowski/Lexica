@@ -1,6 +1,8 @@
 ﻿using Lexica.CLI.Interfaces;
 using Lexica.CLI.Managers;
 using Lexica.CLI.Models;
+using Lexica.CLI.Models.Config;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using NLog;
@@ -8,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -75,6 +78,12 @@ namespace Lexica.CLI
             services.AddTransient<IOrderManager, OrderManager>();
             services.AddSingleton<IFileProvider>(x => new EmbeddedFileProvider(Assembly.GetExecutingAssembly()));
             services.AddSingleton<IResourceLoader, ResourceLoader>();
+
+            AppSettings settings = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .Build()
+                .Get<AppSettings>();
+            services.AddSingleton<AppSettings>(settings);
 
             serviceProvider = services.BuildServiceProvider();
         }

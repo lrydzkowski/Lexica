@@ -11,3 +11,7 @@ errors.
 - [Microsoft.Extensions.DependencyInjection](https://www.nuget.org/packages/Microsoft.Extensions.DependencyInjection/) -
 Dependency Injection for .NET Core.
 - [ResourceLoader](https://www.nuget.org/packages/ResourceLoader/) - A utility for reading embedded resources.
+- [Microsoft.Extensions.Configuration.Json](https://www.nuget.org/packages/Microsoft.Extensions.Configuration.Json) -
+JSON configuration provider.
+- [Microsoft.Extensions.Configuration.Binder](https://www.nuget.org/packages/Microsoft.Extensions.Configuration.Binder) -
+-An ability to bind an object to data in configuration.
