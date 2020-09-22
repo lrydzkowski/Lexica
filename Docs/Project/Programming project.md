@@ -9,8 +9,12 @@ Namespace:
 Classes:
 
 - Config
+  - IConfigSource.cs
+  - FileConfigSource.cs
+    - public FileConfigSource(string path = null)
+    - public string GetContents()
   - AppSettings.cs
-    - public AppSettings(string path = null)
+    - public AppSettings(IConfigSource configSource)
     - private void Validate()
     - public Load()
     - public Config.Models.Settings Get()
@@ -348,7 +352,7 @@ Classes:
   [Fact]
   - public void QuestionsRandomness_CorrectData_QuestionsInRandomOrder()
 
-## CLI
+## LexicaCLI
 
 CLI Interface:
 
