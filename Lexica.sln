@@ -9,7 +9,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LexicaCLI", "LexicaCLI\LexicaCLI.csproj", "{05FAFFD8-559B-4DBF-8722-FD6F89060F0F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LexicaCLI", "LexicaCLI\LexicaCLI.csproj", "{05FAFFD8-559B-4DBF-8722-FD6F89060F0F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", "{79B8A185-F884-41BF-A96F-A43402D57FF8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreTests", "CoreTests\CoreTests.csproj", "{A88F9FF5-E281-4DE5-8FF8-8B6F78A44CD9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{05FAFFD8-559B-4DBF-8722-FD6F89060F0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{05FAFFD8-559B-4DBF-8722-FD6F89060F0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{05FAFFD8-559B-4DBF-8722-FD6F89060F0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79B8A185-F884-41BF-A96F-A43402D57FF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79B8A185-F884-41BF-A96F-A43402D57FF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79B8A185-F884-41BF-A96F-A43402D57FF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79B8A185-F884-41BF-A96F-A43402D57FF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A88F9FF5-E281-4DE5-8FF8-8B6F78A44CD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A88F9FF5-E281-4DE5-8FF8-8B6F78A44CD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A88F9FF5-E281-4DE5-8FF8-8B6F78A44CD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A88F9FF5-E281-4DE5-8FF8-8B6F78A44CD9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
