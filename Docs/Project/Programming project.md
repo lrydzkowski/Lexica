@@ -27,12 +27,10 @@ Classes:
     - Maintaining.cs
 - Data
   - LexicaContext.cs
-- CoreException
+- Exceptions
   - AppException.cs
     - string Code
     - string Message
-  - AppException\<T\> : AppException.cs
-    - T Data
   - WrongConfigException : AppException.cs
 - Models:
   - QuestionTypeEnum.cs
