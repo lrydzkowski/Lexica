@@ -117,6 +117,7 @@ Classes:
     - long Id
     - string Namespace
     - string Name
+- Services
 - Data:
   - Models:
     - SetTable.cs
@@ -129,6 +130,10 @@ Classes:
       - public int EntryId
       - public string Word - MaxLength(50)
       - public string Translation - MaxLength(50)
+    - ImportHistoryTable.cs
+      - public long Id
+      - public long SetId
+      - public DateTime ExecutedDate
 
 ## WordsManagerIntegrationTests (xUnit)
 
