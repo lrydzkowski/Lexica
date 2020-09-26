@@ -7,13 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\appsettings1.json" />
-    <None Remove="Resources\appsettings2.json" />
+    <None Remove="Resources\appsettings1.wrong.json" />
+    <None Remove="Resources\appsettings2.wrong.json" />
+    <None Remove="Resources\appsettings3.wrong.json" />
+    <None Remove="Resources\appsettings4.correct.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\appsettings1.json" />
-    <EmbeddedResource Include="Resources\appsettings2.json" />
+    <EmbeddedResource Include="Resources\appsettings1.wrong.json" />
+    <EmbeddedResource Include="Resources\appsettings2.wrong.json" />
+    <EmbeddedResource Include="Resources\appsettings3.wrong.json" />
+    <EmbeddedResource Include="Resources\appsettings4.correct.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,7 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\appsettings1.json" />
+    <Resource Include="Resources\appsettings1.wrong.json" />
   </ItemGroup>
 
 </Project>

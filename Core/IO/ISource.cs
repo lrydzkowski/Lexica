@@ -4,9 +4,9 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Lexica.Core.Config
+namespace Lexica.Core.IO
 {
-    public interface IConfigSource
+    public interface ISource
     {
         public string GetContents();
     }

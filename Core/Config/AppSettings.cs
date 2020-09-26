@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -8,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Lexica.Core.Config.Models;
 using Lexica.Core.Exceptions;
+using Lexica.Core.IO;
 using Lexica.Core.Models;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
@@ -17,35 +19,24 @@ namespace Lexica.Core.Config
 {
     public class AppSettings
     {
-        private IConfigSource ConfigSource { get; set; }
+        private string DefaultSchemaPath { get; } = "Resources.appsettings.schema.json";
 
-        private string ConfigSchema { get; set; }
+        private ISource ConfigSource { get; set; }
+
+        private ISource ConfigSchemaSource { get; set; }
 
         public Settings Settings { get; private set; }
 
-        public AppSettings(IConfigSource configSource)
+        public AppSettings(ISource configSource, ISource configSchemaSource = null)
         {
             ConfigSource = configSource;
-            GetConfigSchema();
+            ConfigSchemaSource = configSchemaSource ?? new EmbeddedSource(DefaultSchemaPath);
             LoadConfig();
         }
 
-        public void GetConfigSchema()
+        private OperationResult<IList<string>> Validate(string configContents, string configSchemaContents)
         {
-            var resourceLoader = new ResourceLoader();
-            ConfigSchema = resourceLoader.GetEmbeddedResourceString(
-                Assembly.GetExecutingAssembly(),
-                "Resources.appsettings.schema.json"
-            );
-            if (ConfigSchema == null)
-            {
-                throw new WrongConfigException("App settings schema doesn't exist.");
-            }
-        }
-
-        private OperationResult<IList<string>> Validate(string configContents)
-        {
-            JSchema schema = JSchema.Parse(ConfigSchema);
+            JSchema schema = JSchema.Parse(configSchemaContents);
             JObject confObj = JObject.Parse(configContents);
 
             IList<string> validationErrors = null;
@@ -58,7 +49,8 @@ namespace Lexica.Core.Config
         private void LoadConfig()
         {
             string configContents = ConfigSource.GetContents();
-            OperationResult<IList<string>> validationResult = Validate(configContents);
+            string configSchemaContents = ConfigSchemaSource.GetContents();
+            OperationResult<IList<string>> validationResult = Validate(configContents, configSchemaContents);
             if (!validationResult.Result)
             {
                 var exception = new WrongConfigException("App settings has a wrong structure.");

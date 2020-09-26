@@ -4,9 +4,9 @@ using System.Text;
 
 namespace Lexica.Core.Config.Models
 {
-    public class Maintaining
+    public class Learning
     {
-        public bool ResetAfterMistake { get; set; }
+        public int NumOfLevels { get; set; }
 
         public bool PlayPronunciation { get; set; }
     }

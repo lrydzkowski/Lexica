@@ -10,6 +10,10 @@ namespace Lexica.Core.Config.Models
 
         public Words Words { get; set; }
 
+        public Spelling Spelling { get; set; }
+
+        public Learning Learning { get; set; }
+
         public Maintaining Maintaining { get; set; }
     }
 }
