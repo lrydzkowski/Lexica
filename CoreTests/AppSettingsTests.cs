@@ -53,7 +53,7 @@ namespace CoreTests
             var resourceConfigSource = new EmbeddedSource(resourcePath, Assembly.GetExecutingAssembly());
 
             // Act
-            Action action = () => new AppSettings(resourceConfigSource);
+            void action() => new AppSettings(resourceConfigSource);
 
             // Assert
             WrongConfigException ex = Assert.Throws<WrongConfigException>(action);

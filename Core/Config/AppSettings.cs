@@ -39,8 +39,7 @@ namespace Lexica.Core.Config
             JSchema schema = JSchema.Parse(configSchemaContents);
             JObject confObj = JObject.Parse(configContents);
 
-            IList<string> validationErrors = null;
-            bool result = confObj.IsValid(schema, out validationErrors);
+            bool result = confObj.IsValid(schema, out IList<string> validationErrors);
             var operationResult = new OperationResult<IList<string>>(result, validationErrors);
 
             return operationResult;
@@ -60,14 +59,12 @@ namespace Lexica.Core.Config
                 }
                 throw exception;
             }
-            using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(configContents)))
-            {
-                Settings settings = new ConfigurationBuilder()
-                    .AddJsonStream(stream)
-                    .Build()
-                    .Get<Settings>();
-                Settings = settings;
-            }
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(configContents));
+            Settings settings = new ConfigurationBuilder()
+                .AddJsonStream(stream)
+                .Build()
+                .Get<Settings>();
+            Settings = settings;
         }
 
         public Settings Get(bool reload = false)

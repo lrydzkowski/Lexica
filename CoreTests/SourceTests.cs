@@ -16,7 +16,7 @@ namespace CoreTests
         public void Init_NotExistedFile_ThrowsFileNotFoundException(string filePath)
         {
             // Act
-            Action action = () => new FileSource(filePath);
+            void action() => new FileSource(filePath);
 
             // Assert
             FileNotFoundException ex = Assert.Throws<FileNotFoundException>(action);
@@ -28,11 +28,11 @@ namespace CoreTests
         public void Init_NotExistedEmbeddedResource_ThrowsFileNotFoundException(string resourcePath)
         {
             // Act
-            Action action = () =>
+            void action()
             {
                 var embeddedSource = new EmbeddedSource(resourcePath, Assembly.GetExecutingAssembly());
                 embeddedSource.GetContents();
-            };
+            }
 
             // Assert
             ResourceNotFoundException ex = Assert.Throws<ResourceNotFoundException>(action);
