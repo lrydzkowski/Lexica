@@ -6,23 +6,16 @@ using System.Text;
 
 namespace Lexica.EF.Models
 {
-    class EntryTable
+    public class ImportHistoryTable
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long RecId { get; set; }
+        public long Id { get; set; }
 
         [Required]
         public long SetId { get; set; }
+        public SetTable Set { get; set; }
 
         [Required]
-        public int EntryId { get; set; }
-
-        [Required]
-        [MaxLength(50)]
-        public string Word { get; set; }
-
-        [Required]
-        [MaxLength(50)]
-        public string Translation { get; set; }
+        public DateTime ExecutedDate { get; set; }
     }
 }

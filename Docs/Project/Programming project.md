@@ -118,6 +118,7 @@ Classes:
     - string Namespace
     - string Name
 - Services
+  - SetService
 - Data:
   - Models:
     - SetTable.cs

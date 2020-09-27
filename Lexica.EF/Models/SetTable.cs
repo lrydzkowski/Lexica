@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Lexica.EF.Models
 {
-    class SetTable
+    public class SetTable
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
@@ -20,5 +20,7 @@ namespace Lexica.EF.Models
         public string Name { get; set; }
 
         public ICollection<EntryTable> Entries { get; set; }
+
+        public ImportHistoryTable Import { get; set; }
     }
 }
