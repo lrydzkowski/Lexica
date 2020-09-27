@@ -7,7 +7,6 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using Lexica.Core.Config.Models;
 using Lexica.Core.Exceptions;
 using Lexica.Core.IO;
 using Lexica.Core.Models;
@@ -17,20 +16,18 @@ using Newtonsoft.Json.Schema;
 
 namespace Lexica.Core.Config
 {
-    public class AppSettings
+    public class AppSettings<T>
     {
-        private string DefaultSchemaPath { get; } = "Resources.appsettings.schema.json";
-
         private ISource ConfigSource { get; set; }
 
         private ISource ConfigSchemaSource { get; set; }
 
-        public Settings Settings { get; private set; }
+        public T Settings { get; private set; }
 
-        public AppSettings(ISource configSource, ISource configSchemaSource = null)
+        public AppSettings(ISource configSource, ISource configSchemaSource)
         {
             ConfigSource = configSource;
-            ConfigSchemaSource = configSchemaSource ?? new EmbeddedSource(DefaultSchemaPath);
+            ConfigSchemaSource = configSchemaSource;
             LoadConfig();
         }
 
@@ -60,14 +57,14 @@ namespace Lexica.Core.Config
                 throw exception;
             }
             using var stream = new MemoryStream(Encoding.UTF8.GetBytes(configContents));
-            Settings settings = new ConfigurationBuilder()
+            T settings = new ConfigurationBuilder()
                 .AddJsonStream(stream)
                 .Build()
-                .Get<Settings>();
+                .Get<T>();
             Settings = settings;
         }
 
-        public Settings Get(bool reload = false)
+        public T Get(bool reload = false)
         {
             if (reload)
             {

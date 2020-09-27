@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Lexica.Core.Config.Models
+namespace Lexica.CoreTests.Config.Models
 {
     public class Settings
     {

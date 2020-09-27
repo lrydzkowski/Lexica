@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Lexica.Core.Config.Models
+namespace Lexica.CoreTests.Config.Models
 {
-    public class Maintaining
+    public class Learning
     {
-        public bool ResetAfterMistake { get; set; }
+        public int NumOfLevels { get; set; }
 
         public bool PlayPronunciation { get; set; }
     }

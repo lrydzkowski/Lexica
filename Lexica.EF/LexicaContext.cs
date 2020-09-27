@@ -1,8 +1,12 @@
-﻿using Lexica.EF.Models;
+﻿using Lexica.Core.Config;
+using Lexica.Core.IO;
+using Lexica.EF.Config;
+using Lexica.EF.Config.Models;
+using Lexica.EF.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
+using System.Reflection;
 using System.Text;
 
 namespace Lexica.EF
@@ -21,7 +25,12 @@ namespace Lexica.EF
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql("Server=192.168.0.20;Port=5500;Database=Lexica;Username=Lexica;Password=9Dt7pv4Uwi6JPHREploR");
+            var configSource = new FileSource("database.json");
+            var configSchemaSource = new EmbeddedSource("database.schema.json", Assembly.GetExecutingAssembly());
+            var appSettings = new AppSettings<Database>(configSource, configSchemaSource);
+            string connectionString = appSettings.Get().ConnectionString;
+
+            optionsBuilder.UseNpgsql(connectionString);
         }
 
         private void CreateWordsTables(ModelBuilder modelBuilder)

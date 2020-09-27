@@ -1,7 +1,7 @@
 ﻿using Lexica.Core.Config;
-using Lexica.Core.Config.Models;
 using Lexica.Core.Exceptions;
 using Lexica.Core.IO;
+using Lexica.CoreTests.Config.Models;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -20,6 +20,7 @@ namespace CoreTests
                 new object[]
                 {
                     "Resources.appsettings1.wrong.json",
+                    "Resources.appsettings.schema.json",
                     new Dictionary<string, string>() {
                         { "0", "Invalid type. Expected String but got Boolean. Path 'Database.ConnectionString', line 3, position 29." }
                     }
@@ -27,6 +28,7 @@ namespace CoreTests
                 new object[]
                 {
                     "Resources.appsettings2.wrong.json",
+                    "Resources.appsettings.schema.json",
                     new Dictionary<string, string>() {
                         { "0", "Required properties are missing from object: PlayPronunciation. Path 'Maintaining', line 14, position 18." },
                         { "1", "Required properties are missing from object: Words. Path '', line 1, position 1." }
@@ -35,6 +37,7 @@ namespace CoreTests
                 new object[]
                 {
                     "Resources.appsettings3.wrong.json",
+                    "Resources.appsettings.schema.json",
                     new Dictionary<string, string>() {
                         { "0", "Integer 11 exceeds maximum value of 10. Path 'Spelling.NumOfLevels', line 10, position 21." },
                         { "1", "Integer 11 exceeds maximum value of 10. Path 'Learning.NumOfLevels', line 14, position 21." }
@@ -46,14 +49,16 @@ namespace CoreTests
         [Theory]
         [MemberData(nameof(GetWrongConfigurationParameters))]
         public void Init_WrongConfiguration_ThrowsWrongConfigException(
-            string resourcePath, 
+            string configPath,
+            string schemaPath,
             Dictionary<string, string> expectedExceptionDetails)
         {
             // Arrange
-            var resourceConfigSource = new EmbeddedSource(resourcePath, Assembly.GetExecutingAssembly());
+            var configSource = new EmbeddedSource(configPath, Assembly.GetExecutingAssembly());
+            var configSchemaSource = new EmbeddedSource(schemaPath, Assembly.GetExecutingAssembly());
 
             // Act
-            void action() => new AppSettings(resourceConfigSource);
+            void action() => new AppSettings<Settings>(configSource, configSchemaSource);
 
             // Assert
             WrongConfigException ex = Assert.Throws<WrongConfigException>(action);
@@ -73,6 +78,7 @@ namespace CoreTests
                 new object[]
                 {
                     "Resources.appsettings4.correct.json",
+                    "Resources.appsettings.schema.json",
                     new Settings
                     {
                         Database = new Database
@@ -107,12 +113,14 @@ namespace CoreTests
         [Theory]
         [MemberData(nameof(GetCorrectConfigurationParameters))]
         public void Get_CorrectConfiguration_ReturnsSettingsObject(
-            string resourcePath,
+            string configPath,
+            string schemaPath,
             Settings expectedSettings)
         {
             // Arrange
-            var resourceConfigSource = new EmbeddedSource(resourcePath, Assembly.GetExecutingAssembly());
-            var appSettings = new AppSettings(resourceConfigSource);
+            var configSource = new EmbeddedSource(configPath, Assembly.GetExecutingAssembly());
+            var configSchemaSource = new EmbeddedSource(schemaPath, Assembly.GetExecutingAssembly());
+            var appSettings = new AppSettings<Settings>(configSource, configSchemaSource);
 
             // Act
             Settings settings = appSettings.Get();
