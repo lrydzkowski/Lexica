@@ -14,4 +14,7 @@ Dependency Injection for .NET Core.
 - [Microsoft.Extensions.Configuration.Json](https://www.nuget.org/packages/Microsoft.Extensions.Configuration.Json) -
 JSON configuration provider.
 - [Microsoft.Extensions.Configuration.Binder](https://www.nuget.org/packages/Microsoft.Extensions.Configuration.Binder) -
--An ability to bind an object to data in configuration.
+An ability to bind an object to data in configuration.
+- [Newtonsoft.Json.Schema](https://www.nuget.org/packages/Newtonsoft.Json.Schema)
+- [Microsoft.EntityFrameworkCore.Tools](https://www.nuget.org/packages/Microsoft.EntityFrameworkCore.Tools)
+- [Npgsql.EntityFrameworkCore.PostgreSQL](https://www.nuget.org/packages/Npgsql.EntityFrameworkCore.PostgreSQL)
