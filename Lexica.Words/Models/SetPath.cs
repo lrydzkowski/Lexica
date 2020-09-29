@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Lexica.WordsManager.Models
+namespace Lexica.Words.Models
 {
-    class SetPath
+    public class SetPath
     {
         public string Namespace { get; set; }
 
