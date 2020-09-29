@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Lexica.Core.Models
 {
-    class Error
+    public class Error
     {
         public string Code { get; private set; }
 
@@ -17,7 +17,7 @@ namespace Lexica.Core.Models
         }
     }
 
-    class Error<T> : Error
+    public class Error<T> : Error
     {
         public T Data { get; private set; }
 
