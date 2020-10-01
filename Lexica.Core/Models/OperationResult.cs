@@ -10,6 +10,20 @@ namespace Lexica.Core.Models
 
         public List<Error> Errors { get; private set; }
 
+        public OperationResult(bool result)
+        {
+            Result = result;
+        }
+
+        public OperationResult(bool result, Error error)
+        {
+            Result = result;
+            if (error != null)
+            {
+                Errors = new List<Error>() { error };
+            }
+        }
+
         public OperationResult(bool result, List<Error> errors = null)
         {
             Result = result;
