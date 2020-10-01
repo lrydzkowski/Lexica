@@ -9,6 +9,10 @@ namespace Lexica.Words.Services
 {
     public interface ISetService
     {
+        public Task CreateSet(Set set);
+
+        public Task CreateSet(List<Set> sets);
+
         public Task<Set> Get(long setId);
 
         public Task<Set> Get(List<long> setIds);

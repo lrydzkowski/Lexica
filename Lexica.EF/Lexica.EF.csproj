@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Lexica.Core\Lexica.Core.csproj" />
+    <ProjectReference Include="..\Lexica.Words\Lexica.Words.csproj" />
   </ItemGroup>
 
   <ItemGroup>

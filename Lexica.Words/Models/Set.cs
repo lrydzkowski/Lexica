@@ -17,7 +17,7 @@ namespace Lexica.Words.Models
 
         public List<long> SetIds { get; set; }
 
-        public SetPath Name { get; set; }
+        public SetPath Path { get; set; }
 
         public List<Entry> Entries { get; set; }
     }
