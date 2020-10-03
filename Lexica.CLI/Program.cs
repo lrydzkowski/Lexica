@@ -2,6 +2,9 @@
 using Lexica.CLI.Managers;
 using Lexica.CLI.Models;
 using Lexica.CLI.Models.Config;
+using Lexica.EF.Services;
+using Lexica.Words;
+using Lexica.Words.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -26,6 +29,36 @@ namespace Lexica.CLI
         {
             try
             {
+                var setService2 = new SetService();
+                var setManager2 = new SetManager(setService2, 15);
+                var set2 = await setManager2.GetSet();
+
+                return;
+
+                var set = new Set();
+                var setPath = new SetPath();
+                setPath.Namespace = "dir1";
+                setPath.Name = "set1";
+                var setInfo = new SetInfo();
+                setInfo.SetId = 1;
+                setInfo.Path = setPath;
+                set.SetsInfo = new List<SetInfo>() { setInfo };
+                set.Entries = new List<Entry>();
+                for (int i = 0; i < 5; i++)
+                {
+                    var entry = new Entry();
+                    entry.SetId = 1;
+                    entry.EntryId = i + 1;
+                    entry.Translations = new List<string>() { "translation" + i.ToString() };
+                    entry.Words = new List<string>() { "word" + i.ToString() };
+                    set.Entries.Add(entry);
+                }
+                var setService = new SetService();
+                var importer = new Importer(setService);
+                await importer.Import(set);
+
+                return;
+
                 // Dependency Injection.
                 ConfigureServices();
                 var orderManager = serviceProvider.GetService<IOrderManager>();

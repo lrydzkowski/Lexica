@@ -20,9 +20,14 @@ namespace Lexica.Words
             SetId = setId;
         }
 
-        public async Task<List<Set>> GetList()
+        public async Task<Set> GetSet()
         {
-            return await SetService.GetList();
+            return await SetService.Get(SetId);
+        }
+
+        public async Task<List<SetInfo>> GetInfoList()
+        {
+            return await SetService.GetInfoList();
         }
 
         public async Task<OperationResult> ChangePath(SetPath newPath)
@@ -30,9 +35,9 @@ namespace Lexica.Words
             return await SetService.ChangePath(SetId, newPath);
         }
 
-        public async Task<OperationResult> Remove()
+        public async Task Remove()
         {
-            return await SetService.Remove(SetId);
+            await SetService.Remove(SetId);
         }
     }
 }

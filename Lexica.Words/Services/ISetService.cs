@@ -17,10 +17,10 @@ namespace Lexica.Words.Services
 
         public Task<Set> Get(List<long> setIds);
 
-        public Task<List<Set>> GetList(bool includeEntries = false);
+        public Task<List<SetInfo>> GetInfoList();
 
         public Task<OperationResult> ChangePath(long setId, SetPath newPath);
 
-        public Task<OperationResult> Remove(long setId);
+        public Task Remove(long setId);
     }
 }

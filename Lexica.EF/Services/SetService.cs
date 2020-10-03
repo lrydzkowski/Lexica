@@ -2,6 +2,7 @@
 using Lexica.EF.Models;
 using Lexica.Words.Models;
 using Lexica.Words.Services;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Lexica.EF.Services
 {
-    class SetService : ISetService
+    public class SetService : ISetService
     {
         public async Task CreateSet(Set set)
         {
@@ -26,8 +27,8 @@ namespace Lexica.EF.Services
                     foreach (var set in sets)
                     {
                         var setRecord = new SetTable();
-                        setRecord.Namespace = set.Path.Namespace;
-                        setRecord.Name = set.Path.Name;
+                        setRecord.Namespace = set.SetsInfo[0].Path.Namespace;
+                        setRecord.Name = set.SetsInfo[0].Path.Name;
                         await context.AddAsync(setRecord);
                         await context.SaveChangesAsync();
 
@@ -40,6 +41,7 @@ namespace Lexica.EF.Services
                                 {
                                     var entryRecord = new EntryTable();
                                     entryRecord.EntryId = entryId;
+                                    entryRecord.SetId = setRecord.Id;
                                     entryRecord.Word = word;
                                     entryRecord.Translation = translation;
                                     await context.AddAsync(entryRecord);
@@ -49,7 +51,7 @@ namespace Lexica.EF.Services
                         }
                         await context.SaveChangesAsync();
                     }
-                    
+
                     await transaction.CommitAsync();
                 }
             }
@@ -72,24 +74,83 @@ namespace Lexica.EF.Services
             return new OperationResult(true);
         }
 
-        public Task<Set> Get(long setId)
+        public async Task<Set> Get(long setId)
         {
-            throw new NotImplementedException();
+            return await Get(new List<long>() { setId });
         }
 
-        public Task<Set> Get(List<long> setIds)
+        public async Task<Set> Get(List<long> setIds)
         {
-            throw new NotImplementedException();
+            using (var context = new LexicaContext())
+            {
+                Set set = null;
+                foreach (long setId in setIds)
+                {
+                    List<SetTable> setRecord = await context.Sets
+                        .Where(x => x.Id == setId)
+                        .Include(x => x.Entries)
+                        .AsNoTracking()
+                        .ToListAsync();
+                    set = setRecord.Select(x => new Set() {
+                        SetsInfo = new List<SetInfo>() {
+                            new SetInfo()
+                            {
+                                SetId = x.Id,
+                                Path = new SetPath()
+                                {
+                                    Namespace = x.Namespace,
+                                    Name = x.Name
+                                }
+                            }
+                        },
+                        Entries = x.Entries.GroupBy(x => new { x.SetId, x.EntryId }).Select(x => new Entry()
+                        {
+                            SetId = x.Key.SetId,
+                            EntryId = x.Key.EntryId,
+                            Words = x.Select(x => x.Word).ToList(),
+                            Translations = x.Select(x => x.Translation).ToList()
+                        }).ToList<Entry>()
+                    })
+                    .FirstOrDefault();
+                }
+                return set;
+            }
         }
 
-        public Task<List<Set>> GetList(bool includeEntries = false)
+        public async Task<List<SetInfo>> GetInfoList()
         {
-            throw new NotImplementedException();
+            using (var context = new LexicaContext())
+            {
+                List<SetInfo> list = await context.Sets
+                    .AsNoTracking()
+                    .Select(x => new SetInfo()
+                    {
+                        SetId = x.Id,
+                        Path = new SetPath()
+                        {
+                            Namespace = x.Namespace,
+                            Name = x.Name
+                        }
+                    })
+                    .ToListAsync();
+                return list;
+            }
         }
 
-        public Task<OperationResult> Remove(long setId)
+        public async Task Remove(long setId)
         {
-            throw new NotImplementedException();
+            using (var context = new LexicaContext())
+            {
+                SetTable setRecord = await context.Sets
+                    .Where(x => x.Id == setId)
+                    .Select(x => new SetTable { Id = x.Id })
+                    .FirstOrDefaultAsync();
+                if (setRecord != null)
+                {
+                    context.Remove(setRecord);
+                    await context.SaveChangesAsync();
+                }
+            }
         }
     }
 }

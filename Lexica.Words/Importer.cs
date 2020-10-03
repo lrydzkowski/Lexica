@@ -3,6 +3,7 @@ using Lexica.Words.Services;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Lexica.Words
 {
@@ -15,14 +16,14 @@ namespace Lexica.Words
             SetService = setService;
         }
 
-        public void Import(List<Set> sets)
+        public async Task Import(List<Set> sets)
         {
-            SetService.CreateSet(sets);
+            await SetService.CreateSet(sets);
         }
 
-        public void Import(Set set)
+        public async Task Import(Set set)
         {
-            Import(new List<Set>() { set });
+            await Import(new List<Set>() { set });
         }
     }
 }

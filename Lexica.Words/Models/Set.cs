@@ -11,13 +11,11 @@ namespace Lexica.Words.Models
         {
             get
             {
-                return string.Join("-", SetIds);
+                return string.Join("-", SetsInfo.Select(x => x.SetId));
             }
         }
 
-        public List<long> SetIds { get; set; }
-
-        public SetPath Path { get; set; }
+        public List<SetInfo> SetsInfo { get; set; }
 
         public List<Entry> Entries { get; set; }
     }

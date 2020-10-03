@@ -14,7 +14,7 @@ namespace Lexica.Words.Models
             }
         }
 
-        public int SetId { get; set; }
+        public long SetId { get; set; }
 
         public int EntryId { get; set; }
 
