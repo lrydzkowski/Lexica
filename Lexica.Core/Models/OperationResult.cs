@@ -10,6 +10,11 @@ namespace Lexica.Core.Models
 
         public List<Error> Errors { get; private set; }
 
+        public OperationResult()
+        {
+            Result = true;
+        }
+
         public OperationResult(bool result)
         {
             Result = result;
@@ -28,6 +33,28 @@ namespace Lexica.Core.Models
         {
             Result = result;
             Errors = errors;
+        }
+
+        public void AddError(Error error)
+        {
+            if (error == null)
+            {
+                return;
+            }
+            if (Errors == null)
+            {
+                Errors = new List<Error>();
+            }
+            Result = false;
+            Errors.Add(error);
+        }
+
+        public void Merge(OperationResult result)
+        {
+            foreach (Error error in result.Errors)
+            {
+                AddError(error);
+            }
         }
     }
 

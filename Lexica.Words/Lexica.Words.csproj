@@ -5,6 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\validation.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\validation.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Lexica.Core\Lexica.Core.csproj" />
   </ItemGroup>
 

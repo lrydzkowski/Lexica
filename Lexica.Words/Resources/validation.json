@@ -1,0 +1,22 @@
+﻿{
+  "Namespace": {
+    "Mandatory": true,
+    "MinLength": 1,
+    "MaxLength": 400
+  },
+  "SetName": {
+    "Mandatory": true,
+    "MinLength": 1,
+    "MaxLength": 100
+  },
+  "EntryWord": {
+    "Mandatory": "true",
+    "MinLength": 1,
+    "MaxLength": 50
+  },
+  "EntryTranslation": {
+    "Mandatory": "true",
+    "MinLength": 1,
+    "MaxLength": 50
+  }
+}

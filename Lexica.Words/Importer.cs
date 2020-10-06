@@ -1,4 +1,5 @@
-﻿using Lexica.Words.Models;
+﻿using Lexica.Core.Models;
+using Lexica.Words.Models;
 using Lexica.Words.Services;
 using System;
 using System.Collections.Generic;
@@ -16,14 +17,16 @@ namespace Lexica.Words
             SetService = setService;
         }
 
-        public async Task Import(List<Set> sets)
+        public async Task<OperationResult> Import(List<Set> sets)
         {
+            var result = new OperationResult();
             await SetService.CreateSet(sets);
+            return result;
         }
 
-        public async Task Import(Set set)
+        public async Task<OperationResult> Import(Set set)
         {
-            await Import(new List<Set>() { set });
+            return await Import(new List<Set>() { set });
         }
     }
 }
