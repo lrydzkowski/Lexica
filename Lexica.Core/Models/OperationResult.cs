@@ -51,9 +51,12 @@ namespace Lexica.Core.Models
 
         public void Merge(OperationResult result)
         {
-            foreach (Error error in result.Errors)
+            if (!result.Result)
             {
-                AddError(error);
+                foreach (Error error in result.Errors)
+                {
+                    AddError(error);
+                }
             }
         }
     }

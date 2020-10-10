@@ -1,5 +1,5 @@
 ﻿using Lexica.Core.Models;
-using Lexica.Core.Models.Validators;
+using Lexica.Core.Validators.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,9 +8,9 @@ namespace Lexica.Core.Validators
 {
     public class StringValidator : IValidator<string>
     {
-        public GeneralValidationData ValidationData { get; private set; }
+        public StringValidationData ValidationData { get; private set; }
 
-        public StringValidator(GeneralValidationData validationData)
+        public StringValidator(StringValidationData validationData)
         {
             ValidationData = validationData;
         }

@@ -1,18 +1,26 @@
-﻿using Lexica.Core.Models.Validators;
+﻿using Lexica.Core.Validators.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Lexica.Words.Validators.Models
 {
-    class ValidationData
+    public class ValidationData
     {
-        public GeneralValidationData Namespace { get; set; }
+        public StringValidationData Namespace { get; set; } = new StringValidationData(
+            minLength: 1, maxLength: 400, mandatory: true
+        );
 
-        public GeneralValidationData SetName { get; set; }
+        public StringValidationData SetName { get; set; } = new StringValidationData(
+            minLength: 1, maxLength: 100, mandatory: true
+        );
 
-        public GeneralValidationData EntryWord { get; set; }
+        public StringValidationData EntryWord { get; set; } = new StringValidationData(
+            minLength: 1, maxLength: 50, mandatory: true
+        );
 
-        public GeneralValidationData EntryTranslation { get; set; }
+        public StringValidationData EntryTranslation { get; set; } = new StringValidationData(
+            minLength: 1, maxLength: 50, mandatory: true
+        );
     }
 }

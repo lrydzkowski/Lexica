@@ -8,11 +8,11 @@ using Lexica.Words.Models;
 using Lexica.Words.Validators;
 using Lexica.Words.Validators.Models;
 
-namespace Lexica.EF.Services
+namespace Lexica.Words.Validators
 {
-    class SetValidator : IValidator<Set>
+    public class SetValidator : IValidator<Set>
     {
-        public ValidationData ValidationData { get; private set; }
+        public ValidationData ValidationData { get; }
 
         public SetValidator(ValidationData validationData)
         {

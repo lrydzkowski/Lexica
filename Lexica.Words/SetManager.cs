@@ -1,4 +1,5 @@
 ﻿using Lexica.Core.Models;
+using Lexica.Core.Validators;
 using Lexica.Words.Models;
 using Lexica.Words.Services;
 using System;
@@ -10,14 +11,17 @@ namespace Lexica.Words
 {
     public class SetManager
     {
-        ISetService SetService { get; set; }
+        public ISetService SetService { get; }
 
-        long SetId { get; set; }
+        public long SetId { get; }
 
-        public SetManager(ISetService setService, long setId)
+        public IValidator<SetPath> SetPathValidator { get; }
+
+        public SetManager(ISetService setService, long setId, IValidator<SetPath> setPathValidator)
         {
             SetService = setService;
             SetId = setId;
+            SetPathValidator = setPathValidator;
         }
 
         public async Task<Set> GetSet()
@@ -32,7 +36,14 @@ namespace Lexica.Words
 
         public async Task<OperationResult> ChangePath(SetPath newPath)
         {
-            return await SetService.ChangePath(SetId, newPath);
+            var operation = new OperationResult();
+            operation.Merge(SetPathValidator.Validate(newPath));
+            if (operation.Result)
+            {
+                operation.Merge(await SetService.ChangePath(SetId, newPath));
+            }
+
+            return operation;
         }
 
         public async Task Remove()
