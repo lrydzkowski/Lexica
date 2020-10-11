@@ -6,6 +6,6 @@ namespace Lexica.CoreTests.Config.Models
 {
     public class Words
     {
-        public string ImportDirectoryPath { get; set; }
+        public string? ImportDirectoryPath { get; set; }
     }
 }

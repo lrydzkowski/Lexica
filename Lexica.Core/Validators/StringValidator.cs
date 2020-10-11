@@ -22,6 +22,10 @@ namespace Lexica.Core.Validators
             {
                 result.AddError(new Error((int)ErrorEnum.IsMandatory, "Value is mandatory, so it cannot be null."));
             }
+            if (data == null)
+            {
+                return result;
+            }
             if (ValidationData.MinLength < data.Length)
             {
                 result.AddError(

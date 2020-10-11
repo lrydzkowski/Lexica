@@ -14,7 +14,7 @@ namespace Lexica.Core.IO
 
         public Assembly Assembly { get; private set; }
 
-        public EmbeddedSource(string path, Assembly assembly = null)
+        public EmbeddedSource(string path, Assembly? assembly = null)
         {
             Path = path;
             Assembly = assembly ?? Assembly.GetExecutingAssembly();

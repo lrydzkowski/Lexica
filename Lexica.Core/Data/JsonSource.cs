@@ -12,7 +12,7 @@ namespace Lexica.Core.Data
     {
         private ISource Source { get; set; }
 
-        private T Data { get; set; }
+        private T? Data { get; set; }
 
         public JsonSource(ISource source)
         {
@@ -20,17 +20,19 @@ namespace Lexica.Core.Data
             Load();
         }
 
-        public void Load()
+        public T Load()
         {
             string contents = Source.GetContents();
             Data = JsonSerializer.Deserialize<T>(contents);
+
+            return Data;
         }
 
         public T Get()
         {
             if (Data == null)
             {
-                Load();
+                return Load();
             }
             return Data;
         }

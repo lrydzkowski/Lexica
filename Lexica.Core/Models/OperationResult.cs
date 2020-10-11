@@ -8,7 +8,7 @@ namespace Lexica.Core.Models
     {
         public bool Result { get; private set; }
 
-        public List<Error> Errors { get; private set; }
+        public List<Error>? Errors { get; private set; }
 
         public OperationResult()
         {
@@ -20,7 +20,7 @@ namespace Lexica.Core.Models
             Result = result;
         }
 
-        public OperationResult(bool result, Error error)
+        public OperationResult(bool result, Error? error)
         {
             Result = result;
             if (error != null)
@@ -29,7 +29,7 @@ namespace Lexica.Core.Models
             }
         }
 
-        public OperationResult(bool result, List<Error> errors = null)
+        public OperationResult(bool result, List<Error>? errors = null)
         {
             Result = result;
             Errors = errors;
@@ -51,7 +51,7 @@ namespace Lexica.Core.Models
 
         public void Merge(OperationResult result)
         {
-            if (!result.Result)
+            if (!result.Result && result.Errors != null)
             {
                 foreach (Error error in result.Errors)
                 {
@@ -65,7 +65,7 @@ namespace Lexica.Core.Models
     {
         public T Data { get; private set; }
 
-        public OperationResult(bool result, T data, List<Error> errors = null) : base(result, errors)
+        public OperationResult(bool result, T data, List<Error>? errors = null) : base(result, errors)
         {
             Data = data;
         }

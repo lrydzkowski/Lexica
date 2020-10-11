@@ -11,19 +11,19 @@ namespace Lexica.EF.Models
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long RecId { get; set; }
 
-        [Required]
         public long SetId { get; set; }
-        public SetTable Set { get; set; }
+        private SetTable? _set;
+        public SetTable Set {
+            get => _set ?? throw new InvalidOperationException("Unintialized property: " + nameof(Set));
+            set => _set = value;
+        }
 
-        [Required]
         public int EntryId { get; set; }
 
-        [Required]
         [MaxLength(50)]
-        public string Word { get; set; }
+        public string Word { get; set; } = "";
 
-        [Required]
         [MaxLength(50)]
-        public string Translation { get; set; }
+        public string Translation { get; set; } = "";
     }
 }

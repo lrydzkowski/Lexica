@@ -10,9 +10,9 @@ namespace Lexica.Core.Models
 
         public QuestionTypeEnum Type { get; private set; }
 
-        public List<string> PossibleAnswers { get; private set; }
+        public List<string>? PossibleAnswers { get; private set; }
 
-        public Question(string content, QuestionTypeEnum type, List<string> possibleAnswers = null)
+        public Question(string content, QuestionTypeEnum type, List<string>? possibleAnswers = null)
         {
             Content = content;
             Type = type;

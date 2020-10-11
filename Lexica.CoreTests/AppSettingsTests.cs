@@ -85,7 +85,7 @@ namespace CoreTests
                         {
                             ConnectionString = "Host=my_host;Database=my_db;Username=my_user;Password=my_pw"
                         },
-                        Words = new Words
+                        Words = new Words()
                         {
                             ImportDirectoryPath = "c:\\LexicaImport"
                         },

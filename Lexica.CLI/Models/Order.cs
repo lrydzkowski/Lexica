@@ -5,7 +5,7 @@ namespace Lexica.CLI.Models
 {
     public class Order
     {
-        public string CustomerId { get; set; }
+        public string? CustomerId { get; set; }
         public DateTime Date { get; set; }
         public decimal TotalAmount { get; set; }
         public List<OrderItem> Items { get; set; }

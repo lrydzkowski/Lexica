@@ -6,8 +6,14 @@ namespace Lexica.Words.Models
 {
     public class SetPath
     {
-        public string Namespace { get; set; }
+        public string Namespace { get; }
 
-        public string Name { get; set; }
+        public string Name { get; }
+
+        public SetPath(string setNamespace, string name)
+        {
+            Namespace = setNamespace;
+            Name = name;
+        }
     }
 }

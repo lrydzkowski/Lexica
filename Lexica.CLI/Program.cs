@@ -12,6 +12,7 @@ using NLog;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -21,7 +22,7 @@ namespace Lexica.CLI
 {
     class Program
     {
-        private static IServiceProvider serviceProvider;
+        private static IServiceProvider? serviceProvider;
 
         private static readonly Logger log = LogManager.GetCurrentClassLogger();
 
@@ -29,33 +30,34 @@ namespace Lexica.CLI
         {
             try
             {
-                var setService2 = new SetService();
-                var setManager2 = new SetManager(setService2, 15);
-                var set2 = await setManager2.GetSet();
+                int number123 = 1;
+                string test123 = string.Format("Text number {0} created only for tests.", number123);
+                string test321 = $"Text number {number123} created only for tests.";
 
+                IfElsePatternMatching();
                 return;
 
-                var set = new Set();
-                var setPath = new SetPath();
-                setPath.Namespace = "dir1";
-                setPath.Name = "set1";
-                var setInfo = new SetInfo();
-                setInfo.SetId = 1;
-                setInfo.Path = setPath;
-                set.SetsInfo = new List<SetInfo>() { setInfo };
-                set.Entries = new List<Entry>();
-                for (int i = 0; i < 5; i++)
-                {
-                    var entry = new Entry();
-                    entry.SetId = 1;
-                    entry.EntryId = i + 1;
-                    entry.Translations = new List<string>() { "translation" + i.ToString() };
-                    entry.Words = new List<string>() { "word" + i.ToString() };
-                    set.Entries.Add(entry);
-                }
-                var setService = new SetService();
-                var importer = new Importer(setService);
-                await importer.Import(set);
+                //var set = new Set();
+                //var setPath = new SetPath();
+                //setPath.Namespace = "dir1";
+                //setPath.Name = "set1";
+                //var setInfo = new SetInfo();
+                //setInfo.SetId = 1;
+                //setInfo.Path = setPath;
+                //set.SetsInfo = new List<SetInfo>() { setInfo };
+                //set.Entries = new List<Entry>();
+                //for (int i = 0; i < 5; i++)
+                //{
+                //    var entry = new Entry();
+                //    entry.SetId = 1;
+                //    entry.EntryId = i + 1;
+                //    entry.Translations = new List<string>() { "translation" + i.ToString() };
+                //    entry.Words = new List<string>() { "word" + i.ToString() };
+                //    set.Entries.Add(entry);
+                //}
+                //var setService = new SetService();
+                //var importer = new Importer(setService);
+                //await importer.Import(set);
 
                 return;
 
@@ -137,6 +139,30 @@ namespace Lexica.CLI
                     }
                 }
             };
+        }
+
+        static void IfElsePatternMatching()
+        {
+            Console.WriteLine("===If Else Pattern Matching ===/n");
+            object testItem1 = 123;
+            object testItem2 = "Hello";
+            if (testItem1 is string myStringValue1)
+            {
+                Console.WriteLine($"{myStringValue1} is a string");
+            }
+            if (testItem1 is int myValue1)
+            {
+                Console.WriteLine($"{myValue1} is an int");
+            }
+            if (testItem2 is string)
+            {
+                Console.WriteLine($"{testItem2} is a string");
+            }
+            if (testItem2 is int myValue2)
+            {
+                Console.WriteLine($"{myValue2} is an int");
+            }
+            Console.WriteLine();
         }
     }
 }

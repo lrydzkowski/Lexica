@@ -16,13 +16,13 @@ using Newtonsoft.Json.Schema;
 
 namespace Lexica.Core.Config
 {
-    public class AppSettings<T>
+    public class AppSettings<T> where T : class
     {
         private ISource ConfigSource { get; set; }
 
         private ISource ConfigSchemaSource { get; set; }
 
-        public T Settings { get; private set; }
+        public T? Settings { get; private set; }
 
         public AppSettings(ISource configSource, ISource configSchemaSource)
         {
@@ -42,7 +42,7 @@ namespace Lexica.Core.Config
             return operationResult;
         }
 
-        private void LoadConfig()
+        private T LoadConfig()
         {
             string configContents = ConfigSource.GetContents();
             string configSchemaContents = ConfigSchemaSource.GetContents();
@@ -62,13 +62,15 @@ namespace Lexica.Core.Config
                 .Build()
                 .Get<T>();
             Settings = settings;
+
+            return Settings;
         }
 
         public T Get(bool reload = false)
         {
-            if (reload)
+            if (reload || Settings == null)
             {
-                LoadConfig();
+                return LoadConfig();
             }
             return Settings;
         }

@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Lexica.EF.Migrations
 {
     [DbContext(typeof(LexicaContext))]
-    [Migration("20200927183117_WordsInit")]
-    partial class WordsInit
+    [Migration("20201011191807_0.1")]
+    partial class _01
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

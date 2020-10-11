@@ -24,7 +24,7 @@ namespace Lexica.Words
             SetPathValidator = setPathValidator;
         }
 
-        public async Task<Set> GetSet()
+        public async Task<Set?> GetSet()
         {
             return await SetService.Get(SetId);
         }

@@ -17,7 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lexica.CoreTests", "Lexica.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lexica.CLI", "Lexica.CLI\Lexica.CLI.csproj", "{B3618C78-79FA-4890-A2B2-1EDF016EE2B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lexica.Words", "Lexica.Words\Lexica.Words.csproj", "{3039BEBA-3483-4BB0-9300-5A3A35AF37D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lexica.Words", "Lexica.Words\Lexica.Words.csproj", "{3039BEBA-3483-4BB0-9300-5A3A35AF37D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lexica.WordsTests", "Lexica.WordsTests\Lexica.WordsTests.csproj", "{E66F3E1A-F316-4E15-B594-17093755EFE8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{3039BEBA-3483-4BB0-9300-5A3A35AF37D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3039BEBA-3483-4BB0-9300-5A3A35AF37D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3039BEBA-3483-4BB0-9300-5A3A35AF37D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E66F3E1A-F316-4E15-B594-17093755EFE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E66F3E1A-F316-4E15-B594-17093755EFE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E66F3E1A-F316-4E15-B594-17093755EFE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E66F3E1A-F316-4E15-B594-17093755EFE8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

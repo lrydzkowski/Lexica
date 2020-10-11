@@ -6,6 +6,6 @@ namespace Lexica.EF.Config.Models
 {
     public class Database
     {
-        public string ConnectionString { get; set; }
+        public string? ConnectionString { get; set; }
     }
 }

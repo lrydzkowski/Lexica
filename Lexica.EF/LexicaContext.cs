@@ -13,11 +13,11 @@ namespace Lexica.EF
 {
     public class LexicaContext : DbContext
     {
-        public DbSet<EntryTable> Entries { get; set; }
+        public DbSet<EntryTable> Entries => Set<EntryTable>();
 
-        public DbSet<ImportHistoryTable> ImportExecutions { get; set; }
+        public DbSet<ImportHistoryTable> ImportExecutions => Set<ImportHistoryTable>();
 
-        public DbSet<SetTable> Sets { get; set; }
+        public DbSet<SetTable> Sets => Set<SetTable>();
 
         public LexicaContext() : base() { }
 
@@ -28,7 +28,7 @@ namespace Lexica.EF
             var configSource = new FileSource("database.json");
             var configSchemaSource = new EmbeddedSource("database.schema.json", Assembly.GetExecutingAssembly());
             var appSettings = new AppSettings<Database>(configSource, configSchemaSource);
-            string connectionString = appSettings.Get().ConnectionString;
+            string? connectionString = appSettings.Get().ConnectionString;
 
             optionsBuilder.UseNpgsql(connectionString);
         }

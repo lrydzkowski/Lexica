@@ -13,7 +13,11 @@ namespace Lexica.EF.Models
 
         [Required]
         public long SetId { get; set; }
-        public SetTable Set { get; set; }
+        private SetTable? _set;
+        public SetTable Set {
+            get => _set ?? throw new Exception("Uninitialized property: " + nameof(Set));
+            set => _set = value; 
+        }
 
         [Required]
         public DateTime ExecutedDate { get; set; }

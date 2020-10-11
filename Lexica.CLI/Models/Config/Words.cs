@@ -6,6 +6,6 @@ namespace Lexica.CLI.Models.Config
 {
     public class Words
     {
-        public string ImportDirectoryPath { get; set; }
+        public string? ImportDirectoryPath { get; set; }
     }
 }

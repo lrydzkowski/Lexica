@@ -11,16 +11,22 @@ namespace Lexica.EF.Models
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
 
-        [Required]
         [MaxLength(400)]
-        public string Namespace { get; set; }
+        public string Namespace { get; set; } = "";
 
-        [Required]
         [MaxLength(100)]
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
 
-        public ICollection<EntryTable> Entries { get; set; }
+        private ICollection<EntryTable>? _entries;
+        public ICollection<EntryTable> Entries {
+            get => _entries ?? throw new InvalidOperationException("Uninitialized property: " + nameof(Entries));
+            set => _entries = value;
+        }
 
-        public ImportHistoryTable Import { get; set; }
+        private ImportHistoryTable? _import;
+        public ImportHistoryTable Import {
+            get => _import ?? throw new InvalidOperationException("Uninitialized property: " + nameof(Import));
+            set => _import = value;
+        }
     }
 }

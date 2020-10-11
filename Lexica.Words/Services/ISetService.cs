@@ -13,9 +13,9 @@ namespace Lexica.Words.Services
 
         public Task CreateSet(List<Set> sets);
 
-        public Task<Set> Get(long setId);
+        public Task<Set?> Get(long setId);
 
-        public Task<Set> Get(List<long> setIds);
+        public Task<Set?> Get(List<long> setIds);
 
         public Task<List<SetInfo>> GetInfoList();
 

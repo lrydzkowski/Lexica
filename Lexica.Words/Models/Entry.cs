@@ -14,12 +14,20 @@ namespace Lexica.Words.Models
             }
         }
 
-        public long SetId { get; set; }
+        public long SetId { get; }
 
-        public int EntryId { get; set; }
+        public int EntryId { get; }
 
-        public List<string> Words { get; set; }
+        public List<string> Words { get; }
 
-        public List<string> Translations { get; set; }
+        public List<string> Translations { get; }
+
+        public Entry(long setId, int entryId, List<string> words, List<string> translations)
+        {
+            SetId = setId;
+            EntryId = entryId;
+            Words = words;
+            Translations = translations;
+        }
     }
 }

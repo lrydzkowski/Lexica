@@ -15,14 +15,13 @@ namespace Lexica.Words
 
         public List<long> SetIds { get; private set; }
 
-        public Set Set { get; private set; }
+        public Set? Set { get; private set; }
 
         public int Index { get; private set; }
 
-        public SetModeOperator(ISetService setService, long setId)
+        public SetModeOperator(ISetService setService, long setId) : this(setService, new List<long> { setId })
         {
-            SetService = setService;
-            SetIds.Add(setId);
+            
         }
 
         public SetModeOperator(ISetService setService, List<long> setIds)
@@ -31,17 +30,21 @@ namespace Lexica.Words
             SetIds = setIds;
         }
 
-        public async Task LoadSet()
+        public async Task<Set?> LoadSet()
         {
             if (Set == null)
             {
                 Set = await SetService.Get(SetIds);
             }
+            return Set;
         }
 
         private void Randomize()
         {
-            Set.Entries.Shuffle();
+            if (Set != null)
+            {
+                Set.Entries.Shuffle();
+            }            
         }
 
         public void Reset()
@@ -50,28 +53,37 @@ namespace Lexica.Words
             Index = 0;
         }
 
-        public async Task<Entry> GetEntry(long setId, int entryId)
+        public async Task<Entry?> GetEntry(long setId, int entryId)
         {
-            await LoadSet();
-            for (int i = 0; i < Set.Entries.Count; i++)
+            Set? set = await LoadSet();
+            if (set != null)
             {
-                Entry entry = Set.Entries[i];
-                if (entry.SetId == setId && entry.EntryId == entryId)
+                for (int i = 0; i < set.Entries.Count; i++)
                 {
-                    return entry;
+                    Entry entry = set.Entries[i];
+                    if (entry.SetId == setId && entry.EntryId == entryId)
+                    {
+                        return entry;
+                    }
                 }
             }
+
             return null;
         }
 
-        public async Task<Entry> GetNextEntry()
+        public async Task<Entry?> GetNextEntry()
         {
-            await LoadSet();
-            if (Index > Set.Entries.Count - 1)
+            Set? set = await LoadSet();
+            if (set == null)
             {
                 return null;
             }
-            return Set.Entries[Index++];
+            if (Index > set.Entries.Count - 1)
+            {
+                return null;
+            }
+            
+            return set.Entries[Index++];
         }
     }
 }

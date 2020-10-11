@@ -15,8 +15,16 @@ namespace Lexica.Words.Models
             }
         }
 
-        public List<SetInfo> SetsInfo { get; set; }
+        public List<SetInfo> SetsInfo { get; }
 
-        public List<Entry> Entries { get; set; }
+        public List<Entry> Entries { get; }
+
+        public Set(SetInfo setInfo, List<Entry> entries) : this(new List<SetInfo> { setInfo }, entries) { }
+
+        public Set(List<SetInfo> setsInfo, List<Entry> entries)
+        {
+            SetsInfo = setsInfo;
+            Entries = entries;
+        }
     }
 }

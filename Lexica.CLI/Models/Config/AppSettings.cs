@@ -6,10 +6,10 @@ namespace Lexica.CLI.Models.Config
 {
     public class AppSettings
     {
-        public Database Database { get; set; }
+        public Database? Database { get; set; }
 
-        public Words Words { get; set; }
+        public Words? Words { get; set; }
 
-        public Maintaining Maintaining { get; set; }
+        public Maintaining? Maintaining { get; set; }
     }
 }

@@ -26,9 +26,11 @@ namespace Lexica.EF.Services
                 {
                     foreach (var set in sets)
                     {
-                        var setRecord = new SetTable();
-                        setRecord.Namespace = set.SetsInfo[0].Path.Namespace;
-                        setRecord.Name = set.SetsInfo[0].Path.Name;
+                        var setRecord = new SetTable
+                        {
+                            Namespace = set.SetsInfo[0].Path.Namespace,
+                            Name = set.SetsInfo[0].Path.Name
+                        };
                         await context.AddAsync(setRecord);
                         await context.SaveChangesAsync();
 
@@ -39,11 +41,13 @@ namespace Lexica.EF.Services
                             {
                                 foreach (var translation in entry.Translations)
                                 {
-                                    var entryRecord = new EntryTable();
-                                    entryRecord.EntryId = entryId;
-                                    entryRecord.SetId = setRecord.Id;
-                                    entryRecord.Word = word;
-                                    entryRecord.Translation = translation;
+                                    var entryRecord = new EntryTable
+                                    {
+                                        EntryId = entryId,
+                                        SetId = setRecord.Id,
+                                        Word = word,
+                                        Translation = translation
+                                    };
                                     await context.AddAsync(entryRecord);
                                 }
                             }
@@ -77,16 +81,16 @@ namespace Lexica.EF.Services
             return new OperationResult(true);
         }
 
-        public async Task<Set> Get(long setId)
+        public async Task<Set?> Get(long setId)
         {
             return await Get(new List<long>() { setId });
         }
 
-        public async Task<Set> Get(List<long> setIds)
+        public async Task<Set?> Get(List<long> setIds)
         {
             using (var context = new LexicaContext())
             {
-                Set set = null;
+                Set? set = null;
                 foreach (long setId in setIds)
                 {
                     List<SetTable> setRecord = await context.Sets
@@ -94,26 +98,21 @@ namespace Lexica.EF.Services
                         .Include(x => x.Entries)
                         .AsNoTracking()
                         .ToListAsync();
-                    set = setRecord.Select(x => new Set() {
-                        SetsInfo = new List<SetInfo>() {
-                            new SetInfo()
-                            {
-                                SetId = x.Id,
-                                Path = new SetPath()
-                                {
-                                    Namespace = x.Namespace,
-                                    Name = x.Name
-                                }
-                            }
-                        },
-                        Entries = x.Entries.GroupBy(x => new { x.SetId, x.EntryId }).Select(x => new Entry()
-                        {
-                            SetId = x.Key.SetId,
-                            EntryId = x.Key.EntryId,
-                            Words = x.Select(x => x.Word).ToList(),
-                            Translations = x.Select(x => x.Translation).ToList()
-                        }).ToList<Entry>()
-                    })
+                    set = setRecord.Select(x => new Set(
+                        new SetInfo(
+                            setId: x.Id,
+                            path: new SetPath(
+                                setNamespace: x.Namespace,
+                                name: x.Name
+                            )
+                        ),
+                        x.Entries.GroupBy(x => new { x.SetId, x.EntryId }).Select(x => new Entry(
+                            setId: x.Key.SetId,
+                            entryId: x.Key.EntryId,
+                            words: x.Select(x => x.Word).ToList(),
+                            translations: x.Select(x => x.Translation).ToList()
+                        )).ToList<Entry>()
+                    ))
                     .FirstOrDefault();
                 }
                 return set;
@@ -126,15 +125,13 @@ namespace Lexica.EF.Services
             {
                 List<SetInfo> list = await context.Sets
                     .AsNoTracking()
-                    .Select(x => new SetInfo()
-                    {
-                        SetId = x.Id,
-                        Path = new SetPath()
-                        {
-                            Namespace = x.Namespace,
-                            Name = x.Name
-                        }
-                    })
+                    .Select(x => new SetInfo(
+                        x.Id,
+                        new SetPath(
+                            x.Namespace,
+                            x.Name
+                        )
+                    ))
                     .ToListAsync();
                 return list;
             }
