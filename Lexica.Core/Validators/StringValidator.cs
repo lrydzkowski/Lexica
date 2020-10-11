@@ -20,15 +20,25 @@ namespace Lexica.Core.Validators
             var result = new OperationResult();
             if (ValidationData.Mandatory && data == null)
             {
-                result.AddError(new Error("IsMandatory", "Value cannot be null."));
+                result.AddError(new Error((int)ErrorEnum.IsMandatory, "Value is mandatory, so it cannot be null."));
             }
             if (ValidationData.MinLength < data.Length)
             {
-                result.AddError(new Error("IsToShort", $"Value cannot have more chars than {ValidationData.MinLength}."));
+                result.AddError(
+                    new Error(
+                        (int)ErrorEnum.IsToShort, 
+                        $"Value is too short, it can't have more chars than {ValidationData.MinLength}."
+                    )
+                );
             }
             if (ValidationData.MaxLength > data.Length)
             {
-                result.AddError(new Error("IsToLong", $"Value cannot have more chars than {ValidationData.MaxLength}."));
+                result.AddError(
+                    new Error(
+                        (int)ErrorEnum.IsToLong, 
+                        $"Value is too long, it can't have more chars than {ValidationData.MaxLength}."
+                    )
+                );
             }
             return result;
         }

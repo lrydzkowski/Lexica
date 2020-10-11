@@ -6,11 +6,11 @@ namespace Lexica.Core.Models
 {
     public class Error
     {
-        public string Code { get; private set; }
+        public int Code { get; private set; }
 
         public string Message { get; private set; }
 
-        public Error(string code, string message)
+        public Error(int code, string message)
         {
             Code = code;
             Message = message;
@@ -21,7 +21,7 @@ namespace Lexica.Core.Models
     {
         public T Data { get; private set; }
 
-        public Error(string code, string message, T data) : base(code, message)
+        public Error(int code, string message, T data) : base(code, message)
         {
             Data = data;
         }

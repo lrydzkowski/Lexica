@@ -64,7 +64,10 @@ namespace Lexica.EF.Services
                 SetTable setRecord = context.Sets.Where(x => x.Id == setId).FirstOrDefault();
                 if (setRecord == null)
                 {
-                    var error = new Error("SetDoesntExist", string.Format("Set with id {0} doesn't exist.", setId));
+                    var error = new Error(
+                        (int)ErrorEnum.SetDoesntExist, 
+                        $"Set with id {setId} doesn't exist."
+                    );
                     return new OperationResult(false, error);
                 }
                 setRecord.Namespace = newPath.Namespace;
