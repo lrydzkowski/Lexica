@@ -50,7 +50,7 @@ namespace Lexica.Words
             Index = 0;
         }
 
-        public async Task<Entry> getEntry(long setId, int entryId)
+        public async Task<Entry> GetEntry(long setId, int entryId)
         {
             await LoadSet();
             for (int i = 0; i < Set.Entries.Count; i++)
@@ -64,7 +64,7 @@ namespace Lexica.Words
             return null;
         }
 
-        public async Task<Entry> getNextEntry()
+        public async Task<Entry> GetNextEntry()
         {
             await LoadSet();
             if (Index > Set.Entries.Count - 1)
