@@ -69,5 +69,22 @@ namespace Lexica.Core.Models
         {
             Data = data;
         }
+
+        public void Merge(OperationResult<T> result, MergeModeEnum mergeMode)
+        {
+            base.Merge(result);
+            switch (mergeMode)
+            {
+                case MergeModeEnum.Overwrite:
+                    Data = result.Data;
+                    break;
+                case MergeModeEnum.OverwriteIfNull:
+                    if (Data == null)
+                    {
+                        Data = result.Data;
+                    }
+                    break;
+            }
+        }
     }
 }
