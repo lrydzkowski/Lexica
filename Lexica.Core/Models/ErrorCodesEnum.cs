@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Lexica.Core.Models
 {
-    enum ErrorEnum
+    enum ErrorCodesEnum
     {
         IsMandatory = 10010,
         IsToShort = 10011,

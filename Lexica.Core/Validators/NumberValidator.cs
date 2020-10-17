@@ -6,23 +6,23 @@ using System.Text;
 
 namespace Lexica.Core.Validators
 {
-    public class StringValidator : IValidator<string?>
+    public class NumberValidator : IValidator<double?>
     {
-        public StringValidationData ValidationData { get; private set; }
+        public NumberValidationData ValidationData { get; private set; }
 
-        public StringValidator(StringValidationData validationData)
+        public NumberValidator(NumberValidationData validationData)
         {
             ValidationData = validationData;
         }
 
-        public OperationResult Validate(string? data)
+        public OperationResult Validate(double? data)
         {
             var result = new OperationResult();
             if (ValidationData.Mandatory && data == null)
             {
                 result.AddError(
                     new Error(
-                        (int)ErrorCodesEnum.IsMandatory, 
+                        (int)ErrorCodesEnum.IsMandatory,
                         "Value is mandatory, so it cannot be null."
                     )
                 );
@@ -31,25 +31,24 @@ namespace Lexica.Core.Validators
             {
                 return result;
             }
-            if (data.Length < ValidationData.MinLength)
+            if (data < ValidationData.MinValue)
             {
                 result.AddError(
                     new Error(
-                        (int)ErrorCodesEnum.IsToShort, 
-                        $"Value is too short, it can't have less chars than {ValidationData.MinLength}."
+                        (int)ErrorCodesEnum.IsToShort,
+                        $"Value is too small, it can't be smaller than {ValidationData.MinValue}."
                     )
                 );
             }
-            if (data.Length > ValidationData.MaxLength)
+            if (data > ValidationData.MaxValue)
             {
                 result.AddError(
                     new Error(
-                        (int)ErrorCodesEnum.IsToLong, 
-                        $"Value is too long, it can't have more chars than {ValidationData.MaxLength}."
+                        (int)ErrorCodesEnum.IsToLong,
+                        $"Value is too big, it can't be bigger than {ValidationData.MaxValue}."
                     )
                 );
             }
-
             return result;
         }
     }
