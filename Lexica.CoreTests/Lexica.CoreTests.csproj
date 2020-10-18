@@ -13,14 +13,18 @@
     <None Remove="Resources\appsettings2.wrong.json" />
     <None Remove="Resources\appsettings3.wrong.json" />
     <None Remove="Resources\appsettings4.correct.json" />
+    <None Remove="Resources\Multiple\Embedded\embedded_file1.txt" />
+    <None Remove="Resources\Multiple\Embedded\embedded_file2.txt" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\appsettings.schema.json" />
-    <EmbeddedResource Include="Resources\appsettings1.wrong.json" />
-    <EmbeddedResource Include="Resources\appsettings2.wrong.json" />
-    <EmbeddedResource Include="Resources\appsettings3.wrong.json" />
-    <EmbeddedResource Include="Resources\appsettings4.correct.json" />
+    <EmbeddedResource Include="Resources\Config\appsettings.schema.json" />
+    <EmbeddedResource Include="Resources\Config\appsettings1.wrong.json" />
+    <EmbeddedResource Include="Resources\Config\appsettings2.wrong.json" />
+    <EmbeddedResource Include="Resources\Config\appsettings3.wrong.json" />
+    <EmbeddedResource Include="Resources\Config\appsettings4.correct.json" />
+    <EmbeddedResource Include="Resources\Multiple\Embedded\embedded_file1.txt" />
+    <EmbeddedResource Include="Resources\Multiple\Embedded\embedded_file2.txt" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,6 +36,15 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Lexica.Core\Lexica.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Resources\Multiple\Files\file1.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Multiple\Files\file2.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

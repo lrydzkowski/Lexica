@@ -8,6 +8,6 @@ namespace Lexica.Core.IO
 {
     public interface ISource
     {
-        public string GetContents();
+        public string GetContents(bool upToDate = false);
     }
 }

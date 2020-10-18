@@ -14,22 +14,27 @@ namespace Lexica.Core.IO
 
         public Assembly Assembly { get; private set; }
 
+        public string? Contents { get; private set; }
+
         public EmbeddedSource(string path, Assembly? assembly = null)
         {
             Path = path;
             Assembly = assembly ?? Assembly.GetExecutingAssembly();
         }
 
-        public string GetContents()
+        public string GetContents(bool upToDate = false)
         {
-            var resourceLoader = new ResourceLoader();
-            string contents = resourceLoader.GetEmbeddedResourceString(Assembly, Path);
-            if (contents == null)
+            if (Contents == null || upToDate)
             {
-                throw new ResourceNotFoundException(String.Format("Embedded resource {0} doesn't exist.", Path));
+                var resourceLoader = new ResourceLoader();
+                Contents = resourceLoader.GetEmbeddedResourceString(Assembly, Path);
+                if (Contents == null)
+                {
+                    throw new ResourceNotFoundException($"Embedded resource {Path} doesn't exist.");
+                }
             }
 
-            return contents;
+            return Contents;
         }
     }
 }

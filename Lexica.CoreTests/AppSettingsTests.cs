@@ -19,16 +19,16 @@ namespace CoreTests
             {
                 new object[]
                 {
-                    "Resources.appsettings1.wrong.json",
-                    "Resources.appsettings.schema.json",
+                    "Resources.Config.appsettings1.wrong.json",
+                    "Resources.Config.appsettings.schema.json",
                     new Dictionary<string, string>() {
                         { "0", "Invalid type. Expected String but got Boolean. Path 'Database.ConnectionString', line 3, position 29." }
                     }
                 },
                 new object[]
                 {
-                    "Resources.appsettings2.wrong.json",
-                    "Resources.appsettings.schema.json",
+                    "Resources.Config.appsettings2.wrong.json",
+                    "Resources.Config.appsettings.schema.json",
                     new Dictionary<string, string>() {
                         { "0", "Required properties are missing from object: PlayPronunciation. Path 'Maintaining', line 14, position 18." },
                         { "1", "Required properties are missing from object: Words. Path '', line 1, position 1." }
@@ -36,8 +36,8 @@ namespace CoreTests
                 },
                 new object[]
                 {
-                    "Resources.appsettings3.wrong.json",
-                    "Resources.appsettings.schema.json",
+                    "Resources.Config.appsettings3.wrong.json",
+                    "Resources.Config.appsettings.schema.json",
                     new Dictionary<string, string>() {
                         { "0", "Integer 11 exceeds maximum value of 10. Path 'Spelling.NumOfLevels', line 10, position 21." },
                         { "1", "Integer 11 exceeds maximum value of 10. Path 'Learning.NumOfLevels', line 14, position 21." }
@@ -77,8 +77,8 @@ namespace CoreTests
             {
                 new object[]
                 {
-                    "Resources.appsettings4.correct.json",
-                    "Resources.appsettings.schema.json",
+                    "Resources.Config.appsettings4.correct.json",
+                    "Resources.Config.appsettings.schema.json",
                     new Settings
                     {
                         Database = new Database

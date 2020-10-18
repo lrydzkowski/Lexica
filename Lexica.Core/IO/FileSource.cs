@@ -9,20 +9,38 @@ namespace Lexica.Core.IO
 {
     public class FileSource : ISource
     {
-        public string Path { get; private set; }
-
-        public FileSource(string path)
+        private string _filePath = "";
+        public string FilePath 
         {
-            Path = path;
-            if (!File.Exists(Path))
+            get
             {
-                throw new FileNotFoundException(String.Format("File {0} doesn't exist.", Path));
+                return _filePath;
+            }
+            private set
+            {
+                if (!File.Exists(value))
+                {
+                    throw new FileNotFoundException($"File {value} doesn't exist.");
+                }
+                _filePath = value;
             }
         }
 
-        public string GetContents()
+        public string? Contents { get; private set; }
+
+        public FileSource(string filePath)
         {
-            return File.ReadAllText(Path);
+            FilePath = filePath;
+        }
+
+        public string GetContents(bool upToDate = false)
+        {
+            if (Contents == null || upToDate)
+            {
+                Contents = File.ReadAllText(FilePath);
+            }
+
+            return Contents;
         }
     }
 }
