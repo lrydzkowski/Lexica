@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Visual Studio Code options directory.
 .vscode
+
+Lexica.EF/database.json
+Lexica.Words/words.json
