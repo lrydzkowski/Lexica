@@ -18,7 +18,9 @@ Classes:
   - IDataSource.cs
   - JsonSource.cs
 - Exceptions
-  - WrongConfigExceptions
+  - WrongConfigExceptions.cs
+- Extensions:
+  - ListExtensions.cs
 - IO
   - ISource.cs
   - FileSource.cs
