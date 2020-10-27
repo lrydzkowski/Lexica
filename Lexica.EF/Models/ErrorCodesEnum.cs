@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Lexica.Core.Models
+namespace Lexica.EF.Models
 {
     enum ErrorCodesEnum
     {
-        IsMandatory = 10001,
-        IsToShort = 10002,
-        IsToLong = 10003
+        SetDoesntExist = 11001
     }
 }

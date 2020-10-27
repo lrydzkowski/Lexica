@@ -69,7 +69,7 @@ namespace Lexica.EF.Services
                 if (setRecord == null)
                 {
                     var error = new Error(
-                        (int)ErrorEnum.SetDoesntExist, 
+                        (int)ErrorCodesEnum.SetDoesntExist, 
                         $"Set with id {setId} doesn't exist."
                     );
                     return new OperationResult(false, error);

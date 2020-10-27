@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Lexica.EF.Models
+namespace Lexica.Words.Models
 {
-    enum ErrorEnum
+    enum ErrorCodesEnum
     {
-        SetDoesntExist = 10100
+        NoImportSource = 12001
     }
 }
