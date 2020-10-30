@@ -72,13 +72,45 @@ namespace CoreTests
             Assert.Equal(expectedContents[1], list[1]);
         }
 
+        public static IEnumerable<object[]> GetMultipleFilesCorrectNames()
+        {
+            return new List<object[]>
+            {
+                new object[]
+                {
+                    "Resources/Multiple/Files",
+                    new List<string>()
+                    {
+                        "file1.txt",
+                        "file2.txt"
+                    }
+                }
+            };
+        }
+
+        [Theory]
+        [MemberData(nameof(GetMultipleFilesCorrectNames))]
+        public void GetMultipleFiles_CorrectPath_ReturnsProperNames(string dirPath, List<string> expectedNames)
+        {
+            // Arrange
+            var filesSource = new MultipleFilesSource(dirPath);
+
+            // Act
+            List<string> list = filesSource.GetContents().Select(x => x.Name).ToList<string>();
+
+            // Assert
+            Assert.Equal(expectedNames.Count, list.Count);
+            Assert.Equal(expectedNames[0], list[0]);
+            Assert.Equal(expectedNames[1], list[1]);
+        }
+
         public static IEnumerable<object[]> GetMultipleEmbeddedFilesCorrectPathParameters()
         {
             return new List<object[]>
             {
                 new object[]
                 {
-                    "Lexica.CoreTests.Resources.Multiple.Embedded",
+                    "Lexica.CoreTests/Resources/Multiple/Embedded",
                     new List<string>()
                     {
                         "embedded file 1 contents",
@@ -90,7 +122,9 @@ namespace CoreTests
 
         [Theory]
         [MemberData(nameof(GetMultipleEmbeddedFilesCorrectPathParameters))]
-        public void GetMultipleEmbeddedFiles_CorrectPath_ReturnsProperContents(string dirPath, List<string> expectedContents)
+        public void GetMultipleEmbeddedFiles_CorrectPath_ReturnsProperContents(
+            string dirPath, 
+            List<string> expectedContents)
         {
             // Arrange
             var embeddedSource = new MultipleEmbeddedSource(
@@ -105,6 +139,43 @@ namespace CoreTests
             Assert.Equal(expectedContents.Count, list.Count);
             Assert.Equal(expectedContents[0], list[0]);
             Assert.Equal(expectedContents[1], list[1]);
+        }
+
+        public static IEnumerable<object[]> GetMultipleEmbeddedFilesCorrectNames()
+        {
+            return new List<object[]>
+            {
+                new object[]
+                {
+                    "Lexica.CoreTests/Resources/Multiple/Embedded",
+                    new List<string>()
+                    {
+                        "embedded_file1.txt",
+                        "embedded_file2.txt"
+                    }
+                }
+            };
+        }
+
+        [Theory]
+        [MemberData(nameof(GetMultipleEmbeddedFilesCorrectNames))]
+        public void GetMultipleEmbeddedFiles_CorrectPath_ReturnsProperNames(
+            string dirPath, 
+            List<string> expectedNames)
+        {
+            // Arrange
+            var embeddedSource = new MultipleEmbeddedSource(
+                dirPath,
+                Assembly.GetExecutingAssembly()
+            );
+
+            // Act
+            List<string> list = embeddedSource.GetContents().Select(x => x.Name).ToList<string>();
+
+            // Assert
+            Assert.Equal(expectedNames.Count, list.Count);
+            Assert.Equal(expectedNames[0], list[0]);
+            Assert.Equal(expectedNames[1], list[1]);
         }
     }
 }

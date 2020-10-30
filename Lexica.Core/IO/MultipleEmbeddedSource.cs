@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lexica.Core.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
@@ -13,7 +14,7 @@ namespace Lexica.Core.IO
 
         public MultipleEmbeddedSource(string path, Assembly? assembly = null)
         {
-            Path = path;
+            Path = path.Replace("\\", "/");
             Assembly = assembly ?? Assembly.GetExecutingAssembly();
         }
 
@@ -21,11 +22,16 @@ namespace Lexica.Core.IO
         {
             List<ISource> sourceList = new List<ISource>();
             string[] listOfResources = Assembly.GetManifestResourceNames();
+            string path = Path.Replace("/", ".");
             foreach (string resourceName in listOfResources)
             {
-                if (resourceName.IndexOf(Path) == 0)
+                if (resourceName.IndexOf(path) == 0)
                 {
-                    var embeddedSource = new EmbeddedSource(resourceName, Assembly);
+                    string[] rnParts = resourceName.Split('.');
+                    string fileName = rnParts[rnParts.Length - 2] + '.' + rnParts[rnParts.Length - 1];
+                    var resourceDirPath = resourceName.ReplaceLastOccurence(fileName, "").Replace(".", "/");
+                    var resourceFullPath = resourceDirPath + fileName;
+                    var embeddedSource = new EmbeddedSource(resourceFullPath, Assembly);
                     sourceList.Add(embeddedSource);
                 }
             }

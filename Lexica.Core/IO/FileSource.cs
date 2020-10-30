@@ -9,12 +9,14 @@ namespace Lexica.Core.IO
 {
     public class FileSource : ISource
     {
-        private string _filePath = "";
-        public string FilePath 
+        public string Name { get; private set; }
+
+        private string _path = "";
+        public string Path 
         {
             get
             {
-                return _filePath;
+                return _path;
             }
             private set
             {
@@ -22,7 +24,7 @@ namespace Lexica.Core.IO
                 {
                     throw new FileNotFoundException($"File {value} doesn't exist.");
                 }
-                _filePath = value;
+                _path = value;
             }
         }
 
@@ -30,14 +32,15 @@ namespace Lexica.Core.IO
 
         public FileSource(string filePath)
         {
-            FilePath = filePath;
+            Path = filePath.Replace("\\", "/");
+            Name = System.IO.Path.GetFileName(filePath);
         }
 
         public string GetContents(bool upToDate = false)
         {
             if (Contents == null || upToDate)
             {
-                Contents = File.ReadAllText(FilePath);
+                Contents = File.ReadAllText(Path);
             }
 
             return Contents;

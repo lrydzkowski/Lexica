@@ -10,6 +10,8 @@ namespace Lexica.Core.IO
 {
     public class EmbeddedSource : ISource
     {
+        public string Name { get; private set; }
+
         public string Path { get; private set; }
 
         public Assembly Assembly { get; private set; }
@@ -18,7 +20,8 @@ namespace Lexica.Core.IO
 
         public EmbeddedSource(string path, Assembly? assembly = null)
         {
-            Path = path;
+            Path = path.Replace("\\", "/");
+            Name = System.IO.Path.GetFileName(Path);
             Assembly = assembly ?? Assembly.GetExecutingAssembly();
         }
 
@@ -27,7 +30,7 @@ namespace Lexica.Core.IO
             if (Contents == null || upToDate)
             {
                 var resourceLoader = new ResourceLoader();
-                Contents = resourceLoader.GetEmbeddedResourceString(Assembly, Path);
+                Contents = resourceLoader.GetEmbeddedResourceString(Assembly, Path.Replace("/", "."));
                 if (Contents == null)
                 {
                     throw new ResourceNotFoundException($"Embedded resource {Path} doesn't exist.");
