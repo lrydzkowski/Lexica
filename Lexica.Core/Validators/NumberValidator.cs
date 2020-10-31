@@ -21,9 +21,10 @@ namespace Lexica.Core.Validators
             if (ValidationData.Mandatory && data == null)
             {
                 result.AddError(
-                    new Error(
+                    new Error<Dictionary<string, string>>(
                         (int)ErrorCodesEnum.IsMandatory,
-                        "Value is mandatory, so it cannot be null."
+                        "Value is mandatory, so it cannot be null.",
+                        new Dictionary<string, string>() { { "Name", ValidationData.Name } }
                     )
                 );
             }
@@ -34,18 +35,24 @@ namespace Lexica.Core.Validators
             if (data < ValidationData.MinValue)
             {
                 result.AddError(
-                    new Error(
+                    new Error<Dictionary<string, string>>(
                         (int)ErrorCodesEnum.IsTooShort,
-                        $"Value is too small, it can't be smaller than {ValidationData.MinValue}."
+                        $"Value '{data}' is too small, it can't be smaller than {ValidationData.MinValue}.",
+                        new Dictionary<string, string>() { 
+                            { "Name", ValidationData.Name }, { "Value", ((double)data).ToString() } 
+                        }
                     )
                 );
             }
             if (data > ValidationData.MaxValue)
             {
                 result.AddError(
-                    new Error(
+                    new Error<Dictionary<string, string>>(
                         (int)ErrorCodesEnum.IsTooLong,
-                        $"Value is too big, it can't be bigger than {ValidationData.MaxValue}."
+                        $"Value '{data}' is too big, it can't be bigger than {ValidationData.MaxValue}.",
+                        new Dictionary<string, string>() { 
+                            { "Name", ValidationData.Name }, { "Value", ((double)data).ToString() } 
+                        }
                     )
                 );
             }

@@ -10,7 +10,7 @@ namespace Lexica.Core.Validators.Models
 
         public long MaxValue { get; private set; }
 
-        public NumberValidationData(long minValue, long maxValue, bool mandatory) : base(mandatory)
+        public NumberValidationData(long minValue, long maxValue, bool mandatory, string name) : base(mandatory, name)
         {
             MinValue = minValue;
             MaxValue = maxValue;

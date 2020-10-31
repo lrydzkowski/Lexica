@@ -20,7 +20,7 @@ namespace Lexica.WordsTests
             var mockSetService = new MockSetService();
             var setValidator = new SetValidator(new ValidationData());
             var fileValidator = new FileValidator(new ValidationData());
-            var importer = new Importer(mockSetService, setValidator, fileValidator);
+            var importer = new Importer(mockSetService, fileValidator);
             var multipleSource = new MultipleEmbeddedSource(dirPath, Assembly.GetExecutingAssembly());
 
             // Act
@@ -39,7 +39,7 @@ namespace Lexica.WordsTests
                 new object[]
                 {
                     "Lexica.WordsTests/Resources/Importer/Embedded/TooManySemicolons",
-                    new List<Words.Models.ErrorCodesEnum>()
+                    new List<Enum>()
                     {
                         Words.Models.ErrorCodesEnum.TooManySemicolons,
                         Words.Models.ErrorCodesEnum.TooManySemicolons,
@@ -47,99 +47,137 @@ namespace Lexica.WordsTests
                     },
                     new List<Dictionary<string, string>>()
                     {
-                        new Dictionary<string, string>() { { "line", "14" }, { "fileName", "too_many_semicolons_1.txt" } },
-                        new Dictionary<string, string>() { { "line", "15" }, { "fileName", "too_many_semicolons_1.txt" } },
-                        new Dictionary<string, string>() { { "line", "16" }, { "fileName", "too_many_semicolons_1.txt" } }
+                        new Dictionary<string, string>() {
+                            { "Line", "14" }, { "FileName", "too_many_semicolons_1.txt" }
+                        },
+                        new Dictionary<string, string>() {
+                            { "Line", "15" }, { "FileName", "too_many_semicolons_1.txt" }
+                        },
+                        new Dictionary<string, string>() {
+                            { "Line", "16" }, { "FileName", "too_many_semicolons_1.txt" }
+                        }
                     }
                 },
                 new object[]
                 {
                     "Lexica.WordsTests/Resources/Importer/Embedded/NoSemicolon",
-                    new List<Words.Models.ErrorCodesEnum>()
+                    new List<Enum>()
                     {
                         Words.Models.ErrorCodesEnum.NoSemicolon,
                         Words.Models.ErrorCodesEnum.NoSemicolon
                     },
                     new List<Dictionary<string, string>>()
                     {
-                        new Dictionary<string, string>() { { "line", "17" }, { "fileName", "no_semicolon_1.txt" } },
-                        new Dictionary<string, string>() { { "line", "21" }, { "fileName", "no_semicolon_1.txt" } }
+                        new Dictionary<string, string>() { { "Line", "17" }, { "FileName", "no_semicolon_1.txt" } },
+                        new Dictionary<string, string>() { { "Line", "21" }, { "FileName", "no_semicolon_1.txt" } }
                     }
                 },
                 new object[]
                 {
                     "Lexica.WordsTests/Resources/Importer/Embedded/TooLongWord",
-                    new List<Words.Models.ErrorCodesEnum>()
+                    new List<Enum>()
                     {
-                        Words.Models.ErrorCodesEnum.TooLongWord
+                        Core.Models.ErrorCodesEnum.IsTooLong
                     },
                     new List<Dictionary<string, string>>()
                     {
-                        new Dictionary<string, string>() { { "line", "30" }, { "fileName", "too_long_word_1.txt" } }
+                        new Dictionary<string, string>() { 
+                            { "Line", "30" }, { "FileName", "too_long_word_1.txt" }, { "Name", "Word" }, 
+                            { "Value", "505050505050505050505050505050505050505050505050505050" } 
+                        }
                     }
                 },
                 new object[]
                 {
                     "Lexica.WordsTests/Resources/Importer/Embedded/TooLongTranslation",
-                    new List<Words.Models.ErrorCodesEnum>()
+                    new List<Enum>()
                     {
-                        Words.Models.ErrorCodesEnum.TooLongTranslation
+                        Core.Models.ErrorCodesEnum.IsTooLong
                     },
                     new List<Dictionary<string, string>>()
                     {
-                        new Dictionary<string, string>() { { "line", "22" }, { "fileName", "too_long_translation_1.txt" } }
+                        new Dictionary<string, string>() {
+                            { "Line", "22" }, { "FileName", "too_long_translation_1.txt" }, { "Name", "Translation" },
+                            { "Value", "505050505050505050505050505050505050505050505050505050" }
+                        }
                     }
                 },
                 new object[]
                 {
                     "Lexica.WordsTests/Resources/Importer/Embedded/TooShortWord",
-                    new List<Words.Models.ErrorCodesEnum>()
+                    new List<Enum>()
                     {
-                        Words.Models.ErrorCodesEnum.TooShortWord,
-                        Words.Models.ErrorCodesEnum.TooShortWord
+                        Core.Models.ErrorCodesEnum.IsTooShort,
+                        Core.Models.ErrorCodesEnum.IsTooShort
                     },
                     new List<Dictionary<string, string>>()
                     {
-                        new Dictionary<string, string>() { { "line", "24" }, { "fileName", "too_short_word_1.txt" } },
-                        new Dictionary<string, string>() { { "line", "31" }, { "fileName", "too_short_word_1.txt" } }
+                        new Dictionary<string, string>() {
+                            { "Line", "24" }, { "FileName", "too_short_word_1.txt" }, { "Name", "Word" },
+                            { "Value", "" }
+                        },
+                        new Dictionary<string, string>() {
+                            { "Line", "31" }, { "FileName", "too_short_word_1.txt" }, { "Name", "Word" } ,
+                            { "Value", "" }
+                        }
                     }
                 },
                 new object[]
                 {
                     "Lexica.WordsTests/Resources/Importer/Embedded/TooShortTranslation",
-                    new List<Words.Models.ErrorCodesEnum>()
+                    new List<Enum>()
                     {
-                        Words.Models.ErrorCodesEnum.TooShortTranslation,
-                        Words.Models.ErrorCodesEnum.TooShortTranslation
+                        Core.Models.ErrorCodesEnum.IsTooShort,
+                        Core.Models.ErrorCodesEnum.IsTooShort
                     },
                     new List<Dictionary<string, string>>()
                     {
-                        new Dictionary<string, string>() { { "line", "1" }, { "fileName", "too_short_translation_1.txt" } },
-                        new Dictionary<string, string>() { { "line", "20" }, { "fileName", "too_short_translation_1.txt" } }
+                        new Dictionary<string, string>() {
+                            { "Line", "1" }, { "FileName", "too_short_translation_1.txt" }, { "Name", "Translation" },
+                            { "Value", "" }
+                        },
+                        new Dictionary<string, string>() {
+                            { "Line", "20" }, { "FileName", "too_short_translation_1.txt" }, { "Name", "Translation" },
+                            { "Value", "" }
+                        }
                     }
                 },
                 new object[]
                 {
                     "Lexica.WordsTests/Resources/Importer/Embedded/ErrorsCombination",
-                    new List<Words.Models.ErrorCodesEnum>()
+                    new List<Enum>()
                     {
-                        Words.Models.ErrorCodesEnum.TooShortTranslation,
-                        Words.Models.ErrorCodesEnum.TooShortWord,
+                        Core.Models.ErrorCodesEnum.IsTooShort,
+                        Core.Models.ErrorCodesEnum.IsTooShort,
                         Words.Models.ErrorCodesEnum.NoSemicolon,
                         Words.Models.ErrorCodesEnum.TooManySemicolons,
-                        Words.Models.ErrorCodesEnum.TooLongTranslation,
-                        Words.Models.ErrorCodesEnum.TooLongWord,
-                        Words.Models.ErrorCodesEnum.TooLongTranslation
+                        Core.Models.ErrorCodesEnum.IsTooLong,
+                        Core.Models.ErrorCodesEnum.IsTooLong,
+                        Core.Models.ErrorCodesEnum.IsTooLong
                     },
                     new List<Dictionary<string, string>>()
                     {
-                        new Dictionary<string, string>() { { "line", "21" }, { "fileName", "example_set_1.txt" } },
-                        new Dictionary<string, string>() { { "line", "25" }, { "fileName", "example_set_1.txt" } },
-                        new Dictionary<string, string>() { { "line", "19" }, { "fileName", "example_set_2.txt" } },
-                        new Dictionary<string, string>() { { "line", "23" }, { "fileName", "example_set_2.txt" } },
-                        new Dictionary<string, string>() { { "line", "25" }, { "fileName", "example_set_2.txt" } },
-                        new Dictionary<string, string>() { { "line", "13" }, { "fileName", "example_set_3.txt" } },
-                        new Dictionary<string, string>() { { "line", "18" }, { "fileName", "example_set_3.txt" } }
+                        new Dictionary<string, string>() {
+                            { "Line", "21" }, { "FileName", "example_set_1.txt" }, { "Name", "Translation" },
+                            { "Value", "" }
+                        },
+                        new Dictionary<string, string>() {
+                            { "Line", "25" }, { "FileName", "example_set_1.txt" }, { "Name", "Word" }, { "Value", "" }
+                        },
+                        new Dictionary<string, string>() { { "Line", "19" }, { "FileName", "example_set_2.txt" } },
+                        new Dictionary<string, string>() { { "Line", "23" }, { "FileName", "example_set_2.txt" } },
+                        new Dictionary<string, string>() {
+                            { "Line", "25" }, { "FileName", "example_set_2.txt" }, { "Name", "Translation" },
+                            { "Value", "strona wszczynająca spór sądowy5050505050505sądowy5050505050505sądowy5050505050505sądowy5050505050505" }
+                        },
+                        new Dictionary<string, string>() {
+                            { "Line", "13" }, { "FileName", "example_set_3.txt" }, { "Name", "Word" },
+                            { "Value", "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWstarvation" }
+                        },
+                        new Dictionary<string, string>() {
+                            { "Line", "18" }, { "FileName", "example_set_3.txt" }, { "Name", "Translation" },
+                            { "Value", "zuchwałyWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW" }
+                        }
                     }
                 }
             };
@@ -149,14 +187,14 @@ namespace Lexica.WordsTests
         [MemberData(nameof(ImportValidationErrorsParameters))]
         public async void Import_ValidationErrors_ReturnsFalseResult(
             string dirPath, 
-            List<Words.Models.ErrorCodesEnum> errorCodes, 
+            List<Enum> errorCodes, 
             List<Dictionary<string, string>> errorDetails)
         {
             // Arrange
             var mockSetService = new MockSetService();
             var setValidator = new SetValidator(new ValidationData());
             var fileValidator = new FileValidator(new ValidationData());
-            var importer = new Importer(mockSetService, setValidator, fileValidator);
+            var importer = new Importer(mockSetService, fileValidator);
             var multipleSource = new MultipleEmbeddedSource(dirPath, Assembly.GetExecutingAssembly());
 
             // Act
@@ -173,7 +211,16 @@ namespace Lexica.WordsTests
             {
                 if (result.Errors[i] is Error<Dictionary<string, string>> error)
                 {
-                    Assert.Equal((int)errorCodes[i], error.Code);
+                    int errorCode = 0;
+                    if (errorCodes[i] is Core.Models.ErrorCodesEnum coreErrorCode)
+                    {
+                        errorCode = (int)coreErrorCode;
+                    }
+                    if (errorCodes[i] is Words.Models.ErrorCodesEnum wordErrorCode)
+                    {
+                        errorCode = (int)wordErrorCode;
+                    }
+                    Assert.Equal(errorCode, error.Code);
                     foreach (KeyValuePair<string, string> el in errorDetails[i])
                     {
                         Assert.True(error.Data.ContainsKey(el.Key));

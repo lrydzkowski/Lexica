@@ -3,6 +3,7 @@ using Lexica.Core.Models;
 using Lexica.Core.Validators;
 using Lexica.Words.Models;
 using Lexica.Words.Services;
+using Lexica.Words.Validators;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,14 +14,11 @@ namespace Lexica.Words
     {
         public ISetService SetService { get; }
 
-        public IValidator<Set> SetValidator { get; }
+        public FileValidator FileValidator { get; }
 
-        public IValidator<string, string> FileValidator { get; }
-
-        public Importer(ISetService setService, IValidator<Set> setValidator, IValidator<string, string> fileValidator)
+        public Importer(ISetService setService, FileValidator fileValidator)
         {
             SetService = setService;
-            SetValidator = setValidator;
             FileValidator = fileValidator;
         }
 

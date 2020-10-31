@@ -59,6 +59,24 @@ namespace Lexica.Core.Models
                 }
             }
         }
+
+        public void AddDictionaryDataToError(Dictionary<string, string> data)
+        {
+            if (Errors == null)
+            {
+                return;
+            }
+            for (int i = 0; i < Errors.Count; i++)
+            {
+                if (Errors[i] is Error<Dictionary<string, string>> error)
+                {
+                    foreach (KeyValuePair<string, string> el in data)
+                    {
+                        error.Data[el.Key] = el.Value;
+                    }
+                }
+            }
+        }
     }
 
     public class OperationResult<T> : OperationResult

@@ -9,10 +9,6 @@ namespace Lexica.Words.Models
         NoImportSource = 12001,
         FileIsEmpty = 12002,
         NoSemicolon = 12003,
-        TooManySemicolons = 12004,
-        TooLongWord = 12005,
-        TooLongTranslation = 12006,
-        TooShortWord = 12007,
-        TooShortTranslation = 12008
+        TooManySemicolons = 12004
     }
 }

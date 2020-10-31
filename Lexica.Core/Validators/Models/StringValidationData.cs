@@ -10,7 +10,7 @@ namespace Lexica.Core.Validators.Models
 
         public int MaxLength { get; private set; }
 
-        public StringValidationData(int minLength, int maxLength, bool mandatory) : base(mandatory)
+        public StringValidationData(int minLength, int maxLength, bool mandatory, string name) : base(mandatory, name)
         {
             MinLength = minLength;
             MaxLength = maxLength;

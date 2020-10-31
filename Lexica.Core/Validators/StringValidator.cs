@@ -1,4 +1,5 @@
-﻿using Lexica.Core.Models;
+﻿using Lexica.Core.Extensions;
+using Lexica.Core.Models;
 using Lexica.Core.Validators.Models;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace Lexica.Core.Validators
                 result.AddError(
                     new Error(
                         (int)ErrorCodesEnum.IsMandatory, 
-                        "Value is mandatory, so it cannot be null."
+                        $"{ValidationData.Name.UppercaseFirst()} is mandatory, so it cannot be null."
                     )
                 );
             }
@@ -34,18 +35,20 @@ namespace Lexica.Core.Validators
             if (data.Length < ValidationData.MinLength)
             {
                 result.AddError(
-                    new Error(
+                    new Error<Dictionary<string, string>>(
                         (int)ErrorCodesEnum.IsTooShort, 
-                        $"Value is too short, it can't have less chars than {ValidationData.MinLength}."
+                        $"Value '{data}' is too short, it can't have less chars than {ValidationData.MinLength}.",
+                        new Dictionary<string, string>() { { "Name", ValidationData.Name }, { "Value", data } }
                     )
                 );
             }
             if (data.Length > ValidationData.MaxLength)
             {
                 result.AddError(
-                    new Error(
+                    new Error<Dictionary<string, string>>(
                         (int)ErrorCodesEnum.IsTooLong, 
-                        $"Value is too long, it can't have more chars than {ValidationData.MaxLength}."
+                        $"Value '{data}' is too long, it can't have more chars than {ValidationData.MaxLength}.",
+                        new Dictionary<string, string>() { { "Name", ValidationData.Name }, { "Value", data } }
                     )
                 );
             }

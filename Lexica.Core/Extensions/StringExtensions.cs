@@ -17,5 +17,10 @@ namespace Lexica.Core.Extensions
 
             return result;
         }
+
+        public static string UppercaseFirst(this string str)
+        {
+            return char.ToUpper(str[0]) + str.Substring(1);
+        }
     }
 }

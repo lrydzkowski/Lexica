@@ -16,12 +16,6 @@ namespace Lexica.Words.Validators
 
         public ValidationData ValidationData { get; }
 
-        public enum ElementType
-        {
-            Word,
-            Translation
-        };
-
         public OperationResult Validate(string data, string fileName)
         {
             var result = new OperationResult();
@@ -45,8 +39,8 @@ namespace Lexica.Words.Validators
                 }
                 var errorInfo = new Dictionary<string, string>()
                 {
-                    { "fileName", fileName },
-                    { "line", (i + 1).ToString() }
+                    { "FileName", fileName },
+                    { "Line", (i + 1).ToString() }
                 };
                 if (line.IndexOf(";") == -1)
                 {
@@ -71,64 +65,27 @@ namespace Lexica.Words.Validators
                     );
                     continue;
                 }
-                ValidateLinePart(lineParts[0], errorInfo, ElementType.Word, result);
-                ValidateLinePart(lineParts[1], errorInfo, ElementType.Translation, result);
+
+                List<string> words = lineParts[0].Split(',').Select(x => x.Trim()).ToList<string>();
+                var wordValidator = new StringValidator(ValidationData.EntryWord);
+                foreach (var word in words)
+                {
+                    var wordValidatorResult = wordValidator.Validate(word);
+                    wordValidatorResult.AddDictionaryDataToError(errorInfo);
+                    result.Merge(wordValidatorResult);
+                }
+
+                List<string> translations = lineParts[1].Split(',').Select(x => x.Trim()).ToList<string>();
+                var translationValidator = new StringValidator(ValidationData.EntryTranslation);
+                foreach (var translation in translations)
+                {
+                    var translationValidatorResult = translationValidator.Validate(translation);
+                    translationValidatorResult.AddDictionaryDataToError(errorInfo);
+                    result.Merge(translationValidatorResult);
+                }
             }
 
             return result;
-        }
-
-        private void ValidateLinePart(
-            string linePart, 
-            Dictionary<string, string> errorInfo, 
-            ElementType elementType, 
-            OperationResult result)
-        {
-            List<string> words = linePart.Split(',').Select(x => x.Trim()).ToList<string>();
-            var wordValidator = new StringValidator(ValidationData.EntryWord);
-            foreach (var word in words)
-            {
-                var wordValidationResult = wordValidator.Validate(word);
-                if (!wordValidationResult.Result && wordValidationResult.Errors != null)
-                {
-                    foreach (Error wordValidationError in wordValidationResult.Errors)
-                    {
-                        result.AddError(
-                            new Error<Dictionary<string, string>>(
-                                (int)MapErrorCode((Core.Models.ErrorCodesEnum)wordValidationError.Code, elementType),
-                                wordValidationError.Message,
-                                errorInfo
-                            )
-                        );
-                    }
-                }
-            }
-        }
-
-        private Words.Models.ErrorCodesEnum MapErrorCode(Core.Models.ErrorCodesEnum from, ElementType elementType)
-        {
-            switch (from)
-            {
-                case Core.Models.ErrorCodesEnum.IsTooShort:
-                    switch (elementType)
-                    {
-                        case ElementType.Word:
-                            return Words.Models.ErrorCodesEnum.TooShortWord;
-                        case ElementType.Translation:
-                            return Words.Models.ErrorCodesEnum.TooShortTranslation;
-                    }
-                    break;
-                case Core.Models.ErrorCodesEnum.IsTooLong:
-                    switch (elementType)
-                    {
-                        case ElementType.Word:
-                            return Words.Models.ErrorCodesEnum.TooLongWord;
-                        case ElementType.Translation:
-                            return Words.Models.ErrorCodesEnum.TooLongTranslation;
-                    }
-                    break;
-            }
-            throw new Exception("Unsupported error code.");
         }
     }
 }
