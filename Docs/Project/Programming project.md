@@ -194,11 +194,7 @@ Classes:
 
 - ImporterTests.cs
   - public void Import_NotExistedDir_ReturnsFalseResult(MultipleEmbeddedSource source)
-  - public void Import_TooLongWordInFile_ReturnsFalseResult(MultipleEmbeddedSource source)
-  - public void Import_TooLongTranslationInFile_ReturnsFalseResult(MultipleEmbeddedSource source)
-  - public void Import_TooShortWordInFile_ReturnsFalseResult(MultipleEmbeddedSource source)
-  - public void Import_TooLongWordInFile_ReturnsFalseResult(MultipleEmbeddedSource source)
-  - public void Import_CombinationOfErrorsInFile_ReturnsFalseResult(MultipleEmbeddedSource source)
+  - public void Import_ValidationError_ReturnsFalseResult(MultipleEmbeddedSource source)
 - NamespaceManagerTests.cs
   - public void ChangeNamespacePath_TooShortNewNamespace_ReturnsFalseResult(string oldNamespacePath, string newNamespacePath)
   - public void ChangeNamespacePath_TooLongNewNamespace_ReturnsFalseResult(string oldNamespacePath, string newNamespacePath)

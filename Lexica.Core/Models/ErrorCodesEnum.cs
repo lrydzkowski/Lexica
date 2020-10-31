@@ -4,10 +4,10 @@ using System.Text;
 
 namespace Lexica.Core.Models
 {
-    enum ErrorCodesEnum
+    public enum ErrorCodesEnum
     {
         IsMandatory = 10001,
-        IsToShort = 10002,
-        IsToLong = 10003
+        IsTooShort = 10002,
+        IsTooLong = 10003
     }
 }

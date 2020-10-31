@@ -35,7 +35,7 @@ namespace Lexica.Core.Validators
             {
                 result.AddError(
                     new Error(
-                        (int)ErrorCodesEnum.IsToShort, 
+                        (int)ErrorCodesEnum.IsTooShort, 
                         $"Value is too short, it can't have less chars than {ValidationData.MinLength}."
                     )
                 );
@@ -44,7 +44,7 @@ namespace Lexica.Core.Validators
             {
                 result.AddError(
                     new Error(
-                        (int)ErrorCodesEnum.IsToLong, 
+                        (int)ErrorCodesEnum.IsTooLong, 
                         $"Value is too long, it can't have more chars than {ValidationData.MaxLength}."
                     )
                 );

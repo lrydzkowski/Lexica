@@ -14,7 +14,7 @@ namespace Lexica.Words.Models
             }
         }
 
-        public long SetId { get; }
+        public long? SetId { get; }
 
         public int EntryId { get; }
 
@@ -22,7 +22,7 @@ namespace Lexica.Words.Models
 
         public List<string> Translations { get; }
 
-        public Entry(long setId, int entryId, List<string> words, List<string> translations)
+        public Entry(long? setId, int entryId, List<string> words, List<string> translations)
         {
             SetId = setId;
             EntryId = entryId;

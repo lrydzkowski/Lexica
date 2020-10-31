@@ -21,43 +21,41 @@ namespace Lexica.EF.Services
         public async Task CreateSet(List<Set> sets)
         {
             using (var context = new LexicaContext())
+            using (var transaction = context.Database.BeginTransaction())
             {
-                using (var transaction = context.Database.BeginTransaction())
+                foreach (var set in sets)
                 {
-                    foreach (var set in sets)
+                    var setRecord = new SetTable
                     {
-                        var setRecord = new SetTable
-                        {
-                            Namespace = set.SetsInfo[0].Path.Namespace,
-                            Name = set.SetsInfo[0].Path.Name
-                        };
-                        await context.AddAsync(setRecord);
-                        await context.SaveChangesAsync();
+                        Namespace = set.SetsInfo[0].Path.Namespace,
+                        Name = set.SetsInfo[0].Path.Name
+                    };
+                    await context.AddAsync(setRecord);
+                    await context.SaveChangesAsync();
 
-                        int entryId = 1;
-                        foreach (var entry in set.Entries)
+                    int entryId = 1;
+                    foreach (var entry in set.Entries)
+                    {
+                        foreach (var word in entry.Words)
                         {
-                            foreach (var word in entry.Words)
+                            foreach (var translation in entry.Translations)
                             {
-                                foreach (var translation in entry.Translations)
+                                var entryRecord = new EntryTable
                                 {
-                                    var entryRecord = new EntryTable
-                                    {
-                                        EntryId = entryId,
-                                        SetId = setRecord.Id,
-                                        Word = word,
-                                        Translation = translation
-                                    };
-                                    await context.AddAsync(entryRecord);
-                                }
+                                    EntryId = entryId,
+                                    SetId = setRecord.Id,
+                                    Word = word,
+                                    Translation = translation
+                                };
+                                await context.AddAsync(entryRecord);
                             }
-                            entryId++;
                         }
-                        await context.SaveChangesAsync();
+                        entryId++;
                     }
-
-                    await transaction.CommitAsync();
+                    await context.SaveChangesAsync();
                 }
+
+                await transaction.CommitAsync();
             }
         }
 
@@ -69,7 +67,7 @@ namespace Lexica.EF.Services
                 if (setRecord == null)
                 {
                     var error = new Error(
-                        (int)ErrorCodesEnum.SetDoesntExist, 
+                        (int)EF.Models.ErrorCodesEnum.SetDoesntExist, 
                         $"Set with id {setId} doesn't exist."
                     );
                     return new OperationResult(false, error);
