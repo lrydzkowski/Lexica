@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Lexica.Words.Validators
 {
-    class SetPathValidator : IValidator<SetPath>
+    public class SetPathValidator : IValidator<SetPath>
     {
         public ValidationData ValidationData { get; private set; }
 
