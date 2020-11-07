@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Lexica.WordsTests
+namespace Lexica.WordsTests.Mocks
 {
     class MockSetService : ISetService
     {

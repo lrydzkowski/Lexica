@@ -193,11 +193,19 @@ Namespace:
 Classes:
 
 - ImporterTests.cs
-  - public void Import_NotExistedDir_ReturnsFalseResult(MultipleEmbeddedSource source)
-  - public void Import_ValidationError_ReturnsFalseResult(MultipleEmbeddedSource source)
+  - public void Import_NotExistedDir_ReturnsFalseResult(string dirPath)
+  - public void Import_ValidationError_ReturnsFalseResult(
+      string dirPath,
+      List\<Enum\> errorCodes,
+      List\<Dictionary\<string, string\>\> errorDetails
+    )
 - NamespaceManagerTests.cs
-  - public void ChangeNamespacePath_TooShortNewNamespace_ReturnsFalseResult(string oldNamespacePath, string newNamespacePath)
-  - public void ChangeNamespacePath_TooLongNewNamespace_ReturnsFalseResult(string oldNamespacePath, string newNamespacePath)
+  - public void ChangeNamespacePath_ValidationError_ReturnsFalseResult(
+      string from,
+      string to,
+      List\<Core.Models.ErrorCodesEnum\> errorCodes,
+      List\<Dictionary\<string, string\>\> errorDetails
+    )
 - SetManagerTests.cs
   - public void ChangePath_TooShortName_ReturnsFalseResult(long setId, SetPath newPath)
   - public void ChangePath_TooLongName_ReturnsFalseResult(long setId, SetPath newPath)

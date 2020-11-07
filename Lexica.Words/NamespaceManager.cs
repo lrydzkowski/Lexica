@@ -12,9 +12,9 @@ namespace Lexica.Words
     {
         public INamespaceService NamespaceService { get; }
 
-        public IValidator<string> Validator { get; }
+        public IValidator<string?> Validator { get; }
 
-        public NamespaceManager(INamespaceService namespaceService, IValidator<string> validator)
+        public NamespaceManager(INamespaceService namespaceService, IValidator<string?> validator)
         {
             NamespaceService = namespaceService;
             Validator = validator;
@@ -27,7 +27,8 @@ namespace Lexica.Words
             result.Merge(Validator.Validate(newNamespacePath));
             if (result.Result)
             {
-                result.Merge(await NamespaceService.ChangePath(oldNamespacePath, newNamespacePath));
+                var changeNamespacePathResult = await NamespaceService.ChangePath(oldNamespacePath, newNamespacePath);
+                result.Merge(changeNamespacePathResult);
             }
 
             return result;
