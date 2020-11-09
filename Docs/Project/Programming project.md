@@ -207,13 +207,14 @@ Classes:
       List\<Dictionary\<string, string\>\> errorDetails
     )
 - SetManagerTests.cs
-  - public void ChangePath_TooShortName_ReturnsFalseResult(long setId, SetPath newPath)
-  - public void ChangePath_TooLongName_ReturnsFalseResult(long setId, SetPath newPath)
-  - public void ChangePath_TooShortNamespace_ReturnsFalseResult(long setId, SetPath newPath)
-  - public void ChangePath_TooLongNamespace_ReturnsFalseResult(long setId, SetPath newPath)
+  - public void ChangePath_ValidationError_ReturnsFalseResult(
+      SetPath newPath,
+      List\<Core.Models.ErrorCodesEnum\> errorCodes,
+      List\<Dictionary\<string, string\>\> errorDetails
+    )
 - SetModeOperatorTests.cs
-  - public void RandomizeEntries_ProperConditions_ReturnsEntriesInRandomOrder(long setId, SetPath newPath)
-  - public void GetAllEntries_ProperConditions_ReturnsAllEntries(long setId, SetPath newPath)
+  - public void RandomizeEntries_ProperConditions_ReturnsEntriesInRandomOrder()
+  - public void GetAllEntries_ProperConditions_ReturnsAllEntries()
 
 ## Lexica.SpellingMode.dll
 
