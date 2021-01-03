@@ -9,7 +9,7 @@ namespace Lexica.EF.Models
     public class SetTable
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long Id { get; set; }
+        public long SetId { get; set; }
 
         [MaxLength(400)]
         public string Namespace { get; set; } = "";

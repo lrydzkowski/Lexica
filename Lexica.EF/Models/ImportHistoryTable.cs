@@ -9,7 +9,7 @@ namespace Lexica.EF.Models
     public class ImportHistoryTable
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long Id { get; set; }
+        public long ImportId { get; set; }
 
         [Required]
         public long SetId { get; set; }

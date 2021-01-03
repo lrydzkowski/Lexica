@@ -50,6 +50,12 @@ namespace Lexica.EF
 
             var setTable = modelBuilder.Entity<SetTable>()
                 .ToTable("Set", "words");
+
+            var maintainingHistoryTable = modelBuilder.Entity<MaintainingHistoryTable>()
+                .ToTable("MaintainingHistory", "modes");
+            maintainingHistoryTable.HasOne<EntryTable>(x => x.Entry)
+                .WithOne(y => y.History)
+                .OnDelete(DeleteBehavior.NoAction);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

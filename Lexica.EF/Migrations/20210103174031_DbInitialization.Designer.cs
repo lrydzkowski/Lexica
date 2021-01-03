@@ -10,15 +10,15 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Lexica.EF.Migrations
 {
     [DbContext(typeof(LexicaContext))]
-    [Migration("20201011191807_0.1")]
-    partial class _01
+    [Migration("20210103174031_DbInitialization")]
+    partial class DbInitialization
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
-                .HasAnnotation("ProductVersion", "3.1.8")
+                .HasAnnotation("ProductVersion", "3.1.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             modelBuilder.Entity("Lexica.EF.Models.EntryTable", b =>
@@ -53,7 +53,7 @@ namespace Lexica.EF.Migrations
 
             modelBuilder.Entity("Lexica.EF.Models.ImportHistoryTable", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<long>("ImportId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
@@ -64,7 +64,7 @@ namespace Lexica.EF.Migrations
                     b.Property<long>("SetId")
                         .HasColumnType("bigint");
 
-                    b.HasKey("Id");
+                    b.HasKey("ImportId");
 
                     b.HasIndex("SetId")
                         .IsUnique();
@@ -74,7 +74,7 @@ namespace Lexica.EF.Migrations
 
             modelBuilder.Entity("Lexica.EF.Models.SetTable", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<long>("SetId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
@@ -89,7 +89,7 @@ namespace Lexica.EF.Migrations
                         .HasColumnType("character varying(400)")
                         .HasMaxLength(400);
 
-                    b.HasKey("Id");
+                    b.HasKey("SetId");
 
                     b.ToTable("Set","words");
                 });

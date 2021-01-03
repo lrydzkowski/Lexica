@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Lexica.EF.Migrations
 {
-    public partial class _01 : Migration
+    public partial class DbInitialization : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -16,14 +16,14 @@ namespace Lexica.EF.Migrations
                 schema: "words",
                 columns: table => new
                 {
-                    Id = table.Column<long>(nullable: false)
+                    SetId = table.Column<long>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Namespace = table.Column<string>(maxLength: 400, nullable: false),
                     Name = table.Column<string>(maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Set", x => x.Id);
+                    table.PrimaryKey("PK_Set", x => x.SetId);
                 });
 
             migrationBuilder.CreateTable(
@@ -46,7 +46,7 @@ namespace Lexica.EF.Migrations
                         column: x => x.SetId,
                         principalSchema: "words",
                         principalTable: "Set",
-                        principalColumn: "Id");
+                        principalColumn: "SetId");
                 });
 
             migrationBuilder.CreateTable(
@@ -54,20 +54,20 @@ namespace Lexica.EF.Migrations
                 schema: "words",
                 columns: table => new
                 {
-                    Id = table.Column<long>(nullable: false)
+                    ImportId = table.Column<long>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     SetId = table.Column<long>(nullable: false),
                     ExecutedDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ImportHistory", x => x.Id);
+                    table.PrimaryKey("PK_ImportHistory", x => x.ImportId);
                     table.ForeignKey(
                         name: "FK_ImportHistory_Set_SetId",
                         column: x => x.SetId,
                         principalSchema: "words",
                         principalTable: "Set",
-                        principalColumn: "Id");
+                        principalColumn: "SetId");
                 });
 
             migrationBuilder.CreateIndex(

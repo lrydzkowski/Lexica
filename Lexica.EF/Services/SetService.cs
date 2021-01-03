@@ -43,7 +43,7 @@ namespace Lexica.EF.Services
                                 var entryRecord = new EntryTable
                                 {
                                     EntryId = entryId,
-                                    SetId = setRecord.Id,
+                                    SetId = setRecord.SetId,
                                     Word = word,
                                     Translation = translation
                                 };
@@ -63,7 +63,7 @@ namespace Lexica.EF.Services
         {
             using (var context = new LexicaContext())
             {
-                SetTable setRecord = context.Sets.Where(x => x.Id == setId).FirstOrDefault();
+                SetTable setRecord = context.Sets.Where(x => x.SetId == setId).FirstOrDefault();
                 if (setRecord == null)
                 {
                     var error = new Error(
@@ -92,13 +92,13 @@ namespace Lexica.EF.Services
                 foreach (long setId in setIds)
                 {
                     List<SetTable> setRecord = await context.Sets
-                        .Where(x => x.Id == setId)
+                        .Where(x => x.SetId == setId)
                         .Include(x => x.Entries)
                         .AsNoTracking()
                         .ToListAsync();
                     set = setRecord.Select(x => new Set(
                         new SetInfo(
-                            setId: x.Id,
+                            setId: x.SetId,
                             path: new SetPath(
                                 setNamespace: x.Namespace,
                                 name: x.Name
@@ -124,7 +124,7 @@ namespace Lexica.EF.Services
                 List<SetInfo> list = await context.Sets
                     .AsNoTracking()
                     .Select(x => new SetInfo(
-                        x.Id,
+                        x.SetId,
                         new SetPath(
                             x.Namespace,
                             x.Name
@@ -140,8 +140,8 @@ namespace Lexica.EF.Services
             using (var context = new LexicaContext())
             {
                 SetTable setRecord = await context.Sets
-                    .Where(x => x.Id == setId)
-                    .Select(x => new SetTable { Id = x.Id })
+                    .Where(x => x.SetId == setId)
+                    .Select(x => new SetTable { SetId = x.SetId })
                     .FirstOrDefaultAsync();
                 if (setRecord != null)
                 {

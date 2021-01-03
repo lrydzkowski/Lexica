@@ -25,5 +25,12 @@ namespace Lexica.EF.Models
 
         [MaxLength(50)]
         public string Translation { get; set; } = "";
+
+        private MaintainingHistoryTable? _history;
+        public MaintainingHistoryTable History
+        {
+            get => _history ?? throw new InvalidOperationException("Uninitialized property: " + nameof(History));
+            set => _history = value;
+        }
     }
 }
