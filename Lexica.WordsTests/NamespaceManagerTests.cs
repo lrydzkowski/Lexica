@@ -10,7 +10,7 @@ using Xunit;
 
 namespace Lexica.WordsTests
 {
-    public class NamespaceTests
+    public class NamespaceManagerTests
     {
         public static IEnumerable<object[]> ChangeNamespacePathValidationErrorsParameters()
         {

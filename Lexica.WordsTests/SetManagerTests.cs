@@ -11,7 +11,7 @@ using Xunit;
 
 namespace Lexica.WordsTests
 {
-    public class SetTests
+    public class SetManagerTests
     {
         public static IEnumerable<object[]> ChangeSetPathValidationErrorsParameters()
         {
