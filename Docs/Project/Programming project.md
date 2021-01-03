@@ -21,6 +21,7 @@ Classes:
   - WrongConfigExceptions.cs
 - Extensions:
   - ListExtensions.cs
+  - StringExtensions.cs
 - IO
   - ISource.cs
   - FileSource.cs
@@ -66,7 +67,9 @@ Classes:
   - Init_NotExistedFile_ThrowsFileNotFoundException(string filePath)
   - Init_NotExistedEmbeddedResource_ThrowsFileNotFoundException(string resourcePath)
   - GetMultipleFiles_CorrectPath_ReturnsProperContents(string dirPath, List\<string\> expectedContents)
+  - GetMultipleFiles_CorrectPath_ReturnsProperNames(string dirPath, List\<string\> expectedNames)
   - GetMultipleEmbeddedFiles_CorrectPath_ReturnsProperContents(string dirPath, List\<string\> expectedContents)
+  - GetMultipleEmbeddedFiles_CorrectPath_ReturnsProperNames(string dirPath, List\<string\> expectedNames)
 
 ## Lexica.EF
 
@@ -80,35 +83,41 @@ Classes:
   - Models
     - DatabaseSettings.cs
 - Models
-  - ErrorEnum.cs
+  - ErrorCodesEnum.cs
   - ImportHistoryTable.cs
-    - public long Id
+    - public long RecId
     - public SetTable Set
     - public DateTime ExecutedDate
   - EntryTable.cs
+    - public long RecId
+    - public SetTable Set
+    - public int EntryId
+    - public string Word
+    - public string Translation
   - SetTable.cs
+    - public long RecId
+    - public string Namespace
+    - public string Name
   - SpellingHistoryTable.cs
-    - public long Id
+    - public long OperationId
     - public long SetId
     - public int EntryId
-    - public bool IsWord
-    - public bool IsTranslation
     - public long NumOfCorrectAnswers
     - public long NumOfMistakes
   - LearningHistoryTable.cs
-    - public long Id
+    - public long OperationId
     - public long SetId
     - public int EntryId
     - public bool IsWord
     - public bool IsTranslation
-    - public long NumOfCorrectAnswersOpenQuestion
-    - public long NumOfMistakesOpenQuestion
-    - public long NumOfCorrectAnswersClosedQuestion
-    - public long NumOfMistakesClosedQuestion
-  - MaintainingModeTable.cs
-    - public long Id
+    - public long OpenQuestionNumOfCorrectAnswers
+    - public long OpenQuestionNumOfMistakes
+    - public long ClosedQuestionNumOfCorrectAnswers
+    - public long ClosedQuestionNumOfMistakes
+  - MaintainingHistoryTable.cs
+    - public long OperationId
     - public long SetId
-    - public int EntryId
+    - public long EntryRecId
     - public bool IsWord
     - public bool IsTranslation
     - public long NumOfCorrectAnswers
@@ -136,6 +145,7 @@ Classes:
     - int EntryId
     - List\<string\> Words
     - List\<string\> Translations
+  - ErrorCodesEnums.cs
   - Set.cs
     - string Id
     - List\<SetInfo\> SetsInfo
@@ -206,15 +216,15 @@ Classes:
       List\<Core.Models.ErrorCodesEnum\> errorCodes,
       List\<Dictionary\<string, string\>\> errorDetails
     )
+- SetModeOperatorTests.cs
+  - public void RandomizeEntries_ProperConditions_ReturnsEntriesInRandomOrder()
+  - public void GetAllEntries_ProperConditions_ReturnsAllEntries()
 - SetManagerTests.cs
-  - public void ChangePath_ValidationError_ReturnsFalseResult(
+  - public void ChangeSetPath_ValidationError_ReturnsFalseResult(
       SetPath newPath,
       List\<Core.Models.ErrorCodesEnum\> errorCodes,
       List\<Dictionary\<string, string\>\> errorDetails
     )
-- SetModeOperatorTests.cs
-  - public void RandomizeEntries_ProperConditions_ReturnsEntriesInRandomOrder()
-  - public void GetAllEntries_ProperConditions_ReturnsAllEntries()
 
 ## Lexica.SpellingMode.dll
 
@@ -336,11 +346,9 @@ Namespace:
 
 Classes:
 
-- Manager.cs
-  - public Manager(string setId, Config.Models.Maintaining cfg)
-  - public Manager(List\<string\> setsIds, Config.Models.Maintaining cfg)
-  - public Lexica.Core.Models.Question GetQuestion()
-  - public Lexica.Core.Models.AnswerResult VerifyAswer(string input)
+- Config:
+  - Models:
+    - Maintaining.cs
 - Data:
   - Models:
     - MaintainingHistory
@@ -351,6 +359,11 @@ Classes:
       - public bool IsTranslation
       - public long NumOfCorrectAnswers
       - public long NumOfMistakes
+- Manager.cs
+  - public Manager(string setId, Config.Models.Maintaining cfg)
+  - public Manager(List\<string\> setsIds, Config.Models.Maintaining cfg)
+  - public Lexica.Core.Models.Question GetQuestion()
+  - public Lexica.Core.Models.AnswerResult VerifyAswer(string input)
 
 ## Lexica.MaintainingMode.Tests (xUnit)
 
