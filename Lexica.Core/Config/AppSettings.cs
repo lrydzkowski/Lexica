@@ -74,5 +74,14 @@ namespace Lexica.Core.Config
             }
             return Settings;
         }
+
+        public static AppSettings<T> GetSettings(string name, Assembly assembly)
+        {
+            var configSource = new FileSource($"{name}.json");
+            var configSchemaSource = new EmbeddedSource($"{name}.schema.json", assembly);
+            var appSettings = new AppSettings<T>(configSource, configSchemaSource);
+            
+            return appSettings;
+        }
     }
 }

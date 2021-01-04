@@ -25,9 +25,7 @@ namespace Lexica.EF
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var configSource = new FileSource("database.json");
-            var configSchemaSource = new EmbeddedSource("database.schema.json", Assembly.GetExecutingAssembly());
-            var appSettings = new AppSettings<Database>(configSource, configSchemaSource);
+            var appSettings = AppSettings<Database>.GetSettings("database", Assembly.GetExecutingAssembly());
             string? connectionString = appSettings.Get().ConnectionString;
 
             optionsBuilder.UseNpgsql(connectionString);
