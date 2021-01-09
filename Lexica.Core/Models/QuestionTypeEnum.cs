@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Lexica.Core.Models
 {
-    enum QuestionTypeEnum
+    public enum QuestionTypeEnum
     {
         Open = 1,
         Closed = 2

@@ -352,7 +352,7 @@ Classes:
 - Data:
   - Models:
     - MaintainingHistory
-      - public long Id
+      - public long OperationId
       - public long SetId
       - public int EntryId
       - public bool IsWord
@@ -360,8 +360,7 @@ Classes:
       - public long NumOfCorrectAnswers
       - public long NumOfMistakes
 - Manager.cs
-  - public Manager(string setId, Config.Models.Maintaining cfg)
-  - public Manager(List\<string\> setsIds, Config.Models.Maintaining cfg)
+  - public Manager(Lexica.Words.Models.Set set, AppSettings\<Maintaining\> cfg)
   - public Lexica.Core.Models.Question GetQuestion()
   - public Lexica.Core.Models.AnswerResult VerifyAswer(string input)
 

@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lexica.Words", "Lexica.Word
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lexica.WordsTests", "Lexica.WordsTests\Lexica.WordsTests.csproj", "{E66F3E1A-F316-4E15-B594-17093755EFE8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lexica.MaintainingMode", "Lexica.MaintainingMode\Lexica.MaintainingMode.csproj", "{320F44BC-1894-4340-8494-F26418013883}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{E66F3E1A-F316-4E15-B594-17093755EFE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E66F3E1A-F316-4E15-B594-17093755EFE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E66F3E1A-F316-4E15-B594-17093755EFE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{320F44BC-1894-4340-8494-F26418013883}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{320F44BC-1894-4340-8494-F26418013883}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{320F44BC-1894-4340-8494-F26418013883}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{320F44BC-1894-4340-8494-F26418013883}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

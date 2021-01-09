@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Lexica.Core.Models
 {
-    class AnswerResult
+    public class AnswerResult
     {
         public bool Result { get; private set; }
 

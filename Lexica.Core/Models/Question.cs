@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Lexica.Core.Models
 {
-    class Question
+    public class Question
     {
         public string Content { get; private set; }
 

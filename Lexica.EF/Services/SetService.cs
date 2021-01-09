@@ -89,6 +89,8 @@ namespace Lexica.EF.Services
             using (var context = new LexicaContext())
             {
                 Set? set = null;
+                List<SetInfo> setsInfo = new List<SetInfo>();
+                List<Entry> entries = new List<Entry>();
                 foreach (long setId in setIds)
                 {
                     List<SetTable> setRecord = await context.Sets
@@ -96,22 +98,35 @@ namespace Lexica.EF.Services
                         .Include(x => x.Entries)
                         .AsNoTracking()
                         .ToListAsync();
-                    set = setRecord.Select(x => new Set(
-                        new SetInfo(
+                    SetInfo setInfo = setRecord.Select(
+                        x => new SetInfo(
                             setId: x.SetId,
                             path: new SetPath(
                                 setNamespace: x.Namespace,
                                 name: x.Name
                             )
-                        ),
-                        x.Entries.GroupBy(x => new { x.SetId, x.EntryId }).Select(x => new Entry(
-                            setId: x.Key.SetId,
-                            entryId: x.Key.EntryId,
-                            words: x.Select(x => x.Word).ToList(),
-                            translations: x.Select(x => x.Translation).ToList()
-                        )).ToList<Entry>()
-                    ))
-                    .FirstOrDefault();
+                        )
+                    ).FirstOrDefault();
+                    if (setInfo != null)
+                    {
+                        setsInfo.Add(setInfo);
+                        entries.AddRange(
+                            setRecord.SelectMany(
+                                x => x.Entries.GroupBy(x => new { x.SetId, x.EntryId }).Select(
+                                    x => new Entry(
+                                        setId: x.Key.SetId,
+                                        entryId: x.Key.EntryId,
+                                        words: x.Select(x => x.Word).ToList(),
+                                        translations: x.Select(x => x.Translation).ToList()
+                                    )
+                                ).ToList<Entry>()
+                            ).ToList()
+                        );
+                    }
+                }
+                if (setsInfo.Count > 0)
+                {
+                    set = new Set(setsInfo, entries);
                 }
                 return set;
             }
