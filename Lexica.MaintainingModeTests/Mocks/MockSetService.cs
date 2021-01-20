@@ -9,7 +9,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Lexica.WordsTests.Mocks
+namespace Lexica.MaintainingModeTests.Mocks
 {
     class MockSetService : ISetService
     {
@@ -31,7 +31,7 @@ namespace Lexica.WordsTests.Mocks
         public async Task<Set?> Get(long setId)
         {
             var source = new EmbeddedSource(
-                "Resources/Importer/Embedded/Correct/example_set_1.txt",
+                "Resources/Embedded/Correct/example_set_1.txt",
                 Assembly.GetExecutingAssembly()
             );
             List<Entry> entries = new List<Entry>();

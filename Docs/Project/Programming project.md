@@ -359,8 +359,10 @@ Classes:
       - public bool IsTranslation
       - public long NumOfCorrectAnswers
       - public long NumOfMistakes
+- Models:
+  - ModeTypeEnum.cs
 - Manager.cs
-  - public Manager(Lexica.Words.Models.Set set, AppSettings\<Maintaining\> cfg)
+  - public Manager(Lexica.Words.SetModeOperator setOperator, Maintaining settings)
   - public Lexica.Core.Models.Question GetQuestion()
   - public Lexica.Core.Models.AnswerResult VerifyAswer(string input)
 
@@ -374,9 +376,9 @@ Classes:
 
 - ManagerTests.cs
   [Theory]
-  - public void VerifyAnswer_WrongAnswer_ReturnsFalseAnswerResult(string wrongAnswer)
+  - public void VerifyAnswer_WrongAnswer_ReturnsFalseAnswerResult(string wrongAnswer, ModeTypEnum modeType)
   [Theory]
-  - public void VerifyAnswer_CorrectAnswer_ReturnsTrueAnswerResult(string answer)
+  - public void VerifyAnswer_CorrectAnswer_ReturnsTrueAnswerResult(string correctAnswer, ModeTypeEnum modeType)
   [Fact]
   - public void QuestionsRandomness_CorrectData_QuestionsInRandomOrder()
 

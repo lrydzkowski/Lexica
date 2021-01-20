@@ -24,7 +24,7 @@ namespace Lexica.WordsTests
                 throw new Exception("Set is null.");
             }
 
-            await setModeOperator.Reset();
+            setModeOperator.Reset();
             await setModeOperator.Randomize();
             var str1 = "";
             var entry1 = await setModeOperator.GetNextEntry();
@@ -34,7 +34,7 @@ namespace Lexica.WordsTests
                 entry1 = await setModeOperator.GetNextEntry();
             }
 
-            await setModeOperator.Reset();
+            setModeOperator.Reset();
             await setModeOperator.Randomize();
             var str2 = "";
             var entry2 = await setModeOperator.GetNextEntry();
@@ -59,7 +59,7 @@ namespace Lexica.WordsTests
                 throw new Exception("Set is null.");
             }
 
-            await setModeOperator.Reset();
+            setModeOperator.Reset();
             await setModeOperator.Randomize();
             int index = 0;
             var entry = await setModeOperator.GetNextEntry();

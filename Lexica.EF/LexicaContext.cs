@@ -25,7 +25,7 @@ namespace Lexica.EF
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var appSettings = Settings.Get();
+            AppSettings<Database> appSettings = Settings.Get();
             string? connectionString = appSettings.Get().ConnectionString;
 
             optionsBuilder.UseNpgsql(connectionString);

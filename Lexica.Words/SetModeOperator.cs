@@ -44,7 +44,7 @@ namespace Lexica.Words
             }            
         }
 
-        public async Task Reset()
+        public void Reset()
         {
             Index = 0;
         }

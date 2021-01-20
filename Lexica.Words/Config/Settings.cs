@@ -10,7 +10,7 @@ namespace Lexica.Words.Config
     {
         public static AppSettings<Config.Models.Words> Get()
         {
-            return AppSettings<Config.Models.Words>.GetSettings("database", Assembly.GetExecutingAssembly());
+            return AppSettings<Config.Models.Words>.GetSettings("words", Assembly.GetExecutingAssembly());
         }
     }
 }
