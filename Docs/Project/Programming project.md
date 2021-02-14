@@ -468,7 +468,7 @@ Info:   Run learning mode.
 Usage:  Lexica run [OPTIONS]
 
 Options:
-  -m <ModeName> | -- mode <ModeName>     Run mode.
+  -m <ModeName> | --mode <ModeName>     Run mode.
 ```
 
 ```code
