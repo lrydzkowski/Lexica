@@ -1,20 +1,17 @@
-﻿using Lexica.Core.Config;
-using Lexica.Core.Models;
-using Lexica.MaintainingMode.Config.Models;
+﻿using Lexica.Core.Models;
 using Lexica.MaintainingMode.Models;
+using Lexica.MaintainingMode.Config;
 using Lexica.Words;
 using Lexica.Words.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Lexica.MaintainingMode
 {
     public class Manager
     {
-        public Manager(SetModeOperator setOperator, ModeTypeEnum modeType, Maintaining settings)
+        public Manager(SetModeOperator setOperator, ModeTypeEnum modeType, MaintainingSettings settings)
         {
             SetOperator = setOperator;
             ModeType = modeType;
@@ -25,7 +22,7 @@ namespace Lexica.MaintainingMode
 
         public ModeTypeEnum ModeType { get; set; }
 
-        public Maintaining Settings { get; private set; }
+        public MaintainingSettings Settings { get; private set; }
 
         private Entry? CurrentEntry { get; set; } = null;
 

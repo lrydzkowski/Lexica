@@ -1,8 +1,8 @@
-﻿using Lexica.Core.Config;
+﻿
 using Lexica.Core.IO;
-using Lexica.EF.Config;
-using Lexica.EF.Config.Models;
+using Lexica.Core.Services;
 using Lexica.EF.Models;
+using Lexica.EF.Config;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -25,7 +25,9 @@ namespace Lexica.EF
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            AppSettings<Database> appSettings = Settings.Get();
+            ConfigService<DatabaseSettings> appSettings = ConfigService<DatabaseSettings>.Get(
+                "database", Assembly.GetExecutingAssembly()
+            );
             string? connectionString = appSettings.Get().ConnectionString;
 
             optionsBuilder.UseNpgsql(connectionString);

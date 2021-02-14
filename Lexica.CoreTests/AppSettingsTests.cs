@@ -1,6 +1,6 @@
-﻿using Lexica.Core.Config;
-using Lexica.Core.Exceptions;
+﻿using Lexica.Core.Exceptions;
 using Lexica.Core.IO;
+using Lexica.Core.Services;
 using Lexica.CoreTests.Config.Models;
 using System;
 using System.Collections.Generic;
@@ -58,7 +58,7 @@ namespace CoreTests
             var configSchemaSource = new EmbeddedSource(schemaPath, Assembly.GetExecutingAssembly());
 
             // Act
-            void action() => new AppSettings<Settings>(configSource, configSchemaSource);
+            void action() => new ConfigService<Settings>(configSource, configSchemaSource);
 
             // Assert
             WrongConfigException ex = Assert.Throws<WrongConfigException>(action);
@@ -120,7 +120,7 @@ namespace CoreTests
             // Arrange
             var configSource = new EmbeddedSource(configPath, Assembly.GetExecutingAssembly());
             var configSchemaSource = new EmbeddedSource(schemaPath, Assembly.GetExecutingAssembly());
-            var appSettings = new AppSettings<Settings>(configSource, configSchemaSource);
+            var appSettings = new ConfigService<Settings>(configSource, configSchemaSource);
 
             // Act
             Settings settings = appSettings.Get();

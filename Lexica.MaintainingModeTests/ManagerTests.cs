@@ -1,13 +1,10 @@
-using Lexica.Core.Config;
 using Lexica.Core.Models;
 using Lexica.MaintainingMode;
-using Lexica.MaintainingMode.Config;
-using Lexica.MaintainingMode.Config.Models;
 using Lexica.MaintainingMode.Models;
+using Lexica.MaintainingMode.Config;
 using Lexica.MaintainingModeTests.Mocks;
 using Lexica.Words;
 using Lexica.Words.Models;
-using Lexica.Words.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -59,7 +56,9 @@ namespace Lexica.MaintainingModeTests
             var setService = new MockSetService();
             var setModeOperator = new SetModeOperator(setService, 1);
             await setModeOperator.LoadSet();
-            var modeManager = new Manager(setModeOperator, modeType, new Maintaining() { ResetAfterMistake = null });
+            var modeManager = new Manager(
+                setModeOperator, modeType, new MaintainingSettings() { ResetAfterMistake = null }
+            );
             Entry? entry = await setModeOperator.GetEntry(1, 1);
             if (entry == null)
             {
@@ -102,7 +101,7 @@ namespace Lexica.MaintainingModeTests
             var modeManager = new Manager(
                 setModeOperator, 
                 ModeTypeEnum.Words, 
-                new Maintaining() { ResetAfterMistake = null }
+                new MaintainingSettings() { ResetAfterMistake = null }
             );
 
             // Act

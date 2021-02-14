@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Lexica.MaintainingMode.Config.Models
+namespace Lexica.MaintainingMode.Config
 {
-    public class Maintaining
+    public class MaintainingSettings
     {
         public bool? ResetAfterMistake { get; set; }
     }

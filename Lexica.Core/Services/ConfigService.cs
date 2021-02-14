@@ -14,17 +14,17 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 
-namespace Lexica.Core.Config
+namespace Lexica.Core.Services
 {
-    public class AppSettings<T> where T : class
+    public class ConfigService<T> where T : class
     {
         private ISource ConfigSource { get; set; }
 
         private ISource ConfigSchemaSource { get; set; }
 
-        public T? Settings { get; private set; }
+        public T? Config { get; private set; }
 
-        public AppSettings(ISource configSource, ISource configSchemaSource)
+        public ConfigService(ISource configSource, ISource configSchemaSource)
         {
             ConfigSource = configSource;
             ConfigSchemaSource = configSchemaSource;
@@ -57,31 +57,31 @@ namespace Lexica.Core.Config
                 throw exception;
             }
             using var stream = new MemoryStream(Encoding.UTF8.GetBytes(configContents));
-            T settings = new ConfigurationBuilder()
+            T data = new ConfigurationBuilder()
                 .AddJsonStream(stream)
                 .Build()
                 .Get<T>();
-            Settings = settings;
+            Config = data;
 
-            return Settings;
+            return Config;
         }
 
         public T Get(bool reload = false)
         {
-            if (reload || Settings == null)
+            if (reload || Config == null)
             {
                 return LoadConfig();
             }
-            return Settings;
+            return Config;
         }
 
-        public static AppSettings<T> GetSettings(string name, Assembly assembly)
+        public static ConfigService<T> Get(string name, Assembly assembly)
         {
             var configSource = new FileSource($"{name}.json");
             var configSchemaSource = new EmbeddedSource($"{name}.schema.json", assembly);
-            var appSettings = new AppSettings<T>(configSource, configSchemaSource);
+            var configService = new ConfigService<T>(configSource, configSchemaSource);
             
-            return appSettings;
+            return configService;
         }
     }
 }

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Lexica.CLI.Models.Config
+namespace Lexica.Words.Config
 {
-    public class Words
+    public class WordsSettings
     {
         public string? ImportDirectoryPath { get; set; }
     }

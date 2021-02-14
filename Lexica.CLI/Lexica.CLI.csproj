@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -7,13 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Assets2\test.txt" />
-    <None Remove="Assets\test.txt" />
+    <None Remove="appsettings.schema.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Assets2\test.txt" />
-    <EmbeddedResource Include="Assets\test.txt" />
+    <EmbeddedResource Include="appsettings.schema.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -41,7 +39,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Lexica.Core\Lexica.Core.csproj" />
     <ProjectReference Include="..\Lexica.EF\Lexica.EF.csproj" />
+    <ProjectReference Include="..\Lexica.MaintainingMode\Lexica.MaintainingMode.csproj" />
+    <ProjectReference Include="..\Lexica.Words\Lexica.Words.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -51,6 +52,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="appsettings.sample.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
