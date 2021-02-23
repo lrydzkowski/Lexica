@@ -25,7 +25,18 @@
     {
       "Name": "list",
       "Shortcut": "ls",
-      "Options": [],
+      "Options": [
+        {
+          "Name": "--help",
+          "Shortcut": "-h",
+          "HasValue": false,
+          "MinOccurs": 0,
+          "MaxOccurs" 1,
+          "Groups": [
+            "g1"
+          ]
+        }
+      ],
       "Commands": []
     },
     {

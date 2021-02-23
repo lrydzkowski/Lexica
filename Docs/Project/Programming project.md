@@ -399,6 +399,7 @@ Options:
   -v | --version    Show info about version.
 
 Commands:
+  i   | import      Import sets.
   ls  | list        Show list of sets.
   wls | wlist       List of words in set or sets.
   r   | run         Run application.
@@ -410,6 +411,26 @@ PS C:\> Lexica --version
 
 Lexica 1.0.0.0 (CLI) (build: 202009010)
 Copyright (c) Łukasz Rydzkowski
+```
+
+```code
+PS C:\> Lexica i -h
+PS C:\> Lexica i --help
+PS C:\> Lexica import -h
+PS C:\> Lexica import --help
+
+Info:   Import sets from a directory indicated in configuration file (appsettings.json).
+Usage:  Lexica import
+```
+
+```code
+PS C:\> Lexica ls -h
+PS C:\> Lexica ls --help
+PS C:\> Lexica list -h
+PS C:\> Lexica list --help
+
+Info:   Show list of sets.
+Usage:  Lexica list
 ```
 
 ```code
@@ -472,6 +493,16 @@ Options:
 ```
 
 ```code
+PS C:\> Lexica run -m Maintaining
+
+(Ctrl + p) Play pronunciation; (Enter) Answer; (Ctrl + f) Override; (Ctrl + r) Restart; (Ctrol + c) Close;
+
+  mandat
+  -------------------------
+  #
+```
+
+```code
 PS C:\> Lexica run -m Spelling
 
 (Ctrl + p) Play pronunciation again; (Enter) Answer; (Ctrl + r) Restart; (Ctrl + c) Close;
@@ -509,16 +540,6 @@ Summary:
   Open questions:
     Correct answers:  10 / 20
     Wrong answers:    10 / 20
-```
-
-```code
-PS C:\> Lexica run -m Maintaining
-
-(Ctrl + p) Play pronunciation; (Enter) Answer; (Ctrl + f) Override; (Ctrl + r) Restart; (Ctrol + c) Close;
-
-  mandat
-  -------------------------
-  #
 ```
 
 Namespace:
