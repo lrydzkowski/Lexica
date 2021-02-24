@@ -10,10 +10,10 @@ namespace Lexica.Words.Models
 
         public string Name { get; }
 
-        public SetPath(string setNamespace, string name)
+        public SetPath(string setNamespace, string setName)
         {
             Namespace = setNamespace;
-            Name = name;
+            Name = setName;
         }
     }
 }

@@ -1,11 +1,9 @@
 ﻿using Lexica.Core.Extensions;
+using Lexica.Core.IO;
 using Lexica.Core.Models;
 using Lexica.Words.Models;
 using Lexica.Words.Services;
-using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lexica.Words
 {
@@ -13,35 +11,44 @@ namespace Lexica.Words
     {
         public ISetService SetService { get; private set; }
 
-        public List<long> SetIds { get; private set; }
+        public List<ISource> FilesSources { get; set; }
+
+        public OperationResult<Set?>? LastLoadSetOperationResult { get; private set; }
 
         public Set? Set { get; private set; }
 
         public int Index { get; private set; }
 
-        public SetModeOperator(ISetService setService, long setId) : this(setService, new List<long> { setId }) { }
-
-        public SetModeOperator(ISetService setService, List<long> setIds)
+        public SetModeOperator(ISetService setService, List<ISource> filesSources)
         {
             SetService = setService;
-            SetIds = setIds;
+            FilesSources = filesSources;
         }
 
-        public async Task LoadSet()
+        public SetModeOperator(ISetService setService, ISource fileSource)
+        {
+            SetService = setService;
+            FilesSources = new List<ISource>() { fileSource };
+        }
+
+        public bool LoadSet()
         {
             if (Set == null)
             {
-                Set = await SetService.Get(SetIds);
+                LastLoadSetOperationResult = SetService.Load(FilesSources);
+                Set = LastLoadSetOperationResult.Data;
             }
+            return LastLoadSetOperationResult?.Result ?? true;
         }
 
-        public async Task Randomize()
+        public bool Randomize()
         {
-            await LoadSet();
+            bool result = LoadSet();
             if (Set != null)
             {
                 Set.Entries.Shuffle();
-            }            
+            }
+            return result;
         }
 
         public void Reset()
@@ -49,15 +56,17 @@ namespace Lexica.Words
             Index = 0;
         }
 
-        public async Task<Entry?> GetEntry(long setId, int entryId)
+        public Entry? GetEntry(string setNamespace, string setName, int lineNum)
         {
-            await LoadSet();
+            LoadSet();
             if (Set != null)
             {
                 for (int i = 0; i < Set.Entries.Count; i++)
                 {
                     Entry entry = Set.Entries[i];
-                    if (entry.SetId == setId && entry.EntryId == entryId)
+                    if (    entry.SetPath.Namespace == setNamespace
+                        &&  entry.SetPath.Name == setName
+                        &&  entry.LineNum == lineNum)
                     {
                         return entry;
                     }
@@ -67,9 +76,9 @@ namespace Lexica.Words
             return null;
         }
 
-        public async Task<Entry?> GetNextEntry()
+        public Entry? GetNextEntry()
         {
-            await LoadSet();
+            LoadSet();
             if (Set == null)
             {
                 return null;

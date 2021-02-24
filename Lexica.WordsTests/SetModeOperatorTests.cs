@@ -1,75 +1,104 @@
-﻿using Lexica.Words;
-using Lexica.Words.Models;
+﻿using Lexica.Core.IO;
+using Lexica.Words;
 using Lexica.Words.Services;
-using Lexica.WordsTests.Mocks;
+using Lexica.Words.Validators;
+using Lexica.Words.Validators.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Reflection;
 using Xunit;
 
 namespace Lexica.WordsTests
 {
     public class SetModeOperatorTests
     {
-        [Fact]
-        public async void RandomizeEntries_ProperConditions_ReturnsEntriesInRandomOrder()
+        [Theory]
+        [InlineData("Lexica.WordsTests/Resources/Importer/Embedded/Correct/example_set_1.txt")]
+        [InlineData("Lexica.WordsTests/Resources/Importer/Embedded/Correct/example_set_2.txt")]
+        public void RandomizeEntries_ProperConditions_ReturnsEntriesInRandomOrder(string filePath)
         {
-            ISetService setService = new MockSetService();
-            var setModeOperator = new SetModeOperator(setService, 1);
+            var fileValidator = new FileValidator(new ValidationData());
+            var setService = new SetService(fileValidator);
+            var fileSource = new EmbeddedSource(filePath, Assembly.GetExecutingAssembly());
+            var setModeOperator = new SetModeOperator(setService, fileSource);
 
-            await setModeOperator.LoadSet();
+            setModeOperator.LoadSet();
             if (setModeOperator.Set == null)
             {
                 throw new Exception("Set is null.");
             }
 
             setModeOperator.Reset();
-            await setModeOperator.Randomize();
+            setModeOperator.Randomize();
             var str1 = "";
-            var entry1 = await setModeOperator.GetNextEntry();
+            var entry1 = setModeOperator.GetNextEntry();
             while (entry1 != null)
             {
                 str1 += string.Join(',', entry1.Words) + ',' + string.Join(',', entry1.Translations);
-                entry1 = await setModeOperator.GetNextEntry();
+                entry1 = setModeOperator.GetNextEntry();
             }
 
             setModeOperator.Reset();
-            await setModeOperator.Randomize();
+            setModeOperator.Randomize();
             var str2 = "";
-            var entry2 = await setModeOperator.GetNextEntry();
+            var entry2 = setModeOperator.GetNextEntry();
             while (entry2 != null)
             {
                 str2 += string.Join(',', entry2.Words) + ',' + string.Join(',', entry2.Translations);
-                entry2 = await setModeOperator.GetNextEntry();
+                entry2 = setModeOperator.GetNextEntry();
             }
 
             Assert.NotEqual(str1, str2);
         }
 
-        [Fact]
-        public async void GetAllEntries_ProperConditions_ReturnsAllEntries()
+        public static IEnumerable<object[]> GetAllEntriesProperConditionsParameters()
         {
-            ISetService setService = new MockSetService();
-            var setModeOperator = new SetModeOperator(setService, 1);
+            return new List<object[]>
+            {
+                new object[]
+                {
+                    "Lexica.WordsTests/Resources/Importer/Embedded/Correct/example_set_3.txt",
+                    27
+                },
+                new object[]
+                {
+                    "Lexica.WordsTests/Resources/Importer/Embedded/Correct/example_set_4.txt",
+                    22
+                },
+                new object[]
+                {
+                    "Lexica.WordsTests/Resources/Importer/Embedded/Correct/example_set_5.txt",
+                    28
+                }
+            };
+        }
 
-            await setModeOperator.LoadSet();
+        [Theory]
+        [MemberData(nameof(GetAllEntriesProperConditionsParameters))]
+        public void GetAllEntries_ProperConditions_ReturnsAllEntries(string filePath, int numOfLines)
+        {
+            var fileValidator = new FileValidator(new ValidationData());
+            var setService = new SetService(fileValidator);
+            var fileSource = new EmbeddedSource(filePath, Assembly.GetExecutingAssembly());
+            var setModeOperator = new SetModeOperator(setService, fileSource);
+
+            setModeOperator.LoadSet();
             if (setModeOperator.Set == null)
             {
                 throw new Exception("Set is null.");
             }
 
             setModeOperator.Reset();
-            await setModeOperator.Randomize();
+            setModeOperator.Randomize();
             int index = 0;
-            var entry = await setModeOperator.GetNextEntry();
+            var entry = setModeOperator.GetNextEntry();
             while (entry != null)
             {
-                entry = await setModeOperator.GetNextEntry();
+                entry = setModeOperator.GetNextEntry();
                 index++;
             }
 
-            Assert.Equal(31, index);
+            Assert.Equal(numOfLines, index);
         }
     }
 }

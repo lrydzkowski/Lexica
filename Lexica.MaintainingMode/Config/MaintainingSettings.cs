@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Lexica.MaintainingMode.Config
+﻿namespace Lexica.MaintainingMode.Config
 {
     public class MaintainingSettings
     {

@@ -17,6 +17,7 @@
     <None Remove="Resources\Importer\Embedded\example_set_4.txt" />
     <None Remove="Resources\Importer\Embedded\example_set_5.txt" />
     <None Remove="Resources\Importer\Embedded\NoSemicolon\no_semicolon_1.txt" />
+    <None Remove="Resources\Importer\Embedded\NoSemicolon\no_semicolon_2.txt" />
     <None Remove="Resources\Importer\Embedded\TooLongTranslation\too_long_translation_1.txt" />
     <None Remove="Resources\Importer\Embedded\TooLongWord\too_long_word_1.txt" />
     <None Remove="Resources\Importer\Embedded\TooManySemicolons\too_many_semicolons_1.txt" />
@@ -33,6 +34,7 @@
     <EmbeddedResource Include="Resources\Importer\Embedded\ErrorsCombination\example_set_1.txt" />
     <EmbeddedResource Include="Resources\Importer\Embedded\ErrorsCombination\example_set_2.txt" />
     <EmbeddedResource Include="Resources\Importer\Embedded\ErrorsCombination\example_set_3.txt" />
+    <EmbeddedResource Include="Resources\Importer\Embedded\NoSemicolon\no_semicolon_2.txt" />
     <EmbeddedResource Include="Resources\Importer\Embedded\NoSemicolon\no_semicolon_1.txt" />
     <EmbeddedResource Include="Resources\Importer\Embedded\TooLongTranslation\too_long_translation_1.txt" />
     <EmbeddedResource Include="Resources\Importer\Embedded\TooLongWord\too_long_word_1.txt" />

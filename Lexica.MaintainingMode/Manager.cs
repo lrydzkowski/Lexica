@@ -26,9 +26,9 @@ namespace Lexica.MaintainingMode
 
         private Entry? CurrentEntry { get; set; } = null;
 
-        public async Task Randomize()
+        public void Randomize()
         {
-            await SetOperator.Randomize();
+            SetOperator.Randomize();
         }
 
         public void Reset()
@@ -36,11 +36,11 @@ namespace Lexica.MaintainingMode
             SetOperator.Reset();
         }
 
-        public async Task<Question?> GetQuestion(bool getCurrent = false)
+        public Question? GetQuestion(bool getCurrent = false)
         {
             if (!getCurrent)
             {
-                Entry? entry = await SetOperator.GetNextEntry();
+                Entry? entry = SetOperator.GetNextEntry();
                 CurrentEntry = entry;
             }
             if (CurrentEntry == null)

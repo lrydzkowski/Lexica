@@ -6,26 +6,18 @@ namespace Lexica.Words.Models
 {
     public class Entry
     {
-        public string Id
-        {
-            get
-            {
-                return string.Format("{0}-{1}", SetId, EntryId);
-            }
-        }
+        public SetPath SetPath { get; }
 
-        public long? SetId { get; }
-
-        public int EntryId { get; }
+        public int LineNum { get; }
 
         public List<string> Words { get; }
 
         public List<string> Translations { get; }
 
-        public Entry(long? setId, int entryId, List<string> words, List<string> translations)
+        public Entry(SetPath setPath, int lineNum, List<string> words, List<string> translations)
         {
-            SetId = setId;
-            EntryId = entryId;
+            SetPath = setPath;
+            LineNum = lineNum;
             Words = words;
             Translations = translations;
         }

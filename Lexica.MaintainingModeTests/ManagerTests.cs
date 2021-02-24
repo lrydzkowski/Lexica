@@ -2,13 +2,16 @@ using Lexica.Core.Models;
 using Lexica.MaintainingMode;
 using Lexica.MaintainingMode.Models;
 using Lexica.MaintainingMode.Config;
-using Lexica.MaintainingModeTests.Mocks;
 using Lexica.Words;
 using Lexica.Words.Models;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Xunit;
+using Lexica.Words.Services;
+using Lexica.Words.Validators;
+using Lexica.Words.Validators.Models;
+using System.Reflection;
+using Lexica.Core.IO;
 
 namespace Lexica.MaintainingModeTests
 {
@@ -20,24 +23,28 @@ namespace Lexica.MaintainingModeTests
             {
                 new object[]
                 {
+                    "Lexica.MaintainingModeTests/Resources/Embedded/Correct/example_set_1.txt",
                     "test1,test2",
                     ModeTypeEnum.Translations,
                     false
                 },
                 new object[]
                 {
+                    "Lexica.MaintainingModeTests/Resources/Embedded/Correct/example_set_1.txt",
                     "test1,test2",
                     ModeTypeEnum.Words,
                     false
                 },
                 new object[]
                 {
+                    "Lexica.MaintainingModeTests/Resources/Embedded/Correct/example_set_1.txt",
                     "nieporównywalnie",
                     ModeTypeEnum.Translations,
                     true
                 },
                 new object[]
                 {
+                    "Lexica.MaintainingModeTests/Resources/Embedded/Correct/example_set_1.txt",
                     "incomparably",
                     ModeTypeEnum.Words,
                     true
@@ -47,19 +54,21 @@ namespace Lexica.MaintainingModeTests
 
         [Theory]
         [MemberData(nameof(VerifyAnswerWrongAnswerParameters))]
-        public async Task VerifyAnswer_WrongAnswer_ReturnsProperAnswerResult(
+        public void VerifyAnswer_WrongAnswer_ReturnsProperAnswerResult(
+            string filePath,
             string wrongAnswer, 
             ModeTypeEnum modeType, 
             bool result)
         {
             // Arrange
-            var setService = new MockSetService();
-            var setModeOperator = new SetModeOperator(setService, 1);
-            await setModeOperator.LoadSet();
+            var fileValidator = new FileValidator(new ValidationData());
+            var setService = new SetService(fileValidator);
+            var fileSource = new EmbeddedSource(filePath, Assembly.GetExecutingAssembly());
+            var setModeOperator = new SetModeOperator(setService, fileSource);
             var modeManager = new Manager(
                 setModeOperator, modeType, new MaintainingSettings() { ResetAfterMistake = null }
             );
-            Entry? entry = await setModeOperator.GetEntry(1, 1);
+            Entry? entry = setModeOperator.GetEntry(fileSource.Path, fileSource.Name, 1);
             if (entry == null)
             {
                 throw new Exception("Entry is null");
@@ -76,7 +85,7 @@ namespace Lexica.MaintainingModeTests
             }
 
             // Act
-            Question? question = await modeManager.GetQuestion();
+            Question? question = modeManager.GetQuestion();
             AnswerResult? answerResult = modeManager.VerifyAnswer(wrongAnswer);
             if (answerResult == null)
             {
@@ -91,35 +100,49 @@ namespace Lexica.MaintainingModeTests
             );
         }
 
-        [Fact]
-        public async Task QuestionsRandomness_CorrectData_QuestionsInRandomOrder()
+        public static IEnumerable<object[]> CheckQuestionsRandomnessCorrectDataParameters()
+        {
+            return new List<object[]>
+            {
+                new object[]
+                {
+                    "Lexica.MaintainingModeTests/Resources/Embedded/Correct/example_set_1.txt",
+                    ModeTypeEnum.Translations
+                }
+            };
+        }
+
+        [Theory]
+        [MemberData(nameof(CheckQuestionsRandomnessCorrectDataParameters))]
+        public void CheckQuestionsRandomness_CorrectData_QuestionsInRandomOrder(
+            string filePath, 
+            ModeTypeEnum modeType)
         {
             // Arrange
-            var setService = new MockSetService();
-            var setModeOperator = new SetModeOperator(setService, 1);
-            await setModeOperator.LoadSet();
+            var fileValidator = new FileValidator(new ValidationData());
+            var setService = new SetService(fileValidator);
+            var fileSource = new EmbeddedSource(filePath, Assembly.GetExecutingAssembly());
+            var setModeOperator = new SetModeOperator(setService, fileSource);
             var modeManager = new Manager(
-                setModeOperator, 
-                ModeTypeEnum.Words, 
-                new MaintainingSettings() { ResetAfterMistake = null }
+                setModeOperator, modeType, new MaintainingSettings() { ResetAfterMistake = null }
             );
 
             // Act
-            await modeManager.Randomize();
+            modeManager.Randomize();
             List<string> questionsContent = new List<string>();
-            Question? question = await modeManager.GetQuestion();
+            Question? question = modeManager.GetQuestion();
             while (question != null)
             {
                 questionsContent.Add(question.Content);
-                question = await modeManager.GetQuestion();
+                question = modeManager.GetQuestion();
             }
-            await modeManager.Randomize();
+            modeManager.Randomize();
             List<string> questionsAfterRandomizeContent = new List<string>();
-            question = await modeManager.GetQuestion();
+            question = modeManager.GetQuestion();
             while (question != null)
             {
                 questionsAfterRandomizeContent.Add(question.Content);
-                question = await modeManager.GetQuestion();
+                question = modeManager.GetQuestion();
             }
 
             // Assert

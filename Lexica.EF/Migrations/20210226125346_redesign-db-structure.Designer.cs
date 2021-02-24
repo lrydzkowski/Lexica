@@ -2,15 +2,17 @@
 using Lexica.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Lexica.EF.Migrations
 {
     [DbContext(typeof(LexicaContext))]
-    partial class LexicaContextModelSnapshot : ModelSnapshot
+    [Migration("20210226125346_redesign-db-structure")]
+    partial class redesigndbstructure
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

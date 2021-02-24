@@ -1,36 +1,33 @@
 ﻿using Lexica.Core.IO;
 using Lexica.Core.Models;
-using Lexica.Words;
+using Lexica.Words.Services;
 using Lexica.Words.Validators;
 using Lexica.Words.Validators.Models;
-using Lexica.WordsTests.Mocks;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Reflection.Exceptions;
 using Xunit;
 
 namespace Lexica.WordsTests
 {
-    public class ImporterTests
+    public class SetServiceTests
     {
         [Theory]
-        [InlineData("Lexica.WordsTests/Resources/Importer/Embedded/Correct2")]
-        public async void Import_NotExistedDir_ReturnsFalseResult(string dirPath)
+        [InlineData("Lexica.WordsTests/Resources/Importer/Embedded/Correct2/example_set_1.txt")]
+        public void Import_NotExistedDir_ReturnsFalseResult(string filePath)
         {
             // Arrange
-            var mockSetService = new MockSetService();
-            var setValidator = new SetValidator(new ValidationData());
             var fileValidator = new FileValidator(new ValidationData());
-            var importer = new Importer(mockSetService, fileValidator);
-            var multipleSource = new MultipleEmbeddedSource(dirPath, Assembly.GetExecutingAssembly());
+            var setService = new SetService(fileValidator);
+            var fileSource = new EmbeddedSource(filePath, Assembly.GetExecutingAssembly());
 
             // Act
-            OperationResult result = await importer.Import(multipleSource);
+            void action() => setService.Load(fileSource);
 
             // Assert
-            Assert.False(result.Result);
-            Assert.Equal(1, result.Errors?.Count);
-            Assert.Equal((int)Lexica.Words.Models.ErrorCodesEnum.NoImportSource, result.Errors?[0].Code);
+            ResourceNotFoundException ex = Assert.Throws<ResourceNotFoundException>(action);
+
         }
 
         public static IEnumerable<object[]> ImportValidationErrorsParameters()
@@ -39,7 +36,10 @@ namespace Lexica.WordsTests
             {
                 new object[]
                 {
-                    "Lexica.WordsTests/Resources/Importer/Embedded/TooManySemicolons",
+                    new List<string>()
+                    {
+                        "Lexica.WordsTests/Resources/Importer/Embedded/TooManySemicolons/too_many_semicolons_1.txt",
+                    },
                     new List<Enum>()
                     {
                         Words.Models.ErrorCodesEnum.TooManySemicolons,
@@ -61,21 +61,30 @@ namespace Lexica.WordsTests
                 },
                 new object[]
                 {
-                    "Lexica.WordsTests/Resources/Importer/Embedded/NoSemicolon",
+                    new List<string>()
+                    {
+                        "Lexica.WordsTests/Resources/Importer/Embedded/NoSemicolon/no_semicolon_1.txt",
+                        "Lexica.WordsTests/Resources/Importer/Embedded/NoSemicolon/no_semicolon_2.txt"
+                    },
                     new List<Enum>()
                     {
+                        Words.Models.ErrorCodesEnum.NoSemicolon,
                         Words.Models.ErrorCodesEnum.NoSemicolon,
                         Words.Models.ErrorCodesEnum.NoSemicolon
                     },
                     new List<Dictionary<string, string>>()
                     {
                         new Dictionary<string, string>() { { "Line", "17" }, { "FileName", "no_semicolon_1.txt" } },
-                        new Dictionary<string, string>() { { "Line", "21" }, { "FileName", "no_semicolon_1.txt" } }
+                        new Dictionary<string, string>() { { "Line", "21" }, { "FileName", "no_semicolon_1.txt" } },
+                        new Dictionary<string, string>() { { "Line", "2" }, { "FileName", "no_semicolon_2.txt" } }
                     }
                 },
                 new object[]
                 {
-                    "Lexica.WordsTests/Resources/Importer/Embedded/TooLongWord",
+                    new List<string>()
+                    {
+                        "Lexica.WordsTests/Resources/Importer/Embedded/TooLongWord/too_long_word_1.txt"
+                    },
                     new List<Enum>()
                     {
                         Core.Models.ErrorCodesEnum.IsTooLong
@@ -90,7 +99,10 @@ namespace Lexica.WordsTests
                 },
                 new object[]
                 {
-                    "Lexica.WordsTests/Resources/Importer/Embedded/TooLongTranslation",
+                    new List<string>()
+                    {
+                        "Lexica.WordsTests/Resources/Importer/Embedded/TooLongTranslation/too_long_translation_1.txt"
+                    },
                     new List<Enum>()
                     {
                         Core.Models.ErrorCodesEnum.IsTooLong
@@ -105,7 +117,10 @@ namespace Lexica.WordsTests
                 },
                 new object[]
                 {
-                    "Lexica.WordsTests/Resources/Importer/Embedded/TooShortWord",
+                    new List<string>()
+                    {
+                        "Lexica.WordsTests/Resources/Importer/Embedded/TooShortWord/too_short_word_1.txt",
+                    },
                     new List<Enum>()
                     {
                         Core.Models.ErrorCodesEnum.IsTooShort,
@@ -125,7 +140,10 @@ namespace Lexica.WordsTests
                 },
                 new object[]
                 {
-                    "Lexica.WordsTests/Resources/Importer/Embedded/TooShortTranslation",
+                    new List<string>()
+                    {
+                        "Lexica.WordsTests/Resources/Importer/Embedded/TooShortTranslation/too_short_translation_1.txt"
+                    },
                     new List<Enum>()
                     {
                         Core.Models.ErrorCodesEnum.IsTooShort,
@@ -145,7 +163,12 @@ namespace Lexica.WordsTests
                 },
                 new object[]
                 {
-                    "Lexica.WordsTests/Resources/Importer/Embedded/ErrorsCombination",
+                    new List<string>()
+                    {
+                        "Lexica.WordsTests/Resources/Importer/Embedded/ErrorsCombination/example_set_1.txt",
+                        "Lexica.WordsTests/Resources/Importer/Embedded/ErrorsCombination/example_set_2.txt",
+                        "Lexica.WordsTests/Resources/Importer/Embedded/ErrorsCombination/example_set_3.txt"
+                    },
                     new List<Enum>()
                     {
                         Core.Models.ErrorCodesEnum.IsTooShort,
@@ -186,20 +209,22 @@ namespace Lexica.WordsTests
 
         [Theory]
         [MemberData(nameof(ImportValidationErrorsParameters))]
-        public async void Import_ValidationErrors_ReturnsFalseResult(
-            string dirPath, 
+        public void Import_ValidationErrors_ReturnsFalseResult(
+            List<string> filesPaths, 
             List<Enum> errorCodes, 
             List<Dictionary<string, string>> errorDetails)
         {
             // Arrange
-            var mockSetService = new MockSetService();
-            var setValidator = new SetValidator(new ValidationData());
             var fileValidator = new FileValidator(new ValidationData());
-            var importer = new Importer(mockSetService, fileValidator);
-            var multipleSource = new MultipleEmbeddedSource(dirPath, Assembly.GetExecutingAssembly());
+            var setService = new SetService(fileValidator);
+            var filesSources = new List<ISource>();
+            foreach (string filePath in filesPaths)
+            {
+                filesSources.Add(new EmbeddedSource(filePath, Assembly.GetExecutingAssembly()));
+            }
 
             // Act
-            OperationResult result = await importer.Import(multipleSource);
+            OperationResult result = setService.Load(filesSources);
 
             // Assert
             Assert.False(result.Result);
