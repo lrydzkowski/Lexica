@@ -1,0 +1,41 @@
+﻿{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://lexica.com/schemas/cli-map.json",
+  "title": "Lexica CLI schema",
+  "definitions": {
+    "Command": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "Shortcut": {
+          "type": "string"
+        },
+        "HasValue": {
+          "type": "boolean"
+        },
+        "ExecutorClass": {
+          "type":  "string"
+        },
+        "Commands": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Command"
+          }
+        }
+      },
+      "required": [ "Name", "Shortcut", "HasValue" ]
+    }
+  },
+  "type": "object",
+  "properties": {
+    "Commands": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Command"
+      }
+    }
+  },
+  "required": [ "Commands" ]
+}

@@ -364,3 +364,4 @@ MigrationBackup/
 
 Lexica.EF/database.json
 Lexica.CLI/appsettings.json
+Lexica.CLI/Properties/launchSettings.json

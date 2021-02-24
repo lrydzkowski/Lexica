@@ -26,9 +26,12 @@
           "items": { 
             "type": "string"
           }
+        },
+        "ExecutorClass": {
+          "type": "string"
         }
       },
-      "required": ["Name", "Shortcut", "HasValue", "MinOccurs", "MaxOccurs", "Groups"]
+      "required": ["Name", "Shortcut", "HasValue", "MinOccurs", "MaxOccurs", "Groups", "ExecutorClass"]
     },
     "Command": {
       "type": "object",
@@ -50,9 +53,12 @@
           "items": {
             "$ref": "#/definitions/Command"
           }
+        },
+        "ExecutorClass": {
+          "type": "string"
         }
       },
-      "required": ["Name", "Shortcut", "Options", "Commands"]
+      "required": ["Name", "Shortcut", "Options", "Commands", "ExecutorClass"]
     }
   },
   "type": "object",

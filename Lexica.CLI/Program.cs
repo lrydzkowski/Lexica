@@ -1,5 +1,8 @@
-﻿using Lexica.CLI.Config;
-using Lexica.Core.IO;
+﻿using Lexica.CLI.Args;
+using Lexica.CLI.Core;
+using Lexica.CLI.Core.Config;
+using Lexica.CLI.Core.Extensions;
+using Lexica.CLI.Executors.Extensions;
 using Lexica.Core.Services;
 using Lexica.EF;
 using Microsoft.EntityFrameworkCore;
@@ -9,29 +12,40 @@ using NLog;
 using NLog.Extensions.Logging;
 using System;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Lexica.CLI
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             var logger = LogManager.GetCurrentClassLogger();
             try
             {
+                if (args.Length == 0)
+                {
+                    args = new string[] { "--help" };
+                }
                 var servicesProvider = ConfigureServices();
                 using (servicesProvider as IDisposable)
                 {
-                    Console.WriteLine("Ok!");
-                    Console.WriteLine("Press ANY key to exit");
-                    Console.ReadKey();
+                    try
+                    {
+                        var argsService = (ArgsService)servicesProvider.GetService(typeof(ArgsService));
+                        await argsService.RunAsync(args, servicesProvider);
+                    }
+                    catch (ArgsException ex)
+                    {
+                        View.ShowError(ex.Message);
+                    }
                 }
             }
             catch (Exception ex)
             {
                 // NLog: catch any exception and log it.
                 logger.Error(ex, "Stopped program because of exception");
-                throw;
+                View.ShowError(ex);
             }
             finally
             {
@@ -61,8 +75,11 @@ namespace Lexica.CLI
 
             // Entity Framework Core
             services.AddDbContext<LexicaContext>(
-                opts => opts.UseNpgsql(configService.Get().Database?.ConnectionString, x => x.MigrationsAssembly("Lexica.EF"))
+                opts => opts.UseNpgsql(configService.Get().Database?.ConnectionString)
             );
+
+            services.AddExecutorServices();
+            services.AddCoreServices();
 
             IServiceProvider serviceProvider = services.BuildServiceProvider();
 

@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Lexica.CLI.Config
+namespace Lexica.CLI.Core.Config
 {
     public class AppSettings
     {
