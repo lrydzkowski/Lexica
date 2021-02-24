@@ -1,6 +1,10 @@
 # Lexica - programming project
 
-## Core.dll
+## Modules
+
+![Modules](diagrams/modules.svg)
+
+## Lexica.Core.dll
 
 Namespace:
 
@@ -10,57 +14,39 @@ Classes:
 
 - Config
   - AppSettings.cs
-    - public AppSettings(string path = null)
-    - private void Validate()
-    - public Load()
-    - public Config.Models.Settings Get()
-  - Models:
-    - Settings.cs
-    - Database.cs
-    - Words.cs
-    - Spelling.cs
-    - Learning.cs
-    - Maintaining.cs
 - Data
-  - LexicaContext.cs
-- CoreException
-  - AppException.cs
-    - string Code
-    - string Message
-  - AppException\<T\> : AppException.cs
-    - T Data
-  - WrongConfigException : AppException.cs
-- Models:
-  - QuestionTypeEnum.cs
-    - Open
-    - Closed
-  - Question.cs
-    - string Content
-    - QuestionTypeEnum Type
-    - List\<string\> PossibleAnswers
+  - IDataSource.cs
+  - JsonSource.cs
+- Exceptions
+  - WrongConfigExceptions.cs
+- Extensions:
+  - ListExtensions.cs
+  - StringExtensions.cs
+- IO
+  - ISource.cs
+  - FileSource.cs
+  - EmbeddedSource.cs
+  - IMultipleSource.cs
+  - MultipleFilesSource.cs
+  - MultipleEmbeddedSource.cs
+- Models
   - AnswerResult.cs
-    - bool Result
-    - List\<string\> Answers
   - Error.cs
-    - string Code
-    - string Message
-  - Error\<T\> : Error.cs
-    - T Data
+  - ErrorCodesEnum.cs
+  - MergeModeEnum.cs
   - OperationResult.cs
-    - bool Result
-    - List\<Error\> Errors
-  - OperationResult\<T\> : OperationResult.cs
-    - T Data
+  - Question.cs
+  - QuestionTypeEnum.cs
+- Validators
+  - Models
+    - GeneralValidationData.cs
+    - NumberValidationData.cs
+    - StringValidationData.cs
+  - IValidator.cs
+  - NumberValidator.cs
+  - StringValidator.cs
 
-Sample configuration:
-
-- appsettings.json
-
-Configuration schema:
-
-- appsettings.schema.json
-
-## CoreTests (xUnit)
+## Lexica.CoreTests (xUnit)
 
 Namespace:
 
@@ -69,17 +55,82 @@ Namespace:
 Classes:
 
 - AppSettingsTests.cs
-  [Theory]
-  [InlineData("")]
-  - public void Init_NotExistedPath_ThrowsAppException(string notExistedPath)
-  [Theory]
-  [InlineData("")]
-  - public void Load_WrongConfiguration_ThrowsWrongConfigException(string configPath)
-  [Theory]
-  [InlineData("")]
-  - public void Get_CorrectConfiguration_ReturnsSettingsObject(string configPath)
+  - Init_WrongConfiguration_ThrowsWrongConfigException(
+      string configPath,
+      string schemaPath,
+      Dictionary\<string, string\> expectedExceptionDetails)
+  - Get_CorrectConfiguration_ReturnsSettingsObject(
+      string configPath,
+      string schemaPath,
+      Settings expectedSettings)
+- SourceTests.cs
+  - Init_NotExistedFile_ThrowsFileNotFoundException(string filePath)
+  - Init_NotExistedEmbeddedResource_ThrowsFileNotFoundException(string resourcePath)
+  - GetMultipleFiles_CorrectPath_ReturnsProperContents(string dirPath, List\<string\> expectedContents)
+  - GetMultipleFiles_CorrectPath_ReturnsProperNames(string dirPath, List\<string\> expectedNames)
+  - GetMultipleEmbeddedFiles_CorrectPath_ReturnsProperContents(string dirPath, List\<string\> expectedContents)
+  - GetMultipleEmbeddedFiles_CorrectPath_ReturnsProperNames(string dirPath, List\<string\> expectedNames)
 
-## WordsManager.dll
+## Lexica.EF
+
+Namespace
+
+- Lexica.EF
+
+Classes:
+
+- Config
+  - Models
+    - DatabaseSettings.cs
+- Models
+  - ErrorCodesEnum.cs
+  - ImportHistoryTable.cs
+    - public long RecId
+    - public SetTable Set
+    - public DateTime ExecutedDate
+  - EntryTable.cs
+    - public long RecId
+    - public SetTable Set
+    - public int EntryId
+    - public string Word
+    - public string Translation
+  - SetTable.cs
+    - public long RecId
+    - public string Namespace
+    - public string Name
+  - SpellingHistoryTable.cs
+    - public long OperationId
+    - public long SetId
+    - public int EntryId
+    - public long NumOfCorrectAnswers
+    - public long NumOfMistakes
+  - LearningHistoryTable.cs
+    - public long OperationId
+    - public long SetId
+    - public int EntryId
+    - public bool IsWord
+    - public bool IsTranslation
+    - public long OpenQuestionNumOfCorrectAnswers
+    - public long OpenQuestionNumOfMistakes
+    - public long ClosedQuestionNumOfCorrectAnswers
+    - public long ClosedQuestionNumOfMistakes
+  - MaintainingHistoryTable.cs
+    - public long OperationId
+    - public long SetId
+    - public long EntryRecId
+    - public bool IsWord
+    - public bool IsTranslation
+    - public long NumOfCorrectAnswers
+    - public long NumOfMistakes
+  - Services
+    - SetService.cs : Lexica.Words.Services.ISetService.cs
+    - NamespaceService.cs : Lexica.Words.Services.INamespaceService.cs
+    - SpellingHistoryService.cs : Lexica.SpellingMode.Services.ISpellingHistoryService.cs
+    - LearningHistoryService.cs : Lexica.LearningMode.Services.ILearningHistoryService.cs
+    - MaintainingHistoryService.cs : Lexica.MaintainingMode.Services.IMaintainingHistoryService.cs
+- LexicaContext.cs
+
+## Lexica.Words.dll
 
 Namespace:
 
@@ -87,126 +138,108 @@ Namespace:
 
 Classes:
 
-- Manager.cs
-  - public List\<SetInfo\> GetSetsInfo()
-  - public OperationResult\<Set\> GetSet(int setId)
-  - public OperationResult\<Set\> GetSet(List\<string\> setsIds)
-  - public OperationResult ChangeSetName(string oldFullSetName, string newFullSetName)
-  - public OperationResult ChangeNamespaceName(string oldName, string newName)
-  - public OperationResult RemoveSet(string fullSetName)
-- Importer.cs
-  - public static bool Import(string directoryPath)
-- WordsException
-  - WrongFileStructureException
-- Models:
+- Models
   - Entry.cs
     - string Id
+    - long SetId
+    - int EntryId
     - List\<string\> Words
     - List\<string\> Translations
+  - ErrorCodesEnums.cs
   - Set.cs
     - string Id
-    - string Namespace
-    - string Name
+    - List\<SetInfo\> SetsInfo
     - List\<Entry\> Entries
-    - public Randomize()
-    - public Entry Get(int setId, int id)
-    - public Entry GetNext()
+    - public Set(SetInfo setInfo, List\<Entry\> entries)
+    - public Set(List\<SetInfo\> setsInfo, List\<Entry\> entries)
   - SetInfo.cs
-    - long Id
+    - long? SetId
+    - SetPath Path
+  - SetPath.cs
     - string Namespace
     - string Name
-- Data:
-  - Models:
-    - SetTable.cs
-      - public long Id
-      - public string Namespace - MaxLength(400)
-      - public string Name - MaxLength(100)
-    - EntryTable.cs
-      - public long RecId
-      - public long SetId
-      - public int EntryId
-      - public string Word - MaxLength(50)
-      - public string Translation - MaxLength(50)
+- Services
+  - INamespaceService.cs
+  - ISetService.cs
+- Validators
+  - Models
+    - ValidationData.cs
+      - StringValidationData Namespace
+      - StringValidationData SetName
+      - StringValidationData EntryWord
+      - StringValidationData EntryTranslation
+  - SetPathValidator.cs : Lexica.Core.Validators.IValidator\<SetPath\>
+  - SetValidator.cs : Lexica.Core.Validators.IValidator\<Set\>
+- Config
+  - Models
+    - WordsSettings.cs
+- Importer.cs
+  - public Importer(ISetService setService, IValidator\<Set\> setValidator)
+  - public async Task\<OperationResult\> Import(IMultiplySource source)
+- NamespaceManager.cs
+  - public NamespaceManager(INamespaceService namespaceService, IValidator\<string\> validator)
+  - public async Task\<OperationResult\> ChangeNamespacePath(string oldNamespacePath, string newNamespacePath)
+- SetManager.cs
+  - public SetManager(ISetService setService, IValidator\<SetPath\> setPathValidator)
+  - public async Task\<Set?\> GetSet(long setId)
+  - public async Task\<List\<SetInfo\>\> GetInfoList()
+  - public async Task\<OperationResult\> ChangePath(long setId, SetPath newPath)
+  - public async Task Remove(long setId)
+- SetModeOperator.cs
+  - public SetModeOperator(ISetService setService, long setId)
+  - public SetModeOperator(ISetService setService, List\<long\> setIds)
+  - public async Task\<Set?\> LoadSet()
+  - private void Randomize()
+  - public void Reset()
+  - public async Task\<Entry?\> GetEntry(long setId, int entryId)
+  - public async Task\<Entry?\> GetNextEntry()
 
-## WordsManagerIntegrationTests (xUnit)
-
-Namespace:
-
-- Lexica.Words.IntegrationTests
-
-Classes:
-
-- CreatingTests.cs
-  [Theory]
-  - public void Import_NotExistedDirPath_ThrowsAppException(string notExistedDirPath)
-  [Theory]
-  - public void Import_WrongFileStructure_WrongFileStructureException(string directoryPath)
-  [Theory]
-  - public void Import_CorrectDirectoryPath_CorrectImport(string directoryPath)
-- SelectingTests.cs
-  [Fact]
-  - public void GetList_CorrectConditions_GetCorrectList()
-  [Theory]
-  - public void GetSet_NotExistedSet_ReturnsFalseResult(int notExistedSetId)
-  [Theory]
-  - public void GetSet_NotExistedSets_ReturnsFalseResult(List\<string\> notExistedSetsIds)
-  [Theory]
-  - public void GetSet_CorrectSetId_ReturnsTrueResult(int setId)
-  [Theory]
-  - public void GetSet_CorrectSetsIds_ReturnsTrueResult(List\<string\> setsIds)
-- ChangingTests.cs
-  [Theory]
-  - public void ChangeSetName_WrongCurrentSetName_ReturnsFalseResult(
-      string wrongOldFullSetName,
-      string newFullSetName
-    )
-  [Theory]
-  - public void ChangeSetName_WrongCharsInNewName_ReturnsFalseResult(
-      string oldFullSetName,
-      string wrongNewFullSetName
-    )
-  [Theory]
-  - public void ChangeSetName_CorrectNames_ReturnsTrueResult(
-      string oldFullSetName,
-      string newFullSetName
-    )
-  [Theory]
-  - public void ChangeNamespaceName_WrongCurrentNamespaceName_ReturnsFalseResult(
-      string wrongOldName,
-      string newName
-    )
-  [Theory]
-  - public void ChangeNamespaceName_WrongCharsInNamespaceName_ReturnsFalseResult(
-      string oldName,
-      string wrongNewName
-    )
-  [Theory]
-  - public void ChangeNamespaceName_CorrectNames_ReturnsTrueResult(
-      string oldName,
-      string newName
-    )
-- RemovingTests.cs
-  [Theory]
-  - public void RemoveSet_NotExistedName_ReturnsFalseResult(string notExistedFullSetName)
-  [Theory]
-  - public void RemoveSet_CorrectName_ReturnsTrueResult(string fullSetName)
-
-## SpellingMode.dll
+## Lexica.WordsTests (xUnit)
 
 Namespace:
 
-- Lexica.Spelling
+- Lexica.WordsTests
 
 Classes:
 
-- Manager.cs
-  - public Manager(string setId, Config.Models.Spelling cfg)
-  - public Manager(List\<string\> setsIds, Config.Models.Spelling cfg)
-  - public Lexica.Core.Models.Question GetQuestion()
-  - public Lexica.Core.Models.AnswerResult VerifyAnswer(string answer)
+- ImporterTests.cs
+  - public void Import_NotExistedDir_ReturnsFalseResult(string dirPath)
+  - public void Import_ValidationError_ReturnsFalseResult(
+      string dirPath,
+      List\<Enum\> errorCodes,
+      List\<Dictionary\<string, string\>\> errorDetails
+    )
+- NamespaceManagerTests.cs
+  - public void ChangeNamespacePath_ValidationError_ReturnsFalseResult(
+      string from,
+      string to,
+      List\<Core.Models.ErrorCodesEnum\> errorCodes,
+      List\<Dictionary\<string, string\>\> errorDetails
+    )
+- SetModeOperatorTests.cs
+  - public void RandomizeEntries_ProperConditions_ReturnsEntriesInRandomOrder()
+  - public void GetAllEntries_ProperConditions_ReturnsAllEntries()
+- SetManagerTests.cs
+  - public void ChangeSetPath_ValidationError_ReturnsFalseResult(
+      SetPath newPath,
+      List\<Core.Models.ErrorCodesEnum\> errorCodes,
+      List\<Dictionary\<string, string\>\> errorDetails
+    )
+
+## Lexica.SpellingMode.dll
+
+Namespace:
+
+- Lexica.SpellingMode
+
+Classes:
+
+- Config
+  - Models
+    - SpellingModeSettings.cs
 - Data
-  - Models:
-    - SpellingHistory
+  - Models
+    - SpellingHistory.cs
       - public long Id
       - public long SetId
       - public int EntryId
@@ -214,27 +247,32 @@ Classes:
       - public bool IsTranslation
       - public long NumOfCorrectAnswers
       - public long NumOfMistakes
+- Services
+  - ISpellingHistoryService.cs
+    - public Task\<OperationResult\> Add(SpellingHistory data)
+- Manager.cs
+  - public Manager(
+      string setId,
+      SpellingModeSettings settings,
+      ISpellingHistoryService historyService
+    )
+  - public Manager(
+      List\<string\> setsIds,
+      SpellingModeSettings settings,
+      ISpellingHistoryService historyService
+    )
+  - public Lexica.Core.Models.Question GetQuestion()
+  - public Lexica.Core.Models.AnswerResult VerifyAnswer(string answer)
 
-## SpellingModeIntegrationTests (xUnit)
+## Lexica.SpellingMode.Tests (xUnit)
 
 Namespace:
 
-- Lexica.Spelling.IntegrationTests
+- Lexica.SpellingMode.Tests
 
 Classes:
 
 - ManagerTests.cs
-  [Theory]
-  - public void Init_NotExistedSetId_ThrowsAppException(
-      string notExistedSetId,
-      Config.Models.Spelling cfg
-    )
-  [Theory]
-  - public void Init_NotExistedSetsIds_ThrowsAppException(
-      List\<string\> notExistedSetsIds,
-      Config.Models.Spelling cfg
-    )
-  )
   [Theory]
   - public void VerifyAnswer_WrongAnswer_ReturnsFalseAnswerResult(string wrongAnswer)
   [Theory]
@@ -242,22 +280,20 @@ Classes:
   [Fact]
   - public void QuestionsRandomness_CorrectData_QuestionsInRandomOrder()
 
-## LearningMode.dll
+## Lexica.LearningMode.dll
 
 Namespace:
 
-- Lexica.Learning
+- Lexica.LearningMode
 
 Classes:
 
-- Manager.cs
-  - public Manager(string setId, Config.Models.Learning cfg)
-  - public Manager(List\<string\> setsIds, Config.Models.Learning cfg)
-  - public Lexica.Core.Models.Question GetQuestion()
-  - public Lexica.Core.Models.AnswerResult VerifyAnswer(string input)
-- Data:
-  - Models:
-    - LearningHistory
+- Config
+  - Models
+    - LearningModeSettings.cs
+- Data
+  - Models
+    - LearningHistory.cs
       - public long Id
       - public long SetId
       - public int EntryId
@@ -267,27 +303,32 @@ Classes:
       - public long NumOfMistakesOpenQuestion
       - public long NumOfCorrectAnswersClosedQuestion
       - public long NumOfMistakesClosedQuestion
+- Services
+  - ILearningHistoryService.cs
+    - public Task\<OperationResult\> Add(LearningHistory data)
+- Manager.cs
+  - public Manager(
+      string setId,
+      LearningModeSettings settings,
+      ILearningHistoryService historyService
+    )
+  - public Manager(
+      List\<string\> setsIds,
+      LearningModeSettings settings,
+      ILearningHistoryService historyService
+    )
+  - public Lexica.Core.Models.Question GetQuestion()
+  - public Lexica.Core.Models.AnswerResult VerifyAnswer(string input)
 
-## LearningModeIntegrationTests (xUnit)
+## Lexica.LearningMode.Tests (xUnit)
 
 Namespace:
 
-- Lexica.Learning.IntegrationTests
+- Lexica.LearningMode.Tests
 
 Classes:
 
-- MangerTests.cs
-  [Theory]
-  - public void Init_NotExistedSetId_ThrowsAppException(
-      string notExistedSetId,
-      Config.Models.Learning cfg
-    )
-  [Theory]
-  - public void Init_NotExistedSetsIds_ThrowsAppException(
-      List\<string\> notExistedSetsIds,
-      Config.Models.Learning cfg
-    )
-  )
+- ManagerTests.cs
   [Theory]
   - public void VerifyAnswer_WrongAnswer_ReturnsFalseAnswerResult(string wrongAnswer)
   [Theory]
@@ -297,58 +338,51 @@ Classes:
   [Fact]
   - public void QuestionsRandomness_CorrectData_QuestionsInRandomOrder()
 
-## MaintainingMode.dll
+## Lexica.MaintainingMode.dll
 
 Namespace:
 
-- Lexica.Maintaining
+- Lexica.MaintainingMode
 
 Classes:
 
-- Manager.cs
-  - public Manager(string setId, Config.Models.Maintaining cfg)
-  - public Manager(List\<string\> setsIds, Config.Models.Maintaining cfg)
-  - public Lexica.Core.Models.Question GetQuestion()
-  - public Lexica.Core.Models.AnswerResult VerifyAswer(string input)
+- Config:
+  - Models:
+    - Maintaining.cs
 - Data:
   - Models:
     - MaintainingHistory
-      - public long Id
+      - public long OperationId
       - public long SetId
       - public int EntryId
       - public bool IsWord
       - public bool IsTranslation
       - public long NumOfCorrectAnswers
       - public long NumOfMistakes
+- Models:
+  - ModeTypeEnum.cs
+- Manager.cs
+  - public Manager(Lexica.Words.SetModeOperator setOperator, Maintaining settings)
+  - public Lexica.Core.Models.Question GetQuestion()
+  - public Lexica.Core.Models.AnswerResult VerifyAswer(string input)
 
-## MaintainingModeIntegrationTests (xUnit)
+## Lexica.MaintainingMode.Tests (xUnit)
 
 Namespace:
 
-- Lexica.Maintaining.IntegrationTests
+- Lexica.Maintaining.Tests
 
 Classes:
 
 - ManagerTests.cs
   [Theory]
-  - public void Init_NotExistedSetId_ThrowsAppException(
-      string notExistedSetId,
-      Config.Models.Maintaining cfg
-    )
+  - public void VerifyAnswer_WrongAnswer_ReturnsFalseAnswerResult(string wrongAnswer, ModeTypEnum modeType)
   [Theory]
-  - public void Init_NotExistedSetsIds_ThrowsAppException(
-      List\<string\> notExistedSetsIds,
-      Config.Models.Maintaining cfg
-    )
-  )
-  [Theory]
-  - public void VerifyAnswer_WrongAnswer_ReturnsFalseAnswerResult(string wrongAnswer)
-  [Theory]
-  - public void VerifyAnswer_CorrectAnswer_ReturnsTrueAnswerResult(string answer)
+  - public void VerifyAnswer_CorrectAnswer_ReturnsTrueAnswerResult(string correctAnswer, ModeTypeEnum modeType)
   [Fact]
   - public void QuestionsRandomness_CorrectData_QuestionsInRandomOrder()
 
-## CLI
+## Lexica.CLI
 
 CLI Interface:
 
@@ -365,6 +399,7 @@ Options:
   -v | --version    Show info about version.
 
 Commands:
+  i   | import      Import sets.
   ls  | list        Show list of sets.
   wls | wlist       List of words in set or sets.
   r   | run         Run application.
@@ -376,6 +411,26 @@ PS C:\> Lexica --version
 
 Lexica 1.0.0.0 (CLI) (build: 202009010)
 Copyright (c) Łukasz Rydzkowski
+```
+
+```code
+PS C:\> Lexica i -h
+PS C:\> Lexica i --help
+PS C:\> Lexica import -h
+PS C:\> Lexica import --help
+
+Info:   Import sets from a directory indicated in configuration file (appsettings.json).
+Usage:  Lexica import
+```
+
+```code
+PS C:\> Lexica ls -h
+PS C:\> Lexica ls --help
+PS C:\> Lexica list -h
+PS C:\> Lexica list --help
+
+Info:   Show list of sets.
+Usage:  Lexica list
 ```
 
 ```code
@@ -434,7 +489,17 @@ Info:   Run learning mode.
 Usage:  Lexica run [OPTIONS]
 
 Options:
-  -m <ModeName> | -- mode <ModeName>     Run mode.
+  -m <ModeName> | --mode <ModeName>     Run mode.
+```
+
+```code
+PS C:\> Lexica run -m Maintaining
+
+(Ctrl + p) Play pronunciation; (Enter) Answer; (Ctrl + f) Override; (Ctrl + r) Restart; (Ctrol + c) Close;
+
+  mandat
+  -------------------------
+  #
 ```
 
 ```code
@@ -477,16 +542,6 @@ Summary:
     Wrong answers:    10 / 20
 ```
 
-```code
-PS C:\> Lexica run -m Maintaining
-
-(Ctrl + p) Play pronunciation; (Enter) Answer; (Ctrl + f) Override; (Ctrl + r) Restart; (Ctrol + c) Close;
-
-  mandat
-  -------------------------
-  #
-```
-
 Namespace:
 
 Lexica.CLI
@@ -500,21 +555,18 @@ Classes:
       - public List\<Command\> Commands
     - Option.cs
     - Command.cs
-  - AppCLIDefinition.cs
-    - public AppCLIDefinition(string path = null)
-    - private void Validate()
-    - public void Load()
-    - public Map.Models.CLIDefinition Get()
 - Services
-  - Help.cs
-  - Version.cs
-  - List.cs
-  - SpellingMode.cs
-  - LearningMode.cs
-  - MaintainingMode.cs
+  - IConsoleService\<T\>.cs
+    - public Task RunAsync(T data = null)
+  - Help.cs : IConsoleService\<string\> // Parameter T contains a name of element for which this method should display help.
+  - Version.cs : IConsoleService
+  - SetsList.cs : IConsoleService
+  - EntriesList.cs : IConsoleService
+  - SpellingMode.cs : IConsoleService
+  - LearningMode.cs : IConsoleService
+  - MaintainingMode.cs : IConsoleService
 - Cmd.cs
   - private Map.Models.CLIDefinition Args
   - public void ProcessArguments(string[] args)
-  - public bool ValidateAgainstMap(Map.Models.CLIDefinition cliDefinition)
   - public void Run()
   

@@ -1,0 +1,26 @@
+﻿literal;dosłowny
+elaborate;przemyślany, starannie opracowany, dopracowywać
+punctuation;interpunkcja
+humongous;olbrzymi
+incur;ponosić, narażać się na
+verbatim;dosłowny, dosłownie
+snugly;wygodnie
+contingency;ewentualność, nieprzewidziany wypadek
+vein;żyła
+granular;ziarnisty
+stark;surowy, nagi
+brevity;zwięzłość
+parenthesis, bracket;nawias
+quadrant;ćwiartka
+allocate;umiejscawiać
+elation;radosne uniesienie
+vegetable
+salute;salutować
+ancient;starożytny
+in vain;na próżno
+in no time
+on the agenda;w porządku obrad
+on impulse;pod wpływem impulsu
+under repair;w naprawie
+under age;nieletni
+litigator;strona wszczynająca spór sądowy

@@ -1,0 +1,56 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\appsettings.schema.json" />
+    <None Remove="Resources\appsettings1.wrong.json" />
+    <None Remove="Resources\appsettings2.wrong.json" />
+    <None Remove="Resources\appsettings3.wrong.json" />
+    <None Remove="Resources\appsettings4.correct.json" />
+    <None Remove="Resources\Multiple\Embedded\embedded_file1.txt" />
+    <None Remove="Resources\Multiple\Embedded\embedded_file2.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Config\appsettings.schema.json" />
+    <EmbeddedResource Include="Resources\Config\appsettings1.wrong.json" />
+    <EmbeddedResource Include="Resources\Config\appsettings2.wrong.json" />
+    <EmbeddedResource Include="Resources\Config\appsettings3.wrong.json" />
+    <EmbeddedResource Include="Resources\Config\appsettings4.correct.json" />
+    <EmbeddedResource Include="Resources\Multiple\Embedded\embedded_file1.txt" />
+    <EmbeddedResource Include="Resources\Multiple\Embedded\embedded_file2.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.collector" Version="1.3.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Lexica.Core\Lexica.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Resources\Multiple\Files\file1.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Multiple\Files\file2.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

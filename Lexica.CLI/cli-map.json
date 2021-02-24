@@ -1,0 +1,63 @@
+﻿{
+  "Commands": [
+    {
+      "Name": "--help",
+      "Shortcut": "-h",
+      "HasValue": false,
+      "ExecutorClass": "Lexica.CLI.Executors.General.Help"
+    },
+    {
+      "Name": "--version",
+      "Shortcut": "-v",
+      "HasValue": false,
+      "ExecutorClass": "Lexica.CLI.Executors.General.Version"
+    },
+    {
+      "Name": "list",
+      "Shortcut": "ls",
+      "HasValue": false,
+      "Commands": [
+        {
+          "Name": "--help",
+          "Shortcut": "-h",
+          "HasValue": false
+        }
+      ]
+    },
+    {
+      "Name": "wlist",
+      "Shortcut": "wls",
+      "HasValue": false,
+      "ExecutorClass": "",
+      "Commands": [
+        {
+          "Name": "--help",
+          "Shortcut": "-h",
+          "HasValue": false
+        },
+        {
+          "Name": "--set",
+          "Shortcut": "-s",
+          "HasValue": true
+        }
+      ]
+    },
+    {
+      "Name": "run",
+      "Shortcut": "r",
+      "HasValue": false,
+      "Commands": [
+        {
+          "Name": "--help",
+          "Shortcut": "-h",
+          "HasValue": false
+        },
+        {
+          "Name": "--mode",
+          "Shortcut": "-m",
+          "HasValue": true
+        }
+      ]
+    }
+  ]
+}

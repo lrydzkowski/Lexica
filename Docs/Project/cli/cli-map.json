@@ -8,7 +8,8 @@
       "MaxOccurs": 1,
       "Groups": [
         "g1"
-      ]
+      ],
+      "ExecutorClass": "Lexica.CLI.Executors.General.Help"
     },
     {
       "Name": "--version",
@@ -18,15 +19,29 @@
       "MaxOccurs": 1,
       "Groups": [
         "g2"
-      ]
+      ],
+      "ExecutorClass": "Lexica.CLI.Executors.General.Help"
     }
   ],
   "Commands": [
     {
       "Name": "list",
       "Shortcut": "ls",
-      "Options": [],
-      "Commands": []
+      "Options": [
+        {
+          "Name": "--help",
+          "Shortcut": "-h",
+          "HasValue": false,
+          "MinOccurs": 0,
+          "MaxOccurs" 1,
+          "Groups": [
+            "g1"
+          ],
+          "ExecutorClass": ""
+        }
+      ],
+      "Commands": [],
+      "ExecutorClass": ""
     },
     {
       "Name": "wlist",
@@ -40,7 +55,8 @@
           "MaxOccurs": 1,
           "Groups": [
             "g1"
-          ]
+          ],
+          "ExecutorClass": ""
         },
         {
           "Name": "--set",
@@ -50,10 +66,12 @@
           "MaxOccurs": -1,
           "Groups": [
             "g2"
-          ]
+          ],
+          "ExecutorClass": ""
         }
       ],
-      "Commands": []
+      "Commands": [],
+      "ExecutorClass": ""
     },
     {
       "Name": "run",
@@ -67,7 +85,8 @@
           "MaxOccurs": 1,
           "Groups": [
             "g1"
-          ]
+          ],
+          "ExecutorClass": ""
         },
         {
           "Name": "--mode",
@@ -77,10 +96,12 @@
           "MaxOccurs": 1,
           "Groups": [
             "g2"
-          ]
+          ],
+          "ExecutorClass": ""
         }
       ],
-      "Commands": []
+      "Commands": [],
+      "ExecutorClass": ""
     }
   ]
 }

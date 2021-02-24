@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://lexica.com/schemas/database.json",
+  "title": "Lexica.EF configuration",
+  "type": "object",
+  "properties": {
+    "ConnectionString": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "ConnectionString"
+  ]
+}

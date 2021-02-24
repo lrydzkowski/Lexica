@@ -1,3 +1,2 @@
 Things to learn:
 - Framework Design Guidelines (https://docs.microsoft.com/en-us/dotnet/standard/design-guidelines/?redirectedfrom=MSDN)
-- Asynchronous programming (https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/async/)
