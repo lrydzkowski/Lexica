@@ -8,13 +8,13 @@ namespace Lexica.EF.Models
 {
     public class SetTable
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("set_id")]
         public long SetId { get; set; }
 
-        [MaxLength(400)]
+        [MaxLength(400), Column("namespace")]
         public string Namespace { get; set; } = "";
 
-        [MaxLength(100)]
+        [MaxLength(100), Column("name")]
         public string Name { get; set; } = "";
 
         private ICollection<EntryTable>? _entries;

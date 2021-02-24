@@ -8,10 +8,10 @@ namespace Lexica.EF.Models
 {
     public class MaintainingHistoryTable
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("operation_id")]
         public long OperationId { get; set; }
 
-        [ForeignKey("Entry")]
+        [ForeignKey("Entry"), Column("entry_rec_id")]
         public long EntryRecId { get; set; }
         private EntryTable? _entry;
         public EntryTable Entry
@@ -20,12 +20,16 @@ namespace Lexica.EF.Models
             set => _entry = value;
         }
 
+        [Column("is_word")]
         public bool IsWord { get; set; }
 
+        [Column("is_translation")]
         public bool IsTranslation { get; set; }
 
+        [Column("num_of_correct_answers")]
         public long NumOfCorrectAnswers { get; set; }
 
+        [Column("num_of_mistakes")]
         public long NumOfMistakes { get; set; }
     }
 }

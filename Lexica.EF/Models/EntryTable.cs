@@ -8,9 +8,10 @@ namespace Lexica.EF.Models
 {
     public class EntryTable
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("rec_id")]
         public long RecId { get; set; }
 
+        [Column("set_id")]
         public long SetId { get; set; }
         private SetTable? _set;
         public SetTable Set {
@@ -18,12 +19,13 @@ namespace Lexica.EF.Models
             set => _set = value;
         }
 
+        [Column("entry_id")]
         public int EntryId { get; set; }
 
-        [MaxLength(50)]
+        [MaxLength(50), Column("word")]
         public string Word { get; set; } = "";
 
-        [MaxLength(50)]
+        [MaxLength(50), Column("translation")]
         public string Translation { get; set; } = "";
 
         private MaintainingHistoryTable? _history;

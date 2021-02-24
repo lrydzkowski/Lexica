@@ -8,10 +8,10 @@ namespace Lexica.EF.Models
 {
     public class ImportHistoryTable
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("import_id")]
         public long ImportId { get; set; }
 
-        [Required]
+        [Required, Column("set_id")]
         public long SetId { get; set; }
         private SetTable? _set;
         public SetTable Set {
@@ -19,7 +19,7 @@ namespace Lexica.EF.Models
             set => _set = value; 
         }
 
-        [Required]
+        [Required, Column("executed_date")]
         public DateTime ExecutedDate { get; set; }
     }
 }
