@@ -1,5 +1,6 @@
 ﻿using Lexica.CLI.Core.Services;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace Lexica.CLI.Executors.General
@@ -13,7 +14,7 @@ namespace Lexica.CLI.Executors.General
             _buildService = buildService;
         }
 
-        public void Execute()
+        public void Execute(List<string>? args = null)
         {
             string version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "";
             string build = _buildService.GetBuild();

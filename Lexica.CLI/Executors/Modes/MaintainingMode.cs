@@ -1,0 +1,194 @@
+﻿using Lexica.CLI.Args;
+using Lexica.CLI.Core.Config;
+using Lexica.CLI.Core.Services;
+using Lexica.Core.IO;
+using Lexica.Core.Models;
+using Lexica.Core.Services;
+using Lexica.MaintainingMode;
+using Lexica.MaintainingMode.Config;
+using Lexica.MaintainingMode.Models;
+using Lexica.Words;
+using Lexica.Words.Services;
+using Lexica.Words.Validators;
+using Lexica.Words.Validators.Models;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Text.Json;
+using System.Threading.Tasks;
+
+namespace Lexica.CLI.Executors.Modes
+{
+    class MaintainingMode : IAsyncExecutor
+    {
+        public MaintainingMode(
+            ConfigService<AppSettings> configService, 
+            ILogger<MaintainingMode> logger,
+            JsonService jsonService)
+        {
+            ConfigService = configService;
+            Logger = logger;
+            JsonService = jsonService;
+        }
+
+        public ConfigService<AppSettings> ConfigService { get; private set; }
+
+        public ILogger<MaintainingMode> Logger { get; private set; }
+
+        public JsonService JsonService { get; private set; }
+
+        private MaintainingSettings Settings { get; set; } = new MaintainingSettings();
+
+        private ModeTypeEnum ModeType { get; set; } = ModeTypeEnum.Translations;
+
+        private List<string> FilePaths { get; set; } = new List<string>();
+
+        public async Task ExecuteAsync(List<string>? args = null)
+        {
+            VerifyParameters(args);
+            Manager modeManager = GetModeManager();
+            Question? question = modeManager.GetQuestion();
+            while (question != null)
+            {
+                PresentQuestion(question.Content, modeManager.GetResult(), modeManager.GetNumberOfQuestions());
+                string answer = ReadAnswer();
+                AnswerResult? answerResult = modeManager.VerifyAnswer(answer);
+                bool isAnswerCorrect = answerResult?.Result ?? false;
+                string answers = string.Join(", ", answerResult?.PossibleAnswers ?? new List<string>());
+                PresentResult(isAnswerCorrect, answers);
+                WriteLog(
+                    isAnswerCorrect, 
+                    question.Content, 
+                    answers, 
+                    modeManager.GetResult(), 
+                    modeManager.GetNumberOfQuestions(),
+                    modeManager.AnswersRegister
+                );
+                question = modeManager.GetQuestion();
+            }
+            ShowSummary();
+        }
+
+        private void VerifyParameters(List<string>? args = null)
+        {
+            if (ConfigService.Config?.Maintaining == null)
+            {
+                throw new Exception("Maintaining settings are empty.");
+            }
+            Settings = ConfigService.Config.Maintaining;
+            if (args == null || args.Count == 0)
+            {
+                throw new ArgsException("There are no arguments");
+            }
+            bool enumParsingResult = Enum.TryParse(args[0], out ModeTypeEnum mode);
+            if (!enumParsingResult)
+            {
+                throw new ArgsException("Mode type argument is incorrect.");
+            }
+            ModeType = mode;
+            if (args.Count == 1)
+            {
+                throw new ArgsException("There are no file paths arguments.");
+            }
+            for (int i = 1; i < args.Count; i++)
+            {
+                FilePaths.Add(args[i]);
+            }
+        }
+
+        private Manager GetModeManager()
+        {
+            var fileValidator = new FileValidator(new ValidationData());
+            var setService = new SetService(fileValidator);
+            var fileSources = new List<ISource>();
+            for (int i = 0; i < FilePaths.Count; i++)
+            {
+                fileSources.Add(new FileSource(FilePaths[i]));
+            }
+            var setModeOperator = new SetModeOperator(setService, fileSources);
+            var modeManager = new Manager(setModeOperator, ModeType, Settings);
+            return modeManager;
+        }
+
+        private void PresentQuestion(string question, int currentResult, int numberOfQuestions)
+        {
+            Console.Clear();
+            Console.Write("\\p Play pronunciation; ");
+            Console.Write("(Enter) Answer; ");
+            Console.Write("\\o Override; ");
+            Console.Write("\\r Restart; ");
+            Console.Write("\\c Close;");
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine($"Result: {currentResult}/{numberOfQuestions}");
+            Console.WriteLine();
+            Console.WriteLine($"  {question}");
+            Console.WriteLine("  ------------------------------");
+            Console.Write("  # ");
+        }
+
+        private string ReadAnswer()
+        {
+            string answer = Console.ReadLine();
+            return answer;
+        }
+
+        private void PresentResult(bool result, string? correctAnswer = null)
+        {
+            ConsoleColor standardForegroundColor = Console.ForegroundColor;
+            if (result)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine();
+                Console.Write("  Correct answer :)  ");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.ReadLine();
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine();
+                Console.Write("  Wrong answer :(  ");
+                if (correctAnswer != null)
+                {
+                    Console.WriteLine();
+                    Console.Write("  Correct answer is: ");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write($"{correctAnswer}  ");
+                }
+                Console.ReadLine();
+            }
+            Console.ForegroundColor = standardForegroundColor;
+        }
+
+        private void WriteLog(
+            bool result, 
+            string question, 
+            string answers, 
+            int currentResult, 
+            int numberOfQuestions,
+            Dictionary<string, int> answersRegister)
+        {
+            JsonSerializerOptions options = JsonService.GetJsonSerializerOptions(true, null);
+            string logData = JsonSerializer.Serialize(
+                new
+                {
+                    Result = result,
+                    Question = question,
+                    Answers = answers,
+                    Progress = $"{currentResult}/{numberOfQuestions}",
+                    AnswersRegister = answersRegister
+                },
+                options
+            );
+            Logger.LogDebug(logData);
+        }
+
+        private void ShowSummary()
+        {
+            Console.Clear();
+            Console.Write("The end :) ");
+            Console.ReadLine();
+        }
+    }
+}

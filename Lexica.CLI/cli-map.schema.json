@@ -12,11 +12,11 @@
         "Shortcut": {
           "type": "string"
         },
-        "HasValue": {
-          "type": "boolean"
-        },
         "ExecutorClass": {
-          "type":  "string"
+          "type": "string"
+        },
+        "DefaultExecutorClass": {
+          "type": "string"
         },
         "Commands": {
           "type": "array",
@@ -25,7 +25,7 @@
           }
         }
       },
-      "required": [ "Name", "Shortcut", "HasValue" ]
+      "required": [ "Name", "Shortcut" ]
     }
   },
   "type": "object",

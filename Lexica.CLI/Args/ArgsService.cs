@@ -24,37 +24,60 @@ namespace Lexica.CLI.Args
                 throw new ArgsException("CLI map has empty commands array.");
             }
 
-            Type syncExecutorType = typeof(IExecutor);
-            Type asyncExecutorType = typeof(IAsyncExecutor);
-
+            var commandsToExecute = new List<Command>();
             foreach (string arg in args)
             {
                 Command? command = commands.Where(x => x.Name == arg || x.Shortcut == arg).FirstOrDefault();
-                if (command == null)
+                if (commandsToExecute.Count == 0 && command == null)
                 {
                     throw new ArgsException($"Argument {arg} isn't handled.");
                 }
+                if (command == null)
+                {
+                    commandsToExecute[commandsToExecute.Count - 1].Parameters.Add(arg);
+                }
+                else
+                {
+                    commandsToExecute.Add(command);
+                    commands = command.Commands;
+                }
+            }
+
+            for (int i = 0; i < commandsToExecute.Count; i++)
+            {
+                Command command = commandsToExecute[i];
+                string? executor = null;
                 if (command.ExecutorClass != null)
                 {
-                    Type? type = Type.GetType(command.ExecutorClass);
+                    executor = command.ExecutorClass;
+                }
+                else if (i == commandsToExecute.Count - 1 && command.DefaultExecutorClass != null)
+                {
+                    executor = command.DefaultExecutorClass;
+                }
+                if (executor != null)
+                {
+                    Type? type = Type.GetType(executor);
                     if (type == null)
                     {
-                        throw new ArgsException($"Type {command.ExecutorClass} from command {arg} doesn't exist.");
+                        throw new ArgsException($"Type {executor} doesn't exist.");
                     }
-                    
-                    if (syncExecutorType.IsAssignableFrom(type))
+
+                    if (typeof(IExecutor).IsAssignableFrom(type))
                     {
                         IExecutor syncExecutor = (IExecutor)servicesProvider.GetService(type);
-                        syncExecutor.Execute();
-                    } 
-                    else if (asyncExecutorType.IsAssignableFrom(type))
+                        syncExecutor.Execute(command.Parameters);
+                        return;
+                    }
+                    else if (typeof(IAsyncExecutor).IsAssignableFrom(type))
                     {
                         IAsyncExecutor asyncExecutor = (IAsyncExecutor)servicesProvider.GetService(type);
-                        await asyncExecutor.ExecuteAsync();
+                        await asyncExecutor.ExecuteAsync(command.Parameters);
+                        return;
                     }
                     else
                     {
-                        throw new ArgsException($"Type {command.ExecutorClass} from command {arg} doesn't implement IExecutor or IAsynExecutor.");
+                        throw new ArgsException($"Type {executor} doesn't implement IExecutor or IAsynExecutor.");
                     }
                 }
             }

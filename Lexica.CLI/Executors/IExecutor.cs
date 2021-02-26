@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Lexica.CLI.Executors
 {
     interface IExecutor
     {
-        void Execute();
+        void Execute(List<string>? args = null);
     }
 }

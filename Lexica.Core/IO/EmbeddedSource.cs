@@ -13,6 +13,14 @@ namespace Lexica.Core.IO
 
         public string Path { get; private set; }
 
+        public string Namespace
+        {
+            get
+            {
+                return System.IO.Path.GetDirectoryName(Path)?.Replace("\\", "/") + "/" ?? Path;
+            }
+        }
+
         public Assembly Assembly { get; private set; }
 
         public string? Contents { get; private set; }

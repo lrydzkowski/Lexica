@@ -90,5 +90,15 @@ namespace Lexica.Words
             
             return Set.Entries[Index++];
         }
+
+        public int GetNumberOfEntries()
+        {
+            LoadSet();
+            if (Set == null)
+            {
+                return 0;
+            }
+            return Set.Entries.Count;
+        }
     }
 }

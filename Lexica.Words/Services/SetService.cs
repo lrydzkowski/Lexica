@@ -3,6 +3,7 @@ using Lexica.Core.Models;
 using Lexica.Words.Models;
 using Lexica.Words.Validators;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Lexica.Words.Services
@@ -30,7 +31,7 @@ namespace Lexica.Words.Services
 
             foreach (ISource fileSource in filesSources)
             {
-                var setPath = new SetPath(fileSource.Path, fileSource.Name);
+                var setPath = new SetPath(fileSource.Namespace, fileSource.Name);
                 string contents = fileSource.GetContents().Trim();
 
                 result.Merge(FileValidator.Validate(contents, fileSource.Name));

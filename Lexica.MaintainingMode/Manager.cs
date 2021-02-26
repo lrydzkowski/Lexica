@@ -18,6 +18,8 @@ namespace Lexica.MaintainingMode
             Settings = settings;
         }
 
+        public int NumOfCycles { get; private set; } = 2;
+
         public SetModeOperator SetOperator { get; private set; }
 
         public ModeTypeEnum ModeType { get; set; }
@@ -26,22 +28,49 @@ namespace Lexica.MaintainingMode
 
         private Entry? CurrentEntry { get; set; } = null;
 
-        public void Randomize()
-        {
-            SetOperator.Randomize();
-        }
+        public Dictionary<string, int> AnswersRegister { get; private set; } = new Dictionary<string, int>() { };
 
         public void Reset()
         {
             SetOperator.Reset();
+            AnswersRegister = new Dictionary<string, int>();
+        }
+
+        public void Randomize() { }
+
+        public int GetNumberOfQuestions()
+        {
+            return SetOperator.GetNumberOfEntries() * NumOfCycles;
+        }
+
+        public int GetResult()
+        {
+            return AnswersRegister.Select(x => x.Value).Sum();
         }
 
         public Question? GetQuestion(bool getCurrent = false)
         {
             if (!getCurrent)
             {
-                Entry? entry = SetOperator.GetNextEntry();
-                CurrentEntry = entry;
+                if (IsAnswersRegisterCompleted())
+                {
+                    CurrentEntry = null;
+                }
+                else
+                {
+                    if (CurrentEntry == null)
+                    {
+                        SetOperator.Randomize();
+                    }
+                    Entry? entry = GetNextEntry();
+                    int iteration = 0;
+                    while (iteration < GetNumberOfQuestions() && entry != null && IsEntryCompleted(entry))
+                    {
+                        entry = GetNextEntry();
+                        iteration++;
+                    }
+                    CurrentEntry = entry;
+                }
             }
             if (CurrentEntry == null)
             {
@@ -59,6 +88,43 @@ namespace Lexica.MaintainingMode
             }
 
             return new Question(string.Join(", ", questionWords), QuestionTypeEnum.Open);
+        }
+
+        private bool IsAnswersRegisterCompleted()
+        {
+            if (GetNumberOfQuestions() != AnswersRegister.Count * NumOfCycles)
+            {
+                return false;
+            }
+            foreach (KeyValuePair<string, int> element in AnswersRegister)
+            {
+                if (element.Value < NumOfCycles)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private Entry? GetNextEntry()
+        {
+            Entry? entry = SetOperator.GetNextEntry();
+            if (entry == null)
+            {
+                SetOperator.Reset();
+                SetOperator.Randomize();
+                entry = SetOperator.GetNextEntry();
+            }
+            return entry;
+        }
+
+        private bool IsEntryCompleted(Entry entry)
+        {
+            if (!AnswersRegister.ContainsKey(entry.Id) || AnswersRegister[entry.Id] < NumOfCycles)
+            {
+                return false;
+            }
+            return true;
         }
 
         public AnswerResult? VerifyAnswer(string input)
@@ -82,16 +148,33 @@ namespace Lexica.MaintainingMode
             correctWords.Sort();
 
             bool result = true;
-            if (string.Join(',', answerWords) != string.Join(',', correctWords))
+            if (string.Join(',', answerWords) == string.Join(',', correctWords))
+            {
+                UpdateAnswersRegister(CurrentEntry, 1);
+            }
+            else
             {
                 result = false;
                 if (Settings.ResetAfterMistake == true)
                 {
-                    SetOperator.Reset();
+                    Reset();
+                }
+                else
+                {
+                    UpdateAnswersRegister(CurrentEntry, -1);
                 }
             }
 
             return new AnswerResult(result, correctWords);
+        }
+
+        private void UpdateAnswersRegister(Entry entry, int value)
+        {
+            if (!AnswersRegister.ContainsKey(entry.Id))
+            {
+                AnswersRegister[entry.Id] = 0;
+            }
+            AnswersRegister[entry.Id] += value;
         }
     }
 }

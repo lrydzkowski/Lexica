@@ -6,6 +6,14 @@ namespace Lexica.Words.Models
 {
     public class Entry
     {
+        public string Id
+        {
+            get
+            {
+                return $"{SetPath.Namespace}{SetPath.Name}:{LineNum}";
+            }
+        }
+
         public SetPath SetPath { get; }
 
         public int LineNum { get; }

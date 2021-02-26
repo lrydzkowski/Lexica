@@ -12,6 +12,8 @@ namespace Lexica.Core.IO
 
         public string Path { get; }
 
+        public string Namespace { get; }
+
         public string GetContents(bool upToDate = false);
     }
 }

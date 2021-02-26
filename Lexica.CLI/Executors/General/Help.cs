@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Lexica.CLI.Executors.General
 {
     class Help : IExecutor
     {
-        public void Execute()
+        public void Execute(List<string>? args = null)
         {
             Console.WriteLine("Info:    English learning application.");
             Console.WriteLine("Usage:   Lexica [COMMANDS]");

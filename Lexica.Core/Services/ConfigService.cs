@@ -49,7 +49,7 @@ namespace Lexica.Core.Services
             OperationResult<IList<string>> validationResult = Validate(configContents, configSchemaContents);
             if (!validationResult.Result)
             {
-                var exception = new WrongConfigException("App settings has a wrong structure.");
+                var exception = new WrongConfigException($"File {ConfigSource.Name} has a wrong structure.");
                 for (int i = 0; i < validationResult.Data.Count; i++)
                 {
                     exception.Data.Add(i.ToString(), validationResult.Data[i]);

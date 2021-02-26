@@ -8,10 +8,12 @@ namespace Lexica.CLI.Args.Models
 
         public string Shortcut { get; set; } = "";
 
-        public bool HasValue { get; set; } = false;
-
         public string? ExecutorClass { get; set; } = null;
 
+        public string? DefaultExecutorClass { get; set; } = null;
+
         public List<Command> Commands { get; set; } = new List<Command>();
+
+        public List<string> Parameters { get; set; } = new List<string>();
     }
 }
