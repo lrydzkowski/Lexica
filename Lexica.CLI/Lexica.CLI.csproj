@@ -63,6 +63,9 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\Examples\set_1.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="build">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -8,12 +8,14 @@ using Lexica.MaintainingMode;
 using Lexica.MaintainingMode.Config;
 using Lexica.MaintainingMode.Models;
 using Lexica.Words;
+using Lexica.Words.Config;
 using Lexica.Words.Services;
 using Lexica.Words.Validators;
 using Lexica.Words.Validators.Models;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -24,20 +26,26 @@ namespace Lexica.CLI.Executors.Modes
         public MaintainingMode(
             ConfigService<AppSettings> configService, 
             ILogger<MaintainingMode> logger,
-            JsonService jsonService)
+            JsonService jsonService,
+            LocationService locationService)
         {
             ConfigService = configService;
             Logger = logger;
             JsonService = jsonService;
+            LocationService = locationService;
         }
 
-        public ConfigService<AppSettings> ConfigService { get; private set; }
+        private ConfigService<AppSettings> ConfigService { get; set; }
 
-        public ILogger<MaintainingMode> Logger { get; private set; }
+        private ILogger<MaintainingMode> Logger { get; set; }
 
-        public JsonService JsonService { get; private set; }
+        private JsonService JsonService { get; set; }
 
-        private MaintainingSettings Settings { get; set; } = new MaintainingSettings();
+        private LocationService LocationService { get; set; }
+
+        private WordsSettings WordsSettings { get; set; } = new WordsSettings();
+
+        private MaintainingSettings MaintainingSettings { get; set; } = new MaintainingSettings();
 
         private ModeTypeEnum ModeType { get; set; } = ModeTypeEnum.Translations;
 
@@ -71,11 +79,16 @@ namespace Lexica.CLI.Executors.Modes
 
         private void VerifyParameters(List<string>? args = null)
         {
+            if (ConfigService.Config?.Words == null)
+            {
+                throw new Exception("Words settings are empty.");
+            }
+            WordsSettings = ConfigService.Config.Words;
             if (ConfigService.Config?.Maintaining == null)
             {
                 throw new Exception("Maintaining settings are empty.");
             }
-            Settings = ConfigService.Config.Maintaining;
+            MaintainingSettings = ConfigService.Config.Maintaining;
             if (args == null || args.Count == 0)
             {
                 throw new ArgsException("There are no arguments");
@@ -103,10 +116,16 @@ namespace Lexica.CLI.Executors.Modes
             var fileSources = new List<ISource>();
             for (int i = 0; i < FilePaths.Count; i++)
             {
-                fileSources.Add(new FileSource(FilePaths[i]));
+                string absolutePath = WordsSettings.DirectoryPath ?? LocationService.GetExecutingAssemblyLocation();
+                if (FilePaths[i].StartsWith('.'))
+                {
+                    absolutePath = LocationService.GetExecutingAssemblyLocation();
+                }
+                string filePath = Path.Combine(absolutePath, FilePaths[i].TrimStart('.', '\\', '/'));
+                fileSources.Add(new FileSource(filePath));
             }
             var setModeOperator = new SetModeOperator(setService, fileSources);
-            var modeManager = new Manager(setModeOperator, ModeType, Settings);
+            var modeManager = new Manager(setModeOperator, ModeType, MaintainingSettings);
             return modeManager;
         }
 
