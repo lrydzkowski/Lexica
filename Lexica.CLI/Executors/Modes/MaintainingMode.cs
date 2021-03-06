@@ -206,7 +206,10 @@ namespace Lexica.CLI.Executors.Modes
         private void ShowSummary()
         {
             Console.Clear();
+            ConsoleColor standardForegroundColor = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("The end :) ");
+            Console.ForegroundColor = standardForegroundColor;
             Console.ReadLine();
         }
     }
