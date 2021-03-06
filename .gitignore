@@ -364,5 +364,6 @@ MigrationBackup/
 
 Lexica.EF/database.json
 Lexica.MaintainingMode/maintaining.json
+Lexica.CLI/build
 Lexica.CLI/appsettings.json
 Lexica.CLI/Properties/launchSettings.json
