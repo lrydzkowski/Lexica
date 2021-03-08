@@ -2,6 +2,7 @@
 using Lexica.CLI.Core.Config;
 using Lexica.CLI.Core.Services;
 using Lexica.CLI.Executors;
+using Lexica.CLI.Modes.Maintaining.Models;
 using Lexica.Core.IO;
 using Lexica.Core.Models;
 using Lexica.Core.Services;
@@ -65,7 +66,20 @@ namespace Lexica.CLI.Modes.Maintaining
                 bool isAnswerCorrect = answerResult?.Result ?? false;
                 string answers = string.Join(", ", answerResult?.PossibleAnswers ?? new List<string>());
                 PresentResult(isAnswerCorrect, answers);
-                HandleCommand();
+                CommandEnum command = HandleCommand();
+                if (command == CommandEnum.Close)
+                {
+                    break;
+                }
+                else if (command == CommandEnum.Restart)
+                {
+                    await ExecuteAsync(args);
+                    return;
+                }
+                else if (command == CommandEnum.Override && !isAnswerCorrect)
+                {
+                    modeManager.UpdateAnswersRegister(2);
+                }
                 WriteLog(
                     isAnswerCorrect,
                     question.Content,
@@ -105,6 +119,7 @@ namespace Lexica.CLI.Modes.Maintaining
             {
                 throw new ArgsException("There are no file paths arguments.");
             }
+            FilePaths = new List<string>();
             for (int i = 1; i < args.Count; i++)
             {
                 FilePaths.Add(args[i]);
@@ -180,10 +195,22 @@ namespace Lexica.CLI.Modes.Maintaining
             Console.ForegroundColor = standardForegroundColor;
         }
 
-        private void HandleCommand()
+        private CommandEnum HandleCommand()
         {
             string input = Console.ReadLine();
-
+            switch (input)
+            {
+                case "\\o":
+                    return CommandEnum.Override;
+                case "\\r":
+                    return CommandEnum.Restart;
+                case "\\c":
+                    return CommandEnum.Close;
+                case "\\p":
+                    // play pronuciation
+                    break;
+            }
+            return CommandEnum.None;
         }
 
         private void WriteLog(

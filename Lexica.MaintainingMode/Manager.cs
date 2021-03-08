@@ -168,6 +168,15 @@ namespace Lexica.MaintainingMode
             return new AnswerResult(result, correctWords);
         }
 
+        public void UpdateAnswersRegister(int value)
+        {
+            if (CurrentEntry == null)
+            {
+                return;
+            }
+            UpdateAnswersRegister(CurrentEntry, value);
+        }
+
         private void UpdateAnswersRegister(Entry entry, int value)
         {
             if (!AnswersRegister.ContainsKey(entry.Id))
