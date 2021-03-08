@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Lexica.CLI.Executors;
+using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Lexica.CLI.Executors.Modes
+namespace Lexica.CLI.Modes.Learning
 {
-    class LearningMode : IAsyncExecutor
+    class LearningModeExecutor : IAsyncExecutor
     {
         public async Task ExecuteAsync(List<string>? args = null)
         {

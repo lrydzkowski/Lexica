@@ -28,17 +28,17 @@
             {
               "Name": "maintaining",
               "Shortcut": "m",
-              "ExecutorClass": "Lexica.CLI.Executors.Modes.MaintainingMode"
+              "ExecutorClass": "Lexica.CLI.Modes.Maintaining.MaintainingModeExecutor"
             },
             {
               "Name": "learning",
               "Shortcut": "l",
-              "ExecutorClass": "Lexica.CLI.Executors.Modes.LearningMode"
+              "ExecutorClass": "Lexica.CLI.Modes.Learning.LearningModeExecutor"
             },
             {
               "Name": "spelling",
               "Shortcut": "s",
-              "ExecutorClass": "Lexica.CLI.Executors.Modes.SpellingMode"
+              "ExecutorClass": "Lexica.CLI.Modes.Spelling.SpellingModeExecutor"
             }
           ]
         }

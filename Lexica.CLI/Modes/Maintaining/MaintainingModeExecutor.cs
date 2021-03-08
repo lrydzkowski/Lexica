@@ -1,6 +1,7 @@
 ﻿using Lexica.CLI.Args;
 using Lexica.CLI.Core.Config;
 using Lexica.CLI.Core.Services;
+using Lexica.CLI.Executors;
 using Lexica.Core.IO;
 using Lexica.Core.Models;
 using Lexica.Core.Services;
@@ -19,13 +20,13 @@ using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Lexica.CLI.Executors.Modes
+namespace Lexica.CLI.Modes.Maintaining
 {
-    class MaintainingMode : IAsyncExecutor
+    class MaintainingModeExecutor : IAsyncExecutor
     {
-        public MaintainingMode(
-            ConfigService<AppSettings> configService, 
-            ILogger<MaintainingMode> logger,
+        public MaintainingModeExecutor(
+            ConfigService<AppSettings> configService,
+            ILogger<MaintainingModeExecutor> logger,
             JsonService jsonService,
             LocationService locationService)
         {
@@ -37,7 +38,7 @@ namespace Lexica.CLI.Executors.Modes
 
         private ConfigService<AppSettings> ConfigService { get; set; }
 
-        private ILogger<MaintainingMode> Logger { get; set; }
+        private ILogger<MaintainingModeExecutor> Logger { get; set; }
 
         private JsonService JsonService { get; set; }
 
@@ -64,11 +65,12 @@ namespace Lexica.CLI.Executors.Modes
                 bool isAnswerCorrect = answerResult?.Result ?? false;
                 string answers = string.Join(", ", answerResult?.PossibleAnswers ?? new List<string>());
                 PresentResult(isAnswerCorrect, answers);
+                HandleCommand();
                 WriteLog(
-                    isAnswerCorrect, 
-                    question.Content, 
-                    answers, 
-                    modeManager.GetResult(), 
+                    isAnswerCorrect,
+                    question.Content,
+                    answers,
+                    modeManager.GetResult(),
                     modeManager.GetNumberOfQuestions(),
                     modeManager.AnswersRegister
                 );
@@ -161,7 +163,6 @@ namespace Lexica.CLI.Executors.Modes
                 Console.WriteLine();
                 Console.Write("  Correct answer :)  ");
                 Console.ForegroundColor = ConsoleColor.White;
-                Console.ReadLine();
             }
             else
             {
@@ -175,16 +176,21 @@ namespace Lexica.CLI.Executors.Modes
                     Console.ForegroundColor = ConsoleColor.White;
                     Console.Write($"{correctAnswer}  ");
                 }
-                Console.ReadLine();
             }
             Console.ForegroundColor = standardForegroundColor;
         }
 
+        private void HandleCommand()
+        {
+            string input = Console.ReadLine();
+
+        }
+
         private void WriteLog(
-            bool result, 
-            string question, 
-            string answers, 
-            int currentResult, 
+            bool result,
+            string question,
+            string answers,
+            int currentResult,
             int numberOfQuestions,
             Dictionary<string, int> answersRegister)
         {
