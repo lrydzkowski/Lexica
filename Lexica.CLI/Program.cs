@@ -5,6 +5,7 @@ using Lexica.CLI.Core.Extensions;
 using Lexica.CLI.Executors.Extensions;
 using Lexica.Core.Services;
 using Lexica.EF;
+using Lexica.EF.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -80,6 +81,8 @@ namespace Lexica.CLI
 
             services.AddExecutorServices();
             services.AddCoreServices();
+
+            services.AddEFServices();
 
             IServiceProvider serviceProvider = services.BuildServiceProvider();
 

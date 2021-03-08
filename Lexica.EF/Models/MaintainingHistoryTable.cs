@@ -22,5 +22,8 @@ namespace Lexica.EF.Models
 
         [Column("proper_answer")]
         public string ProperAnswer { get; set; } = "";
+
+        [Column("is_correct")]
+        public bool IsCorrect { get; set; } = false;
     }
 }

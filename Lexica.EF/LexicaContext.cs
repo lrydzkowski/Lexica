@@ -16,12 +16,15 @@ namespace Lexica.EF
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            ConfigService<DatabaseSettings> appSettings = ConfigService<DatabaseSettings>.Get(
-                "database", Assembly.GetExecutingAssembly()
-            );
-            string? connectionString = appSettings.Get().ConnectionString;
+            if (!optionsBuilder.IsConfigured)
+            {
+                ConfigService<DatabaseSettings> appSettings = ConfigService<DatabaseSettings>.Get(
+                                "database", Assembly.GetExecutingAssembly()
+                            );
+                string? connectionString = appSettings.Get().ConnectionString;
 
-            optionsBuilder.UseNpgsql(connectionString);
+                optionsBuilder.UseNpgsql(connectionString);
+            }
         }
 
         private void CreateWordsTables(ModelBuilder modelBuilder)

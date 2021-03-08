@@ -26,7 +26,7 @@ namespace Lexica.MaintainingMode
 
         public MaintainingSettings Settings { get; private set; }
 
-        private Entry? CurrentEntry { get; set; } = null;
+        public Entry? CurrentEntry { get; private set; } = null;
 
         public Dictionary<string, int> AnswersRegister { get; private set; } = new Dictionary<string, int>() { };
 

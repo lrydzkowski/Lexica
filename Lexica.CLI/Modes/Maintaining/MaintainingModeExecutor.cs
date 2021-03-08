@@ -9,6 +9,7 @@ using Lexica.Core.Services;
 using Lexica.MaintainingMode;
 using Lexica.MaintainingMode.Config;
 using Lexica.MaintainingMode.Models;
+using Lexica.MaintainingMode.Services;
 using Lexica.Words;
 using Lexica.Words.Config;
 using Lexica.Words.Services;
@@ -29,12 +30,14 @@ namespace Lexica.CLI.Modes.Maintaining
             ConfigService<AppSettings> configService,
             ILogger<MaintainingModeExecutor> logger,
             JsonService jsonService,
-            LocationService locationService)
+            LocationService locationService,
+            IMaintainingHistoryService maintainingHistoryService)
         {
             ConfigService = configService;
             Logger = logger;
             JsonService = jsonService;
             LocationService = locationService;
+            MaintainingHistoryService = maintainingHistoryService;
         }
 
         private ConfigService<AppSettings> ConfigService { get; set; }
@@ -44,6 +47,8 @@ namespace Lexica.CLI.Modes.Maintaining
         private JsonService JsonService { get; set; }
 
         private LocationService LocationService { get; set; }
+
+        private IMaintainingHistoryService MaintainingHistoryService { get; set; }
 
         private WordsSettings WordsSettings { get; set; } = new WordsSettings();
 
@@ -60,12 +65,16 @@ namespace Lexica.CLI.Modes.Maintaining
             Question? question = modeManager.GetQuestion();
             while (question != null)
             {
+                // Show question.
                 PresentQuestion(question.Content, modeManager.GetResult(), modeManager.GetNumberOfQuestions());
+                // Verify answer.
                 string answer = ReadAnswer();
                 AnswerResult? answerResult = modeManager.VerifyAnswer(answer);
                 bool isAnswerCorrect = answerResult?.Result ?? false;
-                string answers = string.Join(", ", answerResult?.PossibleAnswers ?? new List<string>());
-                PresentResult(isAnswerCorrect, answers);
+                string correctAnswer = string.Join(", ", answerResult?.PossibleAnswers ?? new List<string>());
+                // Show result.
+                PresentResult(isAnswerCorrect, correctAnswer);
+                // Handle user commands (shortcuts).
                 CommandEnum command = HandleCommand();
                 if (command == CommandEnum.Close)
                 {
@@ -80,14 +89,28 @@ namespace Lexica.CLI.Modes.Maintaining
                 {
                     modeManager.UpdateAnswersRegister(2);
                 }
+                // Save logs in file.
                 WriteLog(
                     isAnswerCorrect,
                     question.Content,
-                    answers,
+                    correctAnswer,
                     modeManager.GetResult(),
                     modeManager.GetNumberOfQuestions(),
                     modeManager.AnswersRegister
                 );
+                // Save history in database.
+                if (modeManager.CurrentEntry != null)
+                {
+                    await MaintainingHistoryService.SaveAsync(
+                        modeManager.CurrentEntry.SetPath.Namespace, 
+                        modeManager.CurrentEntry.SetPath.Name, 
+                        question.Content, 
+                        answer, 
+                        correctAnswer, 
+                        isAnswerCorrect
+                    );
+                }
+                // Get next question.
                 question = modeManager.GetQuestion();
             }
             ShowSummary();
