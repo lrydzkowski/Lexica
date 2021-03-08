@@ -21,6 +21,7 @@ namespace CoreTests
                 {
                     "Resources.Config.appsettings1.wrong.json",
                     "Resources.Config.appsettings.schema.json",
+                    "File Resources.Config.appsettings1.wrong.json has a wrong structure.",
                     new Dictionary<string, string>() {
                         { "0", "Invalid type. Expected String but got Boolean. Path 'Database.ConnectionString', line 3, position 29." }
                     }
@@ -29,6 +30,7 @@ namespace CoreTests
                 {
                     "Resources.Config.appsettings2.wrong.json",
                     "Resources.Config.appsettings.schema.json",
+                    "File Resources.Config.appsettings2.wrong.json has a wrong structure.",
                     new Dictionary<string, string>() {
                         { "0", "Required properties are missing from object: PlayPronunciation. Path 'Maintaining', line 14, position 18." },
                         { "1", "Required properties are missing from object: Words. Path '', line 1, position 1." }
@@ -38,6 +40,7 @@ namespace CoreTests
                 {
                     "Resources.Config.appsettings3.wrong.json",
                     "Resources.Config.appsettings.schema.json",
+                    "File Resources.Config.appsettings3.wrong.json has a wrong structure.",
                     new Dictionary<string, string>() {
                         { "0", "Integer 11 exceeds maximum value of 10. Path 'Spelling.NumOfLevels', line 10, position 21." },
                         { "1", "Integer 11 exceeds maximum value of 10. Path 'Learning.NumOfLevels', line 14, position 21." }
@@ -51,6 +54,7 @@ namespace CoreTests
         public void Init_WrongConfiguration_ThrowsWrongConfigException(
             string configPath,
             string schemaPath,
+            string expectedErrorMsg,
             Dictionary<string, string> expectedExceptionDetails)
         {
             // Arrange
@@ -62,7 +66,7 @@ namespace CoreTests
 
             // Assert
             WrongConfigException ex = Assert.Throws<WrongConfigException>(action);
-            Assert.Equal("App settings has a wrong structure.", ex.Message);
+            Assert.Equal(expectedErrorMsg, ex.Message);
             Assert.Equal(expectedExceptionDetails.Count, ex.Data.Count);
             foreach (KeyValuePair<string, string> el in expectedExceptionDetails)
             {

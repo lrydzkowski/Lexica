@@ -48,7 +48,7 @@ namespace Lexica.MaintainingMode
             return AnswersRegister.Select(x => x.Value).Sum();
         }
 
-        public Question? GetQuestion(bool getCurrent = false)
+        public Question? GetQuestion(bool getCurrent = false, bool randomize = true)
         {
             if (!getCurrent)
             {
@@ -58,7 +58,7 @@ namespace Lexica.MaintainingMode
                 }
                 else
                 {
-                    if (CurrentEntry == null)
+                    if (CurrentEntry == null && randomize)
                     {
                         SetOperator.Randomize();
                     }

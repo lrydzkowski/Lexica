@@ -68,7 +68,7 @@ namespace Lexica.MaintainingModeTests
             var modeManager = new Manager(
                 setModeOperator, modeType, new MaintainingSettings() { ResetAfterMistake = null }
             );
-            Entry? entry = setModeOperator.GetEntry(fileSource.Path, fileSource.Name, 1);
+            Entry? entry = setModeOperator.GetEntry(fileSource.Namespace, fileSource.Name, 1);
             if (entry == null)
             {
                 throw new Exception("Entry is null");
@@ -85,7 +85,7 @@ namespace Lexica.MaintainingModeTests
             }
 
             // Act
-            Question? question = modeManager.GetQuestion();
+            Question? question = modeManager.GetQuestion(false, false);
             AnswerResult? answerResult = modeManager.VerifyAnswer(wrongAnswer);
             if (answerResult == null)
             {
@@ -131,17 +131,19 @@ namespace Lexica.MaintainingModeTests
             modeManager.Randomize();
             List<string> questionsContent = new List<string>();
             Question? question = modeManager.GetQuestion();
-            while (question != null)
+            for (int i = 0, ii = modeManager.GetNumberOfQuestions(); i < ii; i++)
             {
-                questionsContent.Add(question.Content);
+                var rnd = new Random();
+                questionsContent.Add(question?.Content ?? rnd.Next(0, 100).ToString());
                 question = modeManager.GetQuestion();
             }
             modeManager.Randomize();
             List<string> questionsAfterRandomizeContent = new List<string>();
             question = modeManager.GetQuestion();
-            while (question != null)
+            for (int i = 0, ii = modeManager.GetNumberOfQuestions(); i < ii; i++)
             {
-                questionsAfterRandomizeContent.Add(question.Content);
+                var rnd = new Random();
+                questionsContent.Add(question?.Content ?? rnd.Next(0, 100).ToString());
                 question = modeManager.GetQuestion();
             }
 
