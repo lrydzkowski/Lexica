@@ -9,16 +9,6 @@ namespace Lexica.Words
 {
     public class SetModeOperator
     {
-        public ISetService SetService { get; private set; }
-
-        public List<ISource> FilesSources { get; set; }
-
-        public OperationResult<Set?>? LastLoadSetOperationResult { get; private set; }
-
-        public Set? Set { get; private set; }
-
-        public int Index { get; private set; }
-
         public SetModeOperator(ISetService setService, List<ISource> filesSources)
         {
             SetService = setService;
@@ -30,6 +20,14 @@ namespace Lexica.Words
             SetService = setService;
             FilesSources = new List<ISource>() { fileSource };
         }
+
+        private ISetService SetService { get; set; }
+
+        private List<ISource> FilesSources { get; set; }
+
+        private OperationResult<Set?>? LastLoadSetOperationResult { get; set; }
+
+        private Set? Set { get; set; }
 
         public bool LoadSet()
         {
@@ -51,11 +49,6 @@ namespace Lexica.Words
             return result;
         }
 
-        public void Reset()
-        {
-            Index = 0;
-        }
-
         public Entry? GetEntry(string setNamespace, string setName, int lineNum)
         {
             LoadSet();
@@ -72,23 +65,38 @@ namespace Lexica.Words
                     }
                 }
             }
-
             return null;
         }
 
-        public Entry? GetNextEntry()
+        public IEnumerable<Entry?> GetEntries(bool infiniteLoop = false, bool randomizeEachIteration = true)
         {
             LoadSet();
             if (Set == null)
             {
-                return null;
+                yield return null;
             }
-            if (Index > Set.Entries.Count - 1)
+            else
             {
-                return null;
+                if (randomizeEachIteration)
+                {
+                    Randomize();
+                }
+                for (int i = 0; i < Set.Entries.Count; i++)
+                {
+                    yield return Set.Entries[i];
+                    if (i == Set.Entries.Count - 1)
+                    {
+                        if (infiniteLoop)
+                        {
+                            i = 0;
+                        }
+                        if (randomizeEachIteration)
+                        {
+                            Randomize();
+                        }
+                    }
+                }
             }
-            
-            return Set.Entries[Index++];
         }
 
         public int GetNumberOfEntries()

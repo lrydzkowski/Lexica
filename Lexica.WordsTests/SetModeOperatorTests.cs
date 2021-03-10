@@ -1,5 +1,6 @@
 ﻿using Lexica.Core.IO;
 using Lexica.Words;
+using Lexica.Words.Models;
 using Lexica.Words.Services;
 using Lexica.Words.Validators;
 using Lexica.Words.Validators.Models;
@@ -22,30 +23,29 @@ namespace Lexica.WordsTests
             var fileSource = new EmbeddedSource(filePath, Assembly.GetExecutingAssembly());
             var setModeOperator = new SetModeOperator(setService, fileSource);
 
-            setModeOperator.LoadSet();
-            if (setModeOperator.Set == null)
+            if (!setModeOperator.LoadSet())
             {
                 throw new Exception("Set is null.");
             }
 
-            setModeOperator.Reset();
-            setModeOperator.Randomize();
-            var str1 = "";
-            var entry1 = setModeOperator.GetNextEntry();
-            while (entry1 != null)
+            string str1 = "";
+            foreach (Entry? entry1 in setModeOperator.GetEntries(false, true))
             {
+                if (entry1 == null)
+                {
+                    break;
+                }
                 str1 += string.Join(',', entry1.Words) + ',' + string.Join(',', entry1.Translations);
-                entry1 = setModeOperator.GetNextEntry();
             }
 
-            setModeOperator.Reset();
-            setModeOperator.Randomize();
-            var str2 = "";
-            var entry2 = setModeOperator.GetNextEntry();
-            while (entry2 != null)
+            string str2 = "";
+            foreach (Entry? entry2 in setModeOperator.GetEntries(false, true))
             {
-                str2 += string.Join(',', entry2.Words) + ',' + string.Join(',', entry2.Translations);
-                entry2 = setModeOperator.GetNextEntry();
+                if (entry2 == null)
+                {
+                    break;
+                }
+                str1 += string.Join(',', entry2.Words) + ',' + string.Join(',', entry2.Translations);
             }
 
             Assert.NotEqual(str1, str2);
@@ -82,19 +82,18 @@ namespace Lexica.WordsTests
             var fileSource = new EmbeddedSource(filePath, Assembly.GetExecutingAssembly());
             var setModeOperator = new SetModeOperator(setService, fileSource);
 
-            setModeOperator.LoadSet();
-            if (setModeOperator.Set == null)
+            if (!setModeOperator.LoadSet())
             {
                 throw new Exception("Set is null.");
             }
 
-            setModeOperator.Reset();
-            setModeOperator.Randomize();
             int index = 0;
-            var entry = setModeOperator.GetNextEntry();
-            while (entry != null)
+            foreach (Entry? entry in setModeOperator.GetEntries(false, true))
             {
-                entry = setModeOperator.GetNextEntry();
+                if (entry == null)
+                {
+                    break;
+                }
                 index++;
             }
 

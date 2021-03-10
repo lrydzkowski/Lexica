@@ -5,7 +5,6 @@ using Lexica.Words;
 using Lexica.Words.Models;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Lexica.MaintainingMode
 {
@@ -18,13 +17,13 @@ namespace Lexica.MaintainingMode
             Settings = settings;
         }
 
-        public int NumOfCycles { get; private set; } = 2;
+        private int NumOfCycles { get; set; } = 2;
 
-        public SetModeOperator SetOperator { get; private set; }
+        private SetModeOperator SetOperator { get; set; }
 
-        public ModeTypeEnum ModeType { get; set; }
+        private ModeTypeEnum ModeType { get; set; }
 
-        public MaintainingSettings Settings { get; private set; }
+        private MaintainingSettings Settings { get; set; }
 
         public Entry? CurrentEntry { get; private set; } = null;
 
@@ -32,15 +31,7 @@ namespace Lexica.MaintainingMode
 
         public void Reset()
         {
-            SetOperator.Reset();
             AnswersRegister = new Dictionary<string, int>();
-        }
-
-        public void Randomize() { }
-
-        public int GetNumberOfQuestions()
-        {
-            return SetOperator.GetNumberOfEntries() * NumOfCycles;
         }
 
         public int GetResult()
@@ -48,74 +39,48 @@ namespace Lexica.MaintainingMode
             return AnswersRegister.Select(x => x.Value).Sum();
         }
 
-        public Question? GetQuestion(bool getCurrent = false, bool randomize = true)
+        public IEnumerable<Question?> GetQuestions(bool randomizeEachIteration = true)
         {
-            if (!getCurrent)
+            int numOfCompletedEntries = 0;
+            foreach (Entry? entry in SetOperator.GetEntries(true, randomizeEachIteration))
             {
-                if (IsAnswersRegisterCompleted())
+                if (entry == null)
                 {
-                    CurrentEntry = null;
+                    yield return null;
+                }
+                else if (IsEntryCompleted(entry))
+                {
+                    numOfCompletedEntries++;
+                    if (numOfCompletedEntries == GetNumberOfQuestions())
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        continue;
+                    }
                 }
                 else
                 {
-                    if (CurrentEntry == null && randomize)
-                    {
-                        SetOperator.Randomize();
-                    }
-                    Entry? entry = GetNextEntry();
-                    int iteration = 0;
-                    while (iteration < GetNumberOfQuestions() && entry != null && IsEntryCompleted(entry))
-                    {
-                        entry = GetNextEntry();
-                        iteration++;
-                    }
                     CurrentEntry = entry;
+                    List<string> questionWords = new List<string>();
+                    switch (ModeType)
+                    {
+                        case ModeTypeEnum.Translations:
+                            questionWords = entry.Words;
+                            break;
+                        case ModeTypeEnum.Words:
+                            questionWords = entry.Translations;
+                            break;
+                    }
+                    yield return new Question(string.Join(", ", questionWords), QuestionTypeEnum.Open);
                 }
             }
-            if (CurrentEntry == null)
-            {
-                return null;
-            }
-            List<string> questionWords = new List<string>();
-            switch (ModeType)
-            {
-                case ModeTypeEnum.Translations:
-                    questionWords = CurrentEntry.Words;
-                    break;
-                case ModeTypeEnum.Words:
-                    questionWords = CurrentEntry.Translations;
-                    break;
-            }
-
-            return new Question(string.Join(", ", questionWords), QuestionTypeEnum.Open);
         }
 
-        private bool IsAnswersRegisterCompleted()
+        public int GetNumberOfQuestions()
         {
-            if (GetNumberOfQuestions() != AnswersRegister.Count * NumOfCycles)
-            {
-                return false;
-            }
-            foreach (KeyValuePair<string, int> element in AnswersRegister)
-            {
-                if (element.Value < NumOfCycles)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        private Entry? GetNextEntry()
-        {
-            Entry? entry = SetOperator.GetNextEntry();
-            if (entry == null)
-            {
-                SetOperator.Reset();
-                SetOperator.Randomize();
-                entry = SetOperator.GetNextEntry();
-            }
-            return entry;
+            return SetOperator.GetNumberOfEntries() * NumOfCycles;
         }
 
         private bool IsEntryCompleted(Entry entry)

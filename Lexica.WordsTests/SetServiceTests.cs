@@ -15,7 +15,7 @@ namespace Lexica.WordsTests
     {
         [Theory]
         [InlineData("Lexica.WordsTests/Resources/Importer/Embedded/Correct2/example_set_1.txt")]
-        public void Import_NotExistedDir_ReturnsFalseResult(string filePath)
+        public void LoadSet_NotExistedFile_ReturnsFalseResult(string filePath)
         {
             // Arrange
             var fileValidator = new FileValidator(new ValidationData());
@@ -30,7 +30,7 @@ namespace Lexica.WordsTests
 
         }
 
-        public static IEnumerable<object[]> ImportValidationErrorsParameters()
+        public static IEnumerable<object[]> LoadSetValidationErrorsParameters()
         {
             return new List<object[]>
             {
@@ -208,8 +208,8 @@ namespace Lexica.WordsTests
         }
 
         [Theory]
-        [MemberData(nameof(ImportValidationErrorsParameters))]
-        public void Import_ValidationErrors_ReturnsFalseResult(
+        [MemberData(nameof(LoadSetValidationErrorsParameters))]
+        public void LoadSet_ValidationErrors_ReturnsFalseResult(
             List<string> filesPaths, 
             List<Enum> errorCodes, 
             List<Dictionary<string, string>> errorDetails)

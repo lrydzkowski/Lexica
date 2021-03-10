@@ -62,9 +62,12 @@ namespace Lexica.CLI.Modes.Maintaining
         {
             VerifyParameters(args);
             Manager modeManager = GetModeManager();
-            Question? question = modeManager.GetQuestion();
-            while (question != null)
+            foreach (Question? question in modeManager.GetQuestions())
             {
+                if (question == null)
+                {
+                    break;
+                }
                 // Show question.
                 PresentQuestion(question.Content, modeManager.GetResult(), modeManager.GetNumberOfQuestions());
                 // Verify answer.
@@ -102,16 +105,14 @@ namespace Lexica.CLI.Modes.Maintaining
                 if (modeManager.CurrentEntry != null)
                 {
                     await MaintainingHistoryService.SaveAsync(
-                        modeManager.CurrentEntry.SetPath.Namespace, 
-                        modeManager.CurrentEntry.SetPath.Name, 
-                        question.Content, 
-                        answer, 
-                        correctAnswer, 
+                        modeManager.CurrentEntry.SetPath.Namespace,
+                        modeManager.CurrentEntry.SetPath.Name,
+                        question.Content,
+                        answer,
+                        correctAnswer,
                         isAnswerCorrect
                     );
                 }
-                // Get next question.
-                question = modeManager.GetQuestion();
             }
             ShowSummary();
         }

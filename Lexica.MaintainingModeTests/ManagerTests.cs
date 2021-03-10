@@ -12,6 +12,7 @@ using Lexica.Words.Validators;
 using Lexica.Words.Validators.Models;
 using System.Reflection;
 using Lexica.Core.IO;
+using System.Linq;
 
 namespace Lexica.MaintainingModeTests
 {
@@ -85,7 +86,7 @@ namespace Lexica.MaintainingModeTests
             }
 
             // Act
-            Question? question = modeManager.GetQuestion(false, false);
+            Question? question = modeManager.GetQuestions(false).FirstOrDefault();
             AnswerResult? answerResult = modeManager.VerifyAnswer(wrongAnswer);
             if (answerResult == null)
             {
@@ -110,45 +111,6 @@ namespace Lexica.MaintainingModeTests
                     ModeTypeEnum.Translations
                 }
             };
-        }
-
-        [Theory]
-        [MemberData(nameof(CheckQuestionsRandomnessCorrectDataParameters))]
-        public void CheckQuestionsRandomness_CorrectData_QuestionsInRandomOrder(
-            string filePath, 
-            ModeTypeEnum modeType)
-        {
-            // Arrange
-            var fileValidator = new FileValidator(new ValidationData());
-            var setService = new SetService(fileValidator);
-            var fileSource = new EmbeddedSource(filePath, Assembly.GetExecutingAssembly());
-            var setModeOperator = new SetModeOperator(setService, fileSource);
-            var modeManager = new Manager(
-                setModeOperator, modeType, new MaintainingSettings() { ResetAfterMistake = null }
-            );
-
-            // Act
-            modeManager.Randomize();
-            List<string> questionsContent = new List<string>();
-            Question? question = modeManager.GetQuestion();
-            for (int i = 0, ii = modeManager.GetNumberOfQuestions(); i < ii; i++)
-            {
-                var rnd = new Random();
-                questionsContent.Add(question?.Content ?? rnd.Next(0, 100).ToString());
-                question = modeManager.GetQuestion();
-            }
-            modeManager.Randomize();
-            List<string> questionsAfterRandomizeContent = new List<string>();
-            question = modeManager.GetQuestion();
-            for (int i = 0, ii = modeManager.GetNumberOfQuestions(); i < ii; i++)
-            {
-                var rnd = new Random();
-                questionsContent.Add(question?.Content ?? rnd.Next(0, 100).ToString());
-                question = modeManager.GetQuestion();
-            }
-
-            // Assert
-            Assert.NotEqual(string.Join(',', questionsContent), string.Join(',', questionsAfterRandomizeContent));
         }
     }
 }
