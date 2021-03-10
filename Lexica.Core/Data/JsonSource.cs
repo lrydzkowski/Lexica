@@ -20,7 +20,7 @@ namespace Lexica.Core.Data
             Load();
         }
 
-        public T Load()
+        public T? Load()
         {
             string contents = Source.GetContents();
             Data = JsonSerializer.Deserialize<T>(contents);
@@ -28,7 +28,7 @@ namespace Lexica.Core.Data
             return Data;
         }
 
-        public T Get()
+        public T? Get()
         {
             if (Data == null)
             {

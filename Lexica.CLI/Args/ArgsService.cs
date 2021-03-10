@@ -34,7 +34,7 @@ namespace Lexica.CLI.Args
                 }
                 if (command == null)
                 {
-                    commandsToExecute[commandsToExecute.Count - 1].Parameters.Add(arg);
+                    commandsToExecute[^1].Parameters.Add(arg);
                 }
                 else
                 {
@@ -46,38 +46,46 @@ namespace Lexica.CLI.Args
             for (int i = 0; i < commandsToExecute.Count; i++)
             {
                 Command command = commandsToExecute[i];
-                string? executor = null;
+                string? executorClassName = null;
                 if (command.ExecutorClass != null)
                 {
-                    executor = command.ExecutorClass;
+                    executorClassName = command.ExecutorClass;
                 }
                 else if (i == commandsToExecute.Count - 1 && command.DefaultExecutorClass != null)
                 {
-                    executor = command.DefaultExecutorClass;
+                    executorClassName = command.DefaultExecutorClass;
                 }
-                if (executor != null)
+                if (executorClassName != null)
                 {
-                    Type? type = Type.GetType(executor);
+                    Type? type = Type.GetType(executorClassName);
                     if (type == null)
                     {
-                        throw new ArgsException($"Type {executor} doesn't exist.");
+                        throw new ArgsException($"Type {executorClassName} doesn't exist.");
                     }
 
                     if (typeof(IExecutor).IsAssignableFrom(type))
                     {
-                        IExecutor syncExecutor = (IExecutor)servicesProvider.GetService(type);
+                        IExecutor? syncExecutor = (IExecutor?)servicesProvider.GetService(type);
+                        if (syncExecutor == null)
+                        {
+                            throw new Exception($"Service {executorClassName} doesn't exist.");
+                        }
                         syncExecutor.Execute(command.Parameters);
                         return;
                     }
                     else if (typeof(IAsyncExecutor).IsAssignableFrom(type))
                     {
-                        IAsyncExecutor asyncExecutor = (IAsyncExecutor)servicesProvider.GetService(type);
+                        IAsyncExecutor? asyncExecutor = (IAsyncExecutor?)servicesProvider.GetService(type);
+                        if (asyncExecutor == null)
+                        {
+                            throw new Exception($"Service {executorClassName} doesn't exist.");
+                        }
                         await asyncExecutor.ExecuteAsync(command.Parameters);
                         return;
                     }
                     else
                     {
-                        throw new ArgsException($"Type {executor} doesn't implement IExecutor or IAsynExecutor.");
+                        throw new ArgsException($"Type {executorClassName} doesn't implement IExecutor or IAsynExecutor.");
                     }
                 }
             }

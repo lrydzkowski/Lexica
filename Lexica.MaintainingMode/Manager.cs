@@ -63,7 +63,7 @@ namespace Lexica.MaintainingMode
                 else
                 {
                     CurrentEntry = entry;
-                    List<string> questionWords = new List<string>();
+                    List<string> questionWords = new();
                     switch (ModeType)
                     {
                         case ModeTypeEnum.Translations:
@@ -100,7 +100,7 @@ namespace Lexica.MaintainingMode
             }
             List<string> answerWords = input.Split(',').Select(x => x.Trim()).ToList<string>();
             answerWords.Sort();
-            List<string> correctWords = new List<string>();
+            List<string> correctWords = new();
             switch (ModeType)
             {
                 case ModeTypeEnum.Translations:

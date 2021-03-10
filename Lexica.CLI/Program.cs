@@ -33,7 +33,11 @@ namespace Lexica.CLI
                 {
                     try
                     {
-                        var argsService = (ArgsService)servicesProvider.GetService(typeof(ArgsService));
+                        var argsService = (ArgsService?)servicesProvider.GetService(typeof(ArgsService));
+                        if (argsService == null)
+                        {
+                            throw new Exception($"Service 'ArgsService' doesn't exist.");
+                        }
                         await argsService.RunAsync(args, servicesProvider);
                     }
                     catch (ArgsException ex)

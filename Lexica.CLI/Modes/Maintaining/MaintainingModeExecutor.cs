@@ -189,7 +189,7 @@ namespace Lexica.CLI.Modes.Maintaining
 
         private string ReadAnswer()
         {
-            string answer = Console.ReadLine();
+            string answer = Console.ReadLine() ?? "";
             return answer;
         }
 
@@ -221,7 +221,7 @@ namespace Lexica.CLI.Modes.Maintaining
 
         private CommandEnum HandleCommand()
         {
-            string input = Console.ReadLine();
+            string? input = Console.ReadLine();
             switch (input)
             {
                 case "\\o":
