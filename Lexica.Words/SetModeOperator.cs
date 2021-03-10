@@ -13,13 +13,11 @@ namespace Lexica.Words
         {
             SetService = setService;
             FilesSources = filesSources;
+            LoadSet();
         }
 
-        public SetModeOperator(ISetService setService, ISource fileSource)
-        {
-            SetService = setService;
-            FilesSources = new List<ISource>() { fileSource };
-        }
+        public SetModeOperator(ISetService setService, ISource fileSource) 
+            : this(setService, new List<ISource>() { fileSource }) { }
 
         private ISetService SetService { get; set; }
 
@@ -41,17 +39,16 @@ namespace Lexica.Words
 
         public bool Randomize()
         {
-            bool result = LoadSet();
-            if (Set != null)
+            if (Set == null)
             {
-                Set.Entries.Shuffle();
+                return false;
             }
-            return result;
+            Set.Entries.Shuffle();
+            return true;
         }
 
         public Entry? GetEntry(string setNamespace, string setName, int lineNum)
         {
-            LoadSet();
             if (Set != null)
             {
                 for (int i = 0; i < Set.Entries.Count; i++)
@@ -70,7 +67,6 @@ namespace Lexica.Words
 
         public IEnumerable<Entry?> GetEntries(bool infiniteLoop = false, bool randomizeEachIteration = true)
         {
-            LoadSet();
             if (Set == null)
             {
                 yield return null;
@@ -101,7 +97,6 @@ namespace Lexica.Words
 
         public int GetNumberOfEntries()
         {
-            LoadSet();
             if (Set == null)
             {
                 return 0;
