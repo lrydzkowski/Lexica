@@ -3,6 +3,7 @@ using Lexica.Core.IO;
 using Lexica.Core.Models;
 using Lexica.Words.Models;
 using Lexica.Words.Services;
+using System;
 using System.Collections.Generic;
 
 namespace Lexica.Words
@@ -65,7 +66,10 @@ namespace Lexica.Words
             return null;
         }
 
-        public IEnumerable<Entry?> GetEntries(bool infiniteLoop = false, bool randomizeEachIteration = true)
+        public IEnumerable<Entry?> GetEntries(
+            bool infiniteLoop = false, 
+            bool randomizeEachIteration = true,
+            int sequenceMaxSize = -1)
         {
             if (Set == null)
             {
@@ -80,11 +84,15 @@ namespace Lexica.Words
                 for (int i = 0; i < Set.Entries.Count; i++)
                 {
                     yield return Set.Entries[i];
-                    if (i == Set.Entries.Count - 1)
+                    if (i == Set.Entries.Count - 1 || i == sequenceMaxSize)
                     {
                         if (infiniteLoop)
                         {
                             i = 0;
+                        }
+                        else if (i == sequenceMaxSize)
+                        {
+                            break;
                         }
                         if (randomizeEachIteration)
                         {
@@ -102,6 +110,32 @@ namespace Lexica.Words
                 return 0;
             }
             return Set.Entries.Count;
+        }
+
+        public List<Entry> GetRandomEntries(int numOfEntries)
+        {
+            List<Entry> entries = new();
+            if (Set == null)
+            {
+                return entries;
+            }
+            if (numOfEntries >= Set.Entries.Count)
+            {
+                return Set.Entries.GetRange(0, Set.Entries.Count);
+            }
+            var rnd = new Random();
+            int drawnIndex = 0;
+            List<int> drawnIndexes = new();
+            for (int i = 0; i < numOfEntries; i++)
+            {
+                do
+                {
+                    drawnIndex = rnd.Next(0, Set.Entries.Count - 1);
+                }
+                while (drawnIndexes.Contains(drawnIndex));
+                entries.Add(Set.Entries[drawnIndex]);
+            }
+            return entries;
         }
     }
 }

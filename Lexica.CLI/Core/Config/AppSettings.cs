@@ -1,4 +1,5 @@
 ﻿using Lexica.EF.Config;
+using Lexica.LearningMode.Config;
 using Lexica.MaintainingMode.Config;
 using Lexica.Words.Config;
 using System;
@@ -14,5 +15,7 @@ namespace Lexica.CLI.Core.Config
         public WordsSettings? Words { get; set; }
 
         public MaintainingSettings? Maintaining { get; set; }
+
+        public LearningSettings? Learning { get; set; }
     }
 }
