@@ -7,19 +7,23 @@ using System.Threading.Tasks;
 
 namespace Lexica.LearningMode.Models
 {
-    public class AnswersRegister
+    public class AnswerRegister
     {
-        public int Words { get; set; } = 0;
+        public AnswerRegisterValue Words { get; set; } = new AnswerRegisterValue();
 
-        public int Translations { get; set; } = 0;
+        public AnswerRegisterValue Translations { get; set; } = new AnswerRegisterValue();
 
-        public int this[string propertyName]
+        public AnswerRegisterValue this[string propertyName]
         {
             get
             {
                 PropertyInfo propertyInfo = GetPropertyInfo(propertyName);
                 object? value = propertyInfo.GetValue(this, null);
-                int number = Convert.ToInt32(value);
+                if (value == null)
+                {
+                    throw new Exception($"Value AnswerRegister['{propertyName}'] is null.");
+                }
+                AnswerRegisterValue number = (AnswerRegisterValue)value;
                 return number;
             }
             set

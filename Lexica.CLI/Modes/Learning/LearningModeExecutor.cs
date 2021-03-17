@@ -90,15 +90,18 @@ namespace Lexica.CLI.Modes.Learning
                 }
                 else if (command == CommandEnum.Override && !isAnswerCorrect)
                 {
-                    modeManager.UpdateAnswersRegister(2);
+                    modeManager.OverridePreviousMistake();
                 }
                 // Save logs in file.
+                (closedQuestionsResult, openQuestionsResult) = modeManager.GetResult();
                 WriteLog(
                     isAnswerCorrect,
                     question.Content,
                     correctAnswer,
-                    closedQuestionsResult + openQuestionsResult,
-                    modeManager.GetNumberOfQuestions(),
+                    closedQuestionsResult,
+                    modeManager.GetNumberOfQuestions(QuestionTypeEnum.Closed),
+                    openQuestionsResult,
+                    modeManager.GetNumberOfQuestions(QuestionTypeEnum.Open),
                     modeManager.AnswersRegister
                 );
                 // Save history in database.
@@ -131,14 +134,10 @@ namespace Lexica.CLI.Modes.Learning
             LearningSettings = ConfigService.Config.Learning;
             if (args == null || args.Count == 0)
             {
-                throw new ArgsException("There are no arguments");
-            }
-            if (args.Count == 0)
-            {
                 throw new ArgsException("There are no file paths arguments.");
             }
             FilePaths = new List<string>();
-            for (int i = 1; i < args.Count; i++)
+            for (int i = 0; i < args.Count; i++)
             {
                 FilePaths.Add(args[i]);
             }
@@ -182,12 +181,13 @@ namespace Lexica.CLI.Modes.Learning
             Console.WriteLine($"Closed questions result: {closedQuestionsCurrentResult}/{numberOfClosedQuestions}");
             Console.WriteLine($"Open questions result: {openQuestionsCurrentResult}/{numberOfOpenQuestions}");
             Console.WriteLine();
-            Console.WriteLine($"  {question}");
+            Console.WriteLine($"  {question.Content}");
             if (question.PossibleAnswers != null && question.PossibleAnswers.Count > 0)
             {
-                for (int i = 1; i <= question.PossibleAnswers.Count; i++)
+                Console.WriteLine();
+                for (int i = 0; i < question.PossibleAnswers.Count; i++)
                 {
-                    Console.WriteLine($"  {i}. {question.PossibleAnswers[i]}");
+                    Console.WriteLine($"  {i + 1}. {question.PossibleAnswers[i]}");
                 }
             }
             Console.WriteLine("  ------------------------------");
@@ -248,9 +248,11 @@ namespace Lexica.CLI.Modes.Learning
             bool result,
             string question,
             string answers,
-            int currentResult,
-            int numberOfQuestions,
-            Dictionary<QuestionTypeEnum, Dictionary<string, AnswersRegister>> answersRegister)
+            int closedQuestionsCurrentResult,
+            int numberOfClosedQuestions,
+            int openQuestionsCurrentResult,
+            int numberOfOpenQuestions,
+            Dictionary<QuestionTypeEnum, Dictionary<string, AnswerRegister>> answersRegister)
         {
             JsonSerializerOptions options = JsonService.GetJsonSerializerOptions(true, null);
             string logData = JsonSerializer.Serialize(
@@ -259,7 +261,8 @@ namespace Lexica.CLI.Modes.Learning
                     Result = result,
                     Question = question,
                     Answers = answers,
-                    Progress = $"{currentResult}/{numberOfQuestions}",
+                    ClosedQuestionsProgress = $"{closedQuestionsCurrentResult}/{numberOfClosedQuestions}",
+                    OpenQuestionsProgress = $"{openQuestionsCurrentResult}/{numberOfOpenQuestions}",
                     AnswersRegister = answersRegister
                 },
                 options

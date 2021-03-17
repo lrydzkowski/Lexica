@@ -36,10 +36,10 @@ namespace Lexica.LearningMode.Models
             switch (ModeType)
             {
                 case ModeTypeEnum.Translations:
-                    correctWords = Entry.Translations;
+                    correctWords = Entry.Words;
                     break;
                 case ModeTypeEnum.Words:
-                    correctWords = Entry.Words;
+                    correctWords = Entry.Translations;
                     break;
             }
             correctWords.Sort();
