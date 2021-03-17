@@ -90,7 +90,7 @@ namespace Lexica.CLI.Modes.Maintaining
                 }
                 else if (command == CommandEnum.Override && !isAnswerCorrect)
                 {
-                    modeManager.UpdateAnswersRegister(2);
+                    modeManager.OverridePreviousMistake();
                 }
                 // Save logs in file.
                 WriteLog(
@@ -243,7 +243,7 @@ namespace Lexica.CLI.Modes.Maintaining
             string answers,
             int currentResult,
             int numberOfQuestions,
-            Dictionary<string, int> answersRegister)
+            Dictionary<string, AnswerRegister> answersRegister)
         {
             JsonSerializerOptions options = JsonService.GetJsonSerializerOptions(true, null);
             string logData = JsonSerializer.Serialize(

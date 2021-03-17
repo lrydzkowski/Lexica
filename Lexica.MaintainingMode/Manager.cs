@@ -27,16 +27,17 @@ namespace Lexica.MaintainingMode
 
         public Entry? CurrentEntry { get; private set; } = null;
 
-        public Dictionary<string, int> AnswersRegister { get; private set; } = new Dictionary<string, int>() { };
+        public Dictionary<string, AnswerRegister> AnswersRegister { get; private set; } 
+            = new Dictionary<string, AnswerRegister>() { };
 
         public void Reset()
         {
-            AnswersRegister = new Dictionary<string, int>();
+            AnswersRegister = new Dictionary<string, AnswerRegister>();
         }
 
         public int GetResult()
         {
-            return AnswersRegister.Select(x => x.Value).Sum();
+            return AnswersRegister.Select(x => x.Value.CurrentValue).Sum();
         }
 
         public IEnumerable<Question?> GetQuestions(bool randomizeEachIteration = true)
@@ -62,6 +63,7 @@ namespace Lexica.MaintainingMode
                 }
                 else
                 {
+                    numOfCompletedEntries = 0;
                     CurrentEntry = entry;
                     List<string> questionWords = new();
                     switch (ModeType)
@@ -85,7 +87,7 @@ namespace Lexica.MaintainingMode
 
         private bool IsEntryCompleted(Entry entry)
         {
-            if (!AnswersRegister.ContainsKey(entry.Id) || AnswersRegister[entry.Id] < NumOfCycles)
+            if (!AnswersRegister.ContainsKey(entry.Id) || AnswersRegister[entry.Id].CurrentValue < NumOfCycles)
             {
                 return false;
             }
@@ -126,29 +128,53 @@ namespace Lexica.MaintainingMode
                 }
                 else
                 {
-                    UpdateAnswersRegister(CurrentEntry, -1);
+                    UpdateAnswersRegister(CurrentEntry, 0, UpdateAnswersRegisterOperationType.Set);
                 }
             }
 
             return new AnswerResult(result, correctWords);
         }
 
-        public void UpdateAnswersRegister(int value)
+        public void UpdateAnswersRegister(
+            int value, 
+            UpdateAnswersRegisterOperationType operationType = UpdateAnswersRegisterOperationType.Add)
         {
             if (CurrentEntry == null)
             {
                 return;
             }
-            UpdateAnswersRegister(CurrentEntry, value);
+            UpdateAnswersRegister(CurrentEntry, value, operationType);
         }
 
-        private void UpdateAnswersRegister(Entry entry, int value)
+        private void UpdateAnswersRegister(
+            Entry entry, 
+            int value, 
+            UpdateAnswersRegisterOperationType operationType = UpdateAnswersRegisterOperationType.Add)
         {
             if (!AnswersRegister.ContainsKey(entry.Id))
             {
-                AnswersRegister[entry.Id] = 0;
+                AnswersRegister[entry.Id] = new AnswerRegister();
             }
-            AnswersRegister[entry.Id] += value;
+            switch (operationType)
+            {
+                case UpdateAnswersRegisterOperationType.Add:
+                    AnswersRegister[entry.Id].PreviousValue = AnswersRegister[entry.Id].CurrentValue;
+                    AnswersRegister[entry.Id].CurrentValue += value;
+                    break;
+                case UpdateAnswersRegisterOperationType.Set:
+                    AnswersRegister[entry.Id].PreviousValue = AnswersRegister[entry.Id].CurrentValue;
+                    AnswersRegister[entry.Id].CurrentValue = value;
+                    break;
+            }
+        }
+
+        public void OverridePreviousMistake()
+        {
+            if (CurrentEntry == null)
+            {
+                return;
+            }
+            AnswersRegister[CurrentEntry.Id].CurrentValue = AnswersRegister[CurrentEntry.Id].PreviousValue + 1;
         }
     }
 }
