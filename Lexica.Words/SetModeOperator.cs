@@ -133,6 +133,7 @@ namespace Lexica.Words
                     drawnIndex = rnd.Next(0, Set.Entries.Count - 1);
                 }
                 while (drawnIndexes.Contains(drawnIndex));
+                drawnIndexes.Add(drawnIndex);
                 entries.Add(Set.Entries[drawnIndex]);
             }
             return entries;
