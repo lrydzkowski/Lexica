@@ -10,6 +10,8 @@ namespace Lexica.EF
     {
         public DbSet<MaintainingHistoryTable> MaintainingHistoryRecords => Set<MaintainingHistoryTable>();
 
+        public DbSet<LearningHistoryTable> LearningHistoryRecords => Set<LearningHistoryTable>();
+
         public LexicaContext() : base() { }
 
         public LexicaContext(DbContextOptions<LexicaContext> options) : base(options) { }
@@ -19,8 +21,8 @@ namespace Lexica.EF
             if (!optionsBuilder.IsConfigured)
             {
                 ConfigService<DatabaseSettings> appSettings = ConfigService<DatabaseSettings>.Get(
-                                "database", Assembly.GetExecutingAssembly()
-                            );
+                    "database", Assembly.GetExecutingAssembly()
+                );
                 string? connectionString = appSettings.Get().ConnectionString;
 
                 optionsBuilder.UseNpgsql(connectionString);
@@ -31,6 +33,8 @@ namespace Lexica.EF
         {
             var maintainingHistoryTable = modelBuilder.Entity<MaintainingHistoryTable>()
                 .ToTable("maintaining_history", "modes");
+            var learningHistoryTable = modelBuilder.Entity<LearningHistoryTable>()
+                .ToTable("learning_history", "modes");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

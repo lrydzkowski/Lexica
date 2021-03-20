@@ -1,4 +1,5 @@
 ﻿using Lexica.EF.Services;
+using Lexica.LearningMode.Services;
 using Lexica.MaintainingMode.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -12,6 +13,7 @@ namespace Lexica.EF.Extensions
         public static void AddEFServices(this IServiceCollection services)
         {
             services.AddTransient<IMaintainingHistoryService, MaintainingHistoryService>();
+            services.AddTransient<ILearningHistoryService, LearningHistoryService>();
         }
     }
 }

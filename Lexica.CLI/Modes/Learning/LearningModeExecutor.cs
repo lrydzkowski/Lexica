@@ -9,6 +9,7 @@ using Lexica.Core.Services;
 using Lexica.LearningMode;
 using Lexica.LearningMode.Config;
 using Lexica.LearningMode.Models;
+using Lexica.LearningMode.Services;
 using Lexica.Words;
 using Lexica.Words.Config;
 using Lexica.Words.Services;
@@ -29,12 +30,14 @@ namespace Lexica.CLI.Modes.Learning
             ConfigService<AppSettings> configService,
             ILogger<LearningModeExecutor> logger,
             JsonService jsonService,
-            LocationService locationService)
+            LocationService locationService,
+            ILearningHistoryService learningHistoryService)
         {
             ConfigService = configService;
             Logger = logger;
             JsonService = jsonService;
             LocationService = locationService;
+            LearningHistoryService = learningHistoryService;
         }
 
         private ConfigService<AppSettings> ConfigService { get; set; }
@@ -44,6 +47,8 @@ namespace Lexica.CLI.Modes.Learning
         private JsonService JsonService { get; set; }
 
         private LocationService LocationService { get; set; }
+
+        public ILearningHistoryService LearningHistoryService { get; set; }
 
         private WordsSettings WordsSettings { get; set; } = new WordsSettings();
 
@@ -105,17 +110,18 @@ namespace Lexica.CLI.Modes.Learning
                     modeManager.AnswersRegister
                 );
                 // Save history in database.
-                //if (modeManager.CurrentEntry != null)
-                //{
-                //    await MaintainingHistoryService.SaveAsync(
-                //        modeManager.CurrentEntry.SetPath.Namespace,
-                //        modeManager.CurrentEntry.SetPath.Name,
-                //        question.Content,
-                //        answer,
-                //        correctAnswer,
-                //        isAnswerCorrect
-                //    );
-                //}
+                if (modeManager.CurrentQuestionInfo != null)
+                {
+                    await LearningHistoryService.SaveAsync(
+                        modeManager.CurrentQuestionInfo.Entry.SetPath.Namespace,
+                        modeManager.CurrentQuestionInfo.Entry.SetPath.Name,
+                        question.Content,
+                        modeManager.CurrentQuestionInfo.QuestionType.ToString().ToLower(),
+                        answer,
+                        correctAnswer,
+                        isAnswerCorrect
+                    );
+                }
             }
             ShowSummary();
         }
