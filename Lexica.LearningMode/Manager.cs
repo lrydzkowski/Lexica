@@ -44,19 +44,23 @@ namespace Lexica.LearningMode
             return new Tuple<int, int>(closedResult, openResult);
         }
 
+        public int GetSumResult()
+        {
+            (int closedResult, int openResult) = GetResult();
+            return closedResult + openResult;
+        }
+
         public IEnumerable<Question?> GetQuestions(bool randomizeEachIteration = true)
         {
-            int numOfCompletedEntries = 0;
             foreach (Entry? entry in SetOperator.GetEntries(true, randomizeEachIteration, 7))
             {
                 if (entry == null)
                 {
                     yield return null;
                 }
-                else if (IsEntryQuestionsCompleted(entry))
+                else if (AreEntryQuestionsCompleted(entry))
                 {
-                    numOfCompletedEntries++;
-                    if (numOfCompletedEntries == GetNumberOfQuestions())
+                    if (AreAllQuestionsCompleted())
                     {
                         break;
                     }
@@ -67,19 +71,18 @@ namespace Lexica.LearningMode
                 }
                 else
                 {
-                    numOfCompletedEntries = 0;
                     bool translationsQuestion = false;
                     bool wordsQuestion = false;
                     QuestionTypeEnum questionType = QuestionTypeEnum.Closed;
                     List<string> questionWords = new();
                     ModeTypeEnum modeType = ModeTypeEnum.Translations;
                     List<string>? possibleAnswers = null;
-                    if (!IsEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed)) // pytanie zamknięte
+                    if (!AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed)) // pytanie zamknięte
                     {
                         questionType = QuestionTypeEnum.Closed;
                         var rnd = new Random();
-                        if (    !IsEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed, ModeTypeEnum.Translations)
-                            &&  !IsEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed, ModeTypeEnum.Words))
+                        if (    !AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed, ModeTypeEnum.Translations)
+                            &&  !AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed, ModeTypeEnum.Words))
                         {
                             ModeTypeEnum closedQuestionMode = rnd.Next(1) == 1
                                 ? ModeTypeEnum.Translations
@@ -93,11 +96,11 @@ namespace Lexica.LearningMode
                                 wordsQuestion = true;
                             }
                         }
-                        else if (!IsEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed, ModeTypeEnum.Translations))
+                        else if (!AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed, ModeTypeEnum.Translations))
                         {
                             translationsQuestion = true;
                         }
-                        else if (!IsEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed, ModeTypeEnum.Words))
+                        else if (!AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed, ModeTypeEnum.Words))
                         {
                             wordsQuestion = true;
                         }
@@ -128,11 +131,11 @@ namespace Lexica.LearningMode
                             }
                         }
                     }
-                    else if (!IsEntryQuestionsCompleted(entry, QuestionTypeEnum.Open)) // pytanie otwarte
+                    else if (!AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Open)) // pytanie otwarte
                     {
                         questionType = QuestionTypeEnum.Open;
-                        if (    !IsEntryQuestionsCompleted(entry, QuestionTypeEnum.Open, ModeTypeEnum.Translations)
-                            &&  !IsEntryQuestionsCompleted(entry, QuestionTypeEnum.Open, ModeTypeEnum.Words))
+                        if (    !AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Open, ModeTypeEnum.Translations)
+                            &&  !AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Open, ModeTypeEnum.Words))
                         {
                             var rnd = new Random();
                             ModeTypeEnum closedQuestionMode = rnd.Next(1) == 1
@@ -147,11 +150,11 @@ namespace Lexica.LearningMode
                                 wordsQuestion = true;
                             }
                         }
-                        else if (!IsEntryQuestionsCompleted(entry, QuestionTypeEnum.Open, ModeTypeEnum.Translations))
+                        else if (!AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Open, ModeTypeEnum.Translations))
                         {
                             translationsQuestion = true;
                         }
-                        else if (!IsEntryQuestionsCompleted(entry, QuestionTypeEnum.Open, ModeTypeEnum.Words))
+                        else if (!AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Open, ModeTypeEnum.Words))
                         {
                             wordsQuestion = true;
                         }
@@ -167,7 +170,14 @@ namespace Lexica.LearningMode
                         }
                     }
 
-                    CurrentQuestionInfo = new QuestionInfo(entry, questionType, modeType, possibleAnswers);
+                    var nextQuestionInfo = new QuestionInfo(entry, questionType, modeType, possibleAnswers);
+                    // Condition to prevent questions repetition
+                    if (!IsCurrentQuestionTheLastOne() && nextQuestionInfo.Equals(CurrentQuestionInfo))
+                    {
+                        continue;
+                    }
+
+                    CurrentQuestionInfo = nextQuestionInfo;
 
                     yield return new Question(string.Join(", ", questionWords), questionType, possibleAnswers);
                 }
@@ -184,19 +194,29 @@ namespace Lexica.LearningMode
             return SetOperator.GetNumberOfEntries() * (GetNumOfRequiredAnswers(questionType) * 2);
         }
 
-        private bool IsEntryQuestionsCompleted(Entry entry)
+        private bool AreEntryQuestionsCompleted(Entry entry)
         {
-            return IsEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed) 
-                && IsEntryQuestionsCompleted(entry, QuestionTypeEnum.Open);
+            return AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed) 
+                && AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Open);
         }
 
-        private bool IsEntryQuestionsCompleted(Entry entry, QuestionTypeEnum questionTypeEnum)
+        private bool AreEntryQuestionsCompleted(Entry entry, QuestionTypeEnum questionTypeEnum)
         {
-            return IsEntryQuestionsCompleted(entry, questionTypeEnum, ModeTypeEnum.Translations)
-                && IsEntryQuestionsCompleted(entry, questionTypeEnum, ModeTypeEnum.Words);
+            return AreEntryQuestionsCompleted(entry, questionTypeEnum, ModeTypeEnum.Translations)
+                && AreEntryQuestionsCompleted(entry, questionTypeEnum, ModeTypeEnum.Words);
         }
 
-        private bool IsEntryQuestionsCompleted(Entry entry, QuestionTypeEnum questionTypeEnum, ModeTypeEnum mode)
+        private bool IsCurrentQuestionTheLastOne()
+        {
+            return GetNumberOfQuestions() - GetSumResult() == 1;
+        }
+
+        private bool AreAllQuestionsCompleted()
+        {
+            return GetNumberOfQuestions() == GetSumResult();
+        }
+
+        private bool AreEntryQuestionsCompleted(Entry entry, QuestionTypeEnum questionTypeEnum, ModeTypeEnum mode)
         {
             if (!AnswersRegister[questionTypeEnum].ContainsKey(entry.Id))
             {

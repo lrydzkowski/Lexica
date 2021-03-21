@@ -45,5 +45,35 @@ namespace Lexica.LearningMode.Models
             correctWords.Sort();
             return correctWords;
         }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj == null || !GetType().Equals(obj.GetType()))
+            {
+                return false;
+            }
+            else
+            {
+                var questionInfo = (QuestionInfo)obj;
+                return questionInfo.Entry.Equals(Entry)
+                    && questionInfo.QuestionType == QuestionType
+                    && questionInfo.ModeType == ModeType
+                    && ListsEquals(questionInfo.PossibleAnswers, PossibleAnswers);
+            }
+        }
+
+        private bool ListsEquals(List<string>? list1, List<string>? list2)
+        {
+            list1 = list1 ?? new List<string>();
+            list2 = list2 ?? new List<string>();
+            IEnumerable<string> isFirstOnly = list1.Except(list2);
+            IEnumerable<string> isSecondOnly = list2.Except(list1);
+            return !isFirstOnly.Any() && !isSecondOnly.Any();
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }
