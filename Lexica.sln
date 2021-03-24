@@ -27,7 +27,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lexica.MaintainingModeTests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lexica.LearningMode", "Lexica.LearningMode\Lexica.LearningMode.csproj", "{63282BF6-FF85-491A-A56E-51EE7A27C987}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lexica.LearningModeTests", "Lexica.LearningModeTests\Lexica.LearningModeTests.csproj", "{A4A297E7-EBC7-4F72-B8A2-1ED7BDFF1421}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lexica.LearningModeTests", "Lexica.LearningModeTests\Lexica.LearningModeTests.csproj", "{A4A297E7-EBC7-4F72-B8A2-1ED7BDFF1421}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lexica.Pronunciation", "Lexica.Pronunciation\Lexica.Pronunciation.csproj", "{CB90B661-935C-4ACD-9E08-9F5C02C38E7E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +77,10 @@ Global
 		{A4A297E7-EBC7-4F72-B8A2-1ED7BDFF1421}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4A297E7-EBC7-4F72-B8A2-1ED7BDFF1421}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4A297E7-EBC7-4F72-B8A2-1ED7BDFF1421}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB90B661-935C-4ACD-9E08-9F5C02C38E7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB90B661-935C-4ACD-9E08-9F5C02C38E7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB90B661-935C-4ACD-9E08-9F5C02C38E7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB90B661-935C-4ACD-9E08-9F5C02C38E7E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

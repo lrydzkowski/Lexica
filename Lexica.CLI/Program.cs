@@ -6,6 +6,9 @@ using Lexica.CLI.Executors.Extensions;
 using Lexica.Core.Services;
 using Lexica.EF;
 using Lexica.EF.Extensions;
+using Lexica.Pronunciation;
+using Lexica.Pronunciation.Forvo;
+using Lexica.Pronunciation.Forvo.Config;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -82,6 +85,10 @@ namespace Lexica.CLI
             services.AddDbContext<LexicaContext>(
                 opts => opts.UseNpgsql(configService.Get().Database?.ConnectionString)
             );
+
+            // Pronunciation service
+            services.AddSingleton<ForvoSettings>(configService.Get().ForvoSettings ?? new ForvoSettings());
+            services.AddSingleton<IPronunciation, PronunciationService>();
 
             services.AddExecutorServices();
             services.AddCoreServices();

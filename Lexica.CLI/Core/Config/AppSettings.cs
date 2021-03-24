@@ -1,6 +1,7 @@
 ﻿using Lexica.EF.Config;
 using Lexica.LearningMode.Config;
 using Lexica.MaintainingMode.Config;
+using Lexica.Pronunciation.Forvo.Config;
 using Lexica.Words.Config;
 using System;
 using System.Collections.Generic;
@@ -17,5 +18,7 @@ namespace Lexica.CLI.Core.Config
         public MaintainingSettings? Maintaining { get; set; }
 
         public LearningSettings? Learning { get; set; }
+
+        public ForvoSettings? ForvoSettings { get; set; }
     }
 }

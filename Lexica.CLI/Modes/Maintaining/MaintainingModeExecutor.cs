@@ -10,6 +10,7 @@ using Lexica.MaintainingMode;
 using Lexica.MaintainingMode.Config;
 using Lexica.MaintainingMode.Models;
 using Lexica.MaintainingMode.Services;
+using Lexica.Pronunciation;
 using Lexica.Words;
 using Lexica.Words.Config;
 using Lexica.Words.Services;
@@ -31,13 +32,15 @@ namespace Lexica.CLI.Modes.Maintaining
             ILogger<MaintainingModeExecutor> logger,
             JsonService jsonService,
             LocationService locationService,
-            IMaintainingHistoryService maintainingHistoryService)
+            IMaintainingHistoryService maintainingHistoryService,
+            IPronunciation pronunciationService)
         {
             ConfigService = configService;
             Logger = logger;
             JsonService = jsonService;
             LocationService = locationService;
             MaintainingHistoryService = maintainingHistoryService;
+            PronunciationService = pronunciationService;
         }
 
         private ConfigService<AppSettings> ConfigService { get; set; }
@@ -49,6 +52,8 @@ namespace Lexica.CLI.Modes.Maintaining
         private LocationService LocationService { get; set; }
 
         private IMaintainingHistoryService MaintainingHistoryService { get; set; }
+
+        private IPronunciation PronunciationService { get; set; } 
 
         private WordsSettings WordsSettings { get; set; } = new WordsSettings();
 
@@ -91,6 +96,10 @@ namespace Lexica.CLI.Modes.Maintaining
                 else if (command == CommandEnum.Override && !isAnswerCorrect)
                 {
                     modeManager.OverridePreviousMistake();
+                }
+                else if (command == CommandEnum.PlayPronunciation)
+                {
+                    //await PronunciationService.PlayAsync();
                 }
                 // Save logs in file.
                 WriteLog(
@@ -231,8 +240,7 @@ namespace Lexica.CLI.Modes.Maintaining
                 case "\\c":
                     return CommandEnum.Close;
                 case "\\p":
-                    // play pronuciation
-                    break;
+                    return CommandEnum.PlayPronunciation;
             }
             return CommandEnum.None;
         }
@@ -258,6 +266,11 @@ namespace Lexica.CLI.Modes.Maintaining
                 options
             );
             Logger.LogDebug(logData);
+        }
+
+        private void PlayPronunciation()
+        {
+
         }
 
         private void ShowSummary()
