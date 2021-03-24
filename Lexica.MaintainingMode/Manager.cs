@@ -42,7 +42,6 @@ namespace Lexica.MaintainingMode
 
         public IEnumerable<Question?> GetQuestions(bool randomizeEachIteration = true)
         {
-            int numOfCompletedEntries = 0;
             foreach (Entry? entry in SetOperator.GetEntries(true, randomizeEachIteration))
             {
                 if (entry == null)
@@ -51,8 +50,7 @@ namespace Lexica.MaintainingMode
                 }
                 else if (IsEntryCompleted(entry))
                 {
-                    numOfCompletedEntries++;
-                    if (numOfCompletedEntries == GetNumberOfQuestions())
+                    if (AreAllQuestionsCompleted())
                     {
                         break;
                     }
@@ -63,7 +61,6 @@ namespace Lexica.MaintainingMode
                 }
                 else
                 {
-                    numOfCompletedEntries = 0;
                     CurrentEntry = entry;
                     List<string> questionWords = new();
                     switch (ModeType)
@@ -92,6 +89,11 @@ namespace Lexica.MaintainingMode
                 return false;
             }
             return true;
+        }
+
+        private bool AreAllQuestionsCompleted()
+        {
+            return GetNumberOfQuestions() == GetResult();
         }
 
         public AnswerResult? VerifyAnswer(string input)
