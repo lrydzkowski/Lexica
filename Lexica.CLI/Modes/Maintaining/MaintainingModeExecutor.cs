@@ -99,7 +99,10 @@ namespace Lexica.CLI.Modes.Maintaining
                 }
                 else if (command == CommandEnum.PlayPronunciation)
                 {
-                    //await PronunciationService.PlayAsync();
+                    if (modeManager.CurrentEntry != null)
+                    {
+                        await PronunciationService.PlayAsync(modeManager.CurrentEntry.Words);
+                    }
                 }
                 // Save logs in file.
                 WriteLog(

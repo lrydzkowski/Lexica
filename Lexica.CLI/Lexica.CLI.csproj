@@ -44,7 +44,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Lexica.Core\Lexica.Core.csproj" />
     <ProjectReference Include="..\Lexica.EF\Lexica.EF.csproj" />
     <ProjectReference Include="..\Lexica.LearningMode\Lexica.LearningMode.csproj" />
     <ProjectReference Include="..\Lexica.MaintainingMode\Lexica.MaintainingMode.csproj" />

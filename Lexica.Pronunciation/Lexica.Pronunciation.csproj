@@ -8,4 +8,8 @@
     <Folder Include="Forvo\Model\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Lexica.Core\Lexica.Core.csproj" />
+  </ItemGroup>
+
 </Project>

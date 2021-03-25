@@ -9,5 +9,7 @@ namespace Lexica.Pronunciation
     public interface IPronunciation
     {
         public Task PlayAsync(string word);
+
+        public Task PlayAsync(List<string> words);
     }
 }

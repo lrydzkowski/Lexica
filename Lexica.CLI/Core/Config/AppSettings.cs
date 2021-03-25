@@ -19,6 +19,6 @@ namespace Lexica.CLI.Core.Config
 
         public LearningSettings? Learning { get; set; }
 
-        public ForvoSettings? ForvoSettings { get; set; }
+        public ForvoSettings? Forvo { get; set; }
     }
 }

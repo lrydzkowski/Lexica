@@ -87,7 +87,7 @@ namespace Lexica.CLI
             );
 
             // Pronunciation service
-            services.AddSingleton<ForvoSettings>(configService.Get().ForvoSettings ?? new ForvoSettings());
+            services.AddSingleton<ForvoSettings>(configService.Get().Forvo ?? new ForvoSettings());
             services.AddSingleton<IPronunciation, PronunciationService>();
 
             services.AddExecutorServices();
