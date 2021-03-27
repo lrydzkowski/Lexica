@@ -91,7 +91,14 @@ namespace Lexica.CLI.Modes.Maintaining
                 bool isAnswerCorrect = answerResult?.Result ?? false;
                 string correctAnswer = string.Join(", ", answerResult?.PossibleAnswers ?? new List<string>());
                 // Show result.
-                PresentResult(isAnswerCorrect, correctAnswer);
+                PresentResult(
+                    question.Content, 
+                    modeManager.GetResult(), 
+                    modeManager.GetNumberOfQuestions(),
+                    answer,
+                    isAnswerCorrect, 
+                    correctAnswer
+                );
                 // Play pronunciation.
                 if (MaintainingSettings.PlayPronuncation.WordsMode && ModeType == ModeTypeEnum.Words)
                 {
@@ -207,13 +214,25 @@ namespace Lexica.CLI.Modes.Maintaining
                 );
         }
 
-        private void PresentQuestion(string question, int currentResult, int numberOfQuestions)
+        private void PresentQuestion(
+            string question, 
+            int currentResult, 
+            int numberOfQuestions,
+            string answer = "", 
+            bool beforeVerification = true)
         {
             Console.Clear();
-            Console.Write(" (Enter) Answer; ");
-            Console.Write("\\o Override; ");
-            Console.Write("\\r Restart; ");
-            Console.Write("\\c Close;");
+            if (beforeVerification)
+            {
+                Console.Write(" (Enter) Answer; ");
+            }
+            else
+            {
+                Console.Write(" (Enter) Next question; ");
+                Console.Write("\\o Override; ");
+                Console.Write("\\r Restart; ");
+                Console.Write("\\c Close;");
+            }
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine($" Result: {currentResult}/{numberOfQuestions}");
@@ -221,6 +240,7 @@ namespace Lexica.CLI.Modes.Maintaining
             Console.WriteLine($"   {question}");
             Console.WriteLine("   -----------------------------------");
             Console.Write("   # ");
+            Console.Write(answer);
         }
 
         private string ReadAnswer()
@@ -229,9 +249,17 @@ namespace Lexica.CLI.Modes.Maintaining
             return answer;
         }
 
-        private void PresentResult(bool result, string? correctAnswer = null)
+        private void PresentResult(
+            string question,
+            int currentResult,
+            int numberOfQuestions,
+            string answer,
+            bool result, 
+            string correctAnswer)
         {
             ConsoleColor standardForegroundColor = Console.ForegroundColor;
+            PresentQuestion(question, currentResult, numberOfQuestions, answer, false);
+            Console.WriteLine();
             if (result)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
@@ -244,7 +272,7 @@ namespace Lexica.CLI.Modes.Maintaining
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine();
                 Console.Write("   Wrong answer :(  ");
-                if (correctAnswer != null)
+                if (correctAnswer.Length > 0)
                 {
                     Console.WriteLine();
                     Console.Write("   Correct answer is: ");
