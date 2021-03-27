@@ -1,7 +1,10 @@
 ﻿using Lexica.Core.Extensions;
 using Lexica.Pronunciation.Forvo.Config;
+using Lexica.Pronunciation.Forvo.Model;
+using NetCoreAudio;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -16,22 +19,41 @@ namespace Lexica.Pronunciation.Forvo
         public PronunciationService(ForvoSettings forvoSettings)
         {
             ForvoSettings = forvoSettings;
+            if (!Directory.Exists(ForvoSettings.DownloadTempPath))
+            {
+                throw new Exception(
+                    $"Directory {ForvoSettings.DownloadTempPath} from settings (Forvo.DownloadTempPath) doesn't exist."
+                );
+            }
         }
 
         public ForvoSettings ForvoSettings { get; private set; }
 
-        public async Task PlayAsync(string word)
+        public async Task<bool> PlayAsync(string word)
         {
-            await PlayAsync(new List<string>() { word });
+            return await PlayAsync(new List<string>() { word });
         }
 
-        public async Task PlayAsync(List<string> words)
+        public async Task<bool> PlayAsync(List<string> words)
         {
+            var player = new Player();
+            bool played = false;
             foreach (string word in words)
             {
                 string responseContent = await SendRequest(word);
-                List<string> urls = ParseResponse(responseContent);
+                List<RecordInfo> recordsInfo = ParseResponse(responseContent);
+                if (recordsInfo.Count == 0)
+                {
+                    continue;
+                }
+                var rnd = new Random();
+                RecordInfo recordInfo = recordsInfo[rnd.Next(0, recordsInfo.Count - 1)];
+                string mp3FilePath = await DownloadFile(recordInfo.PathMp3, word, recordInfo.Id);
+                player.Play(mp3FilePath).Wait();
+                played = true;
             }
+
+            return played;
         }
 
         public async Task<string> SendRequest(string word)
@@ -62,9 +84,9 @@ namespace Lexica.Pronunciation.Forvo
             return url;
         }
 
-        public List<string> ParseResponse(string response)
+        public List<RecordInfo> ParseResponse(string response)
         {
-            var urls = new List<string>();
+            var recordsInfo = new List<RecordInfo>();
             JsonDocument jsonDoc;
             try 
             {
@@ -72,28 +94,50 @@ namespace Lexica.Pronunciation.Forvo
             } 
             catch 
             {
-                return urls;
+                return recordsInfo;
             }
             bool gettingItemsResult = jsonDoc.RootElement.TryGetProperty("items", out JsonElement items);
             if (!gettingItemsResult)
             {
-                return urls;
+                return recordsInfo;
             }
             foreach (JsonElement item in items.EnumerateArray())
             {
+                bool gettingId = item.TryGetProperty("id", out JsonElement id);
                 bool gettingPathMp3 = item.TryGetProperty("pathmp3", out JsonElement pathMp3);
-                if (gettingPathMp3)
+                if (gettingId && gettingPathMp3)
                 {
-                    urls.Add(pathMp3.ToString());
+                    string? idVal = id.ToString();
+                    string? pathMp3Val = pathMp3.ToString();
+                    if (idVal != null && pathMp3Val != null)
+                    {
+                        recordsInfo.Add(new RecordInfo()
+                        {
+                            Id = idVal,
+                            PathMp3 = pathMp3Val
+                        });
+                    }
                 }
             }
-            return urls;
+            return recordsInfo;
         }
 
-        //public async Task<string> DownloadFile(string url)
-        //{
-        //    using var webClient = new WebClient();
-        //    await webClient.DownloadFileTaskAsync(new Uri(url), );
-        //}
+        public async Task<string> DownloadFile(
+            string url,
+            string word,
+            string suffix = "",
+            string extension = "mp3",
+            bool overwrite = false)
+        {
+            using var webClient = new WebClient();
+            string fileName = $"{word}-{suffix}".RemoveInvalidFileNameChars() + $".{extension}";
+            string path = Path.Combine(ForvoSettings.DownloadTempPath, fileName);
+            if (File.Exists(fileName) || overwrite)
+            {
+                return fileName;
+            }
+            await webClient.DownloadFileTaskAsync(new Uri(url), path);
+            return path;
+        }
     }
 }

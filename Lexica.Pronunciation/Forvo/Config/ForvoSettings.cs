@@ -17,5 +17,7 @@ namespace Lexica.Pronunciation.Forvo.Config
         public string Order { get; set; }
 
         public int Limit { get; set; }
+
+        public string DownloadTempPath { get; set; }
     }
 }

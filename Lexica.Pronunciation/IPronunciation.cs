@@ -8,8 +8,8 @@ namespace Lexica.Pronunciation
 {
     public interface IPronunciation
     {
-        public Task PlayAsync(string word);
+        public Task<bool> PlayAsync(string word);
 
-        public Task PlayAsync(List<string> words);
+        public Task<bool> PlayAsync(List<string> words);
     }
 }
