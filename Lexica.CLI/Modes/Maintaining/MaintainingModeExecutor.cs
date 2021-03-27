@@ -34,7 +34,8 @@ namespace Lexica.CLI.Modes.Maintaining
             JsonService jsonService,
             LocationService locationService,
             IMaintainingHistoryService maintainingHistoryService,
-            IPronunciation pronunciationService)
+            IPronunciation pronunciationService,
+            ILogger<IPronunciation> pronunciationLogger)
         {
             ConfigService = configService;
             Logger = logger;
@@ -42,6 +43,7 @@ namespace Lexica.CLI.Modes.Maintaining
             LocationService = locationService;
             MaintainingHistoryService = maintainingHistoryService;
             PronunciationService = pronunciationService;
+            PronunciationLogger = pronunciationLogger;
         }
 
         private ConfigService<AppSettings> ConfigService { get; set; }
@@ -54,7 +56,9 @@ namespace Lexica.CLI.Modes.Maintaining
 
         private IMaintainingHistoryService MaintainingHistoryService { get; set; }
 
-        private IPronunciation PronunciationService { get; set; } 
+        private IPronunciation PronunciationService { get; set; }
+
+        private ILogger<IPronunciation> PronunciationLogger { get; set; }
 
         private WordsSettings WordsSettings { get; set; } = new WordsSettings();
 
@@ -188,7 +192,7 @@ namespace Lexica.CLI.Modes.Maintaining
                 fileSources.Add(new FileSource(filePath));
             }
             var setModeOperator = new SetModeOperator(setService, fileSources);
-            var modeManager = new Manager(setModeOperator, ModeType, MaintainingSettings);
+            var modeManager = new Manager(setModeOperator, ModeType);
             return modeManager;
         }
 
@@ -196,7 +200,9 @@ namespace Lexica.CLI.Modes.Maintaining
         {
             _ = PronunciationService.PlayAsync(words)
                 .ContinueWith(
-                    x => Console.WriteLine(x.Exception),
+                    x => PronunciationLogger.LogError(
+                        x.Exception, "An unexpected error occured in pronunciation service."
+                    ),
                     TaskContinuationOptions.OnlyOnFaulted
                 );
         }

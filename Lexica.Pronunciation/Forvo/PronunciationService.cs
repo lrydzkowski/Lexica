@@ -11,12 +11,13 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Lexica.Pronunciation.Forvo
 {
     public class PronunciationService : IPronunciation
     {
-        public PronunciationService(ForvoSettings forvoSettings)
+        public PronunciationService(ForvoSettings forvoSettings, ILogger<IPronunciation> logger)
         {
             ForvoSettings = forvoSettings;
             if (!Directory.Exists(ForvoSettings.DownloadTempPath))
@@ -25,9 +26,12 @@ namespace Lexica.Pronunciation.Forvo
                     $"Directory {ForvoSettings.DownloadTempPath} from settings (Forvo.DownloadTempPath) doesn't exist."
                 );
             }
+            Logger = logger;
         }
 
         public ForvoSettings ForvoSettings { get; private set; }
+
+        public ILogger<IPronunciation> Logger { get; private set; }
 
         public async Task<bool> PlayAsync(string word)
         {
@@ -44,6 +48,7 @@ namespace Lexica.Pronunciation.Forvo
                 List<RecordInfo> recordsInfo = ParseResponse(responseContent);
                 if (recordsInfo.Count == 0)
                 {
+                    Logger.LogError($"{word} - No pronunciation");
                     continue;
                 }
                 var rnd = new Random();
@@ -62,11 +67,12 @@ namespace Lexica.Pronunciation.Forvo
             string url = GetApiUrl(word);
             HttpResponseMessage responseMsg = await client.GetAsync(url);
             HttpStatusCode statusCode = responseMsg.StatusCode;
+            string content = await responseMsg.Content.ReadAsStringAsync();
             if (statusCode != HttpStatusCode.OK)
             {
+                Logger.LogError(content);
                 return "";
             }
-            string content = await responseMsg.Content.ReadAsStringAsync();
             return content;
         }
 
