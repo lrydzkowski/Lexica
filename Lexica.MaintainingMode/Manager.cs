@@ -10,11 +10,10 @@ namespace Lexica.MaintainingMode
 {
     public class Manager
     {
-        public Manager(SetModeOperator setOperator, ModeTypeEnum modeType, MaintainingSettings settings)
+        public Manager(SetModeOperator setOperator, ModeTypeEnum modeType)
         {
             SetOperator = setOperator;
             ModeType = modeType;
-            Settings = settings;
         }
 
         private int NumOfCycles { get; set; } = 2;
@@ -23,17 +22,10 @@ namespace Lexica.MaintainingMode
 
         private ModeTypeEnum ModeType { get; set; }
 
-        private MaintainingSettings Settings { get; set; }
-
         public Entry? CurrentEntry { get; private set; } = null;
 
         public Dictionary<string, AnswerRegister> AnswersRegister { get; private set; } 
             = new Dictionary<string, AnswerRegister>() { };
-
-        public void Reset()
-        {
-            AnswersRegister = new Dictionary<string, AnswerRegister>();
-        }
 
         public int GetResult()
         {
@@ -124,14 +116,7 @@ namespace Lexica.MaintainingMode
             else
             {
                 result = false;
-                if (Settings.ResetAfterMistake == true)
-                {
-                    Reset();
-                }
-                else
-                {
-                    UpdateAnswersRegister(CurrentEntry, 0, UpdateAnswersRegisterOperationType.Set);
-                }
+                UpdateAnswersRegister(CurrentEntry, 0, UpdateAnswersRegisterOperationType.Set);
             }
 
             return new AnswerResult(result, correctWords);
@@ -176,7 +161,14 @@ namespace Lexica.MaintainingMode
             {
                 return;
             }
-            AnswersRegister[CurrentEntry.Id].CurrentValue = AnswersRegister[CurrentEntry.Id].PreviousValue + 1;
+            if (AnswersRegister.ContainsKey(CurrentEntry.Id))
+            {
+                AnswersRegister[CurrentEntry.Id].CurrentValue = AnswersRegister[CurrentEntry.Id].PreviousValue + 1;
+            }
+            else
+            {
+                UpdateAnswersRegister(1, UpdateAnswersRegisterOperationType.Set);
+            }
         }
     }
 }

@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Lexica.CLI.Modes.Maintaining
@@ -73,6 +74,11 @@ namespace Lexica.CLI.Modes.Maintaining
                 {
                     break;
                 }
+                // Play pronunciation.
+                if (MaintainingSettings.PlayPronuncation.TranslationsMode && ModeType == ModeTypeEnum.Translations)
+                {
+                    PlayPronunciation(modeManager.CurrentEntry?.Words ?? new List<string>());
+                }
                 // Show question.
                 PresentQuestion(question.Content, modeManager.GetResult(), modeManager.GetNumberOfQuestions());
                 // Verify answer.
@@ -82,6 +88,11 @@ namespace Lexica.CLI.Modes.Maintaining
                 string correctAnswer = string.Join(", ", answerResult?.PossibleAnswers ?? new List<string>());
                 // Show result.
                 PresentResult(isAnswerCorrect, correctAnswer);
+                // Play pronunciation.
+                if (MaintainingSettings.PlayPronuncation.WordsMode && ModeType == ModeTypeEnum.Words)
+                {
+                    PlayPronunciation(modeManager.CurrentEntry?.Words ?? new List<string>());
+                }
                 // Handle user commands (shortcuts).
                 CommandEnum command = HandleCommand();
                 if (command == CommandEnum.Close)
@@ -96,13 +107,6 @@ namespace Lexica.CLI.Modes.Maintaining
                 else if (command == CommandEnum.Override && !isAnswerCorrect)
                 {
                     modeManager.OverridePreviousMistake();
-                }
-                else if (command == CommandEnum.PlayPronunciation)
-                {
-                    if (modeManager.CurrentEntry != null)
-                    {
-                        await PronunciationService.PlayAsync(modeManager.CurrentEntry.Words);
-                    }
                 }
                 // Save logs in file.
                 WriteLog(
@@ -124,6 +128,12 @@ namespace Lexica.CLI.Modes.Maintaining
                         correctAnswer,
                         isAnswerCorrect
                     );
+                }
+                // Reset after wrong answer.
+                if (command != CommandEnum.Override && MaintainingSettings.ResetAfterMistake && !isAnswerCorrect)
+                {
+                    await ExecuteAsync(args);
+                    return;
                 }
             }
             ShowSummary();
@@ -182,21 +192,29 @@ namespace Lexica.CLI.Modes.Maintaining
             return modeManager;
         }
 
+        private void PlayPronunciation(List<string> words)
+        {
+            _ = PronunciationService.PlayAsync(words)
+                .ContinueWith(
+                    x => Console.WriteLine(x.Exception),
+                    TaskContinuationOptions.OnlyOnFaulted
+                );
+        }
+
         private void PresentQuestion(string question, int currentResult, int numberOfQuestions)
         {
             Console.Clear();
-            Console.Write("\\p Play pronunciation; ");
-            Console.Write("(Enter) Answer; ");
+            Console.Write(" (Enter) Answer; ");
             Console.Write("\\o Override; ");
             Console.Write("\\r Restart; ");
             Console.Write("\\c Close;");
             Console.WriteLine();
             Console.WriteLine();
-            Console.WriteLine($"Result: {currentResult}/{numberOfQuestions}");
+            Console.WriteLine($" Result: {currentResult}/{numberOfQuestions}");
             Console.WriteLine();
-            Console.WriteLine($"  {question}");
-            Console.WriteLine("  ------------------------------");
-            Console.Write("  # ");
+            Console.WriteLine($"   {question}");
+            Console.WriteLine("   -----------------------------------");
+            Console.Write("   # ");
         }
 
         private string ReadAnswer()
@@ -212,18 +230,18 @@ namespace Lexica.CLI.Modes.Maintaining
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine();
-                Console.Write("  Correct answer :)  ");
+                Console.Write("   Correct answer :)  ");
                 Console.ForegroundColor = ConsoleColor.White;
             }
             else
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine();
-                Console.Write("  Wrong answer :(  ");
+                Console.Write("   Wrong answer :(  ");
                 if (correctAnswer != null)
                 {
                     Console.WriteLine();
-                    Console.Write("  Correct answer is: ");
+                    Console.Write("   Correct answer is: ");
                     Console.ForegroundColor = ConsoleColor.White;
                     Console.Write($"{correctAnswer}  ");
                 }
@@ -242,8 +260,6 @@ namespace Lexica.CLI.Modes.Maintaining
                     return CommandEnum.Restart;
                 case "\\c":
                     return CommandEnum.Close;
-                case "\\p":
-                    return CommandEnum.PlayPronunciation;
             }
             return CommandEnum.None;
         }
@@ -271,17 +287,12 @@ namespace Lexica.CLI.Modes.Maintaining
             Logger.LogDebug(logData);
         }
 
-        private void PlayPronunciation()
-        {
-
-        }
-
         private void ShowSummary()
         {
             Console.Clear();
             ConsoleColor standardForegroundColor = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("The end :) ");
+            Console.Write(" The end :) ");
             Console.ForegroundColor = standardForegroundColor;
             Console.ReadLine();
         }

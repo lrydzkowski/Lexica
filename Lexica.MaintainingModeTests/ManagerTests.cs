@@ -66,9 +66,7 @@ namespace Lexica.MaintainingModeTests
             var setService = new SetService(fileValidator);
             var fileSource = new EmbeddedSource(filePath, Assembly.GetExecutingAssembly());
             var setModeOperator = new SetModeOperator(setService, fileSource);
-            var modeManager = new Manager(
-                setModeOperator, modeType, new MaintainingSettings() { ResetAfterMistake = null }
-            );
+            var modeManager = new Manager(setModeOperator, modeType);
             Entry? entry = setModeOperator.GetEntry(fileSource.Namespace, fileSource.Name, 1);
             if (entry == null)
             {

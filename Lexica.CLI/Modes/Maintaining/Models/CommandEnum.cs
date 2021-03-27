@@ -9,7 +9,6 @@ namespace Lexica.CLI.Modes.Maintaining.Models
         None = 0,
         Restart = 1,
         Close = 2,
-        Override = 3,
-        PlayPronunciation = 4
+        Override = 3
     }
 }
