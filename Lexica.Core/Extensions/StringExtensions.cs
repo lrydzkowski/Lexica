@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Text.Json;
 
 namespace Lexica.Core.Extensions
 {
-    static class StringExtensions
+    public static class StringExtensions
     {
         public static string ReplaceLastOccurence(this string str, string find, string replace)
         {
@@ -22,6 +23,11 @@ namespace Lexica.Core.Extensions
         public static string UppercaseFirst(this string str)
         {
             return char.ToUpper(str[0]) + str.Substring(1);
+        }
+
+        public static string RemoveInvalidFileNameChars(this string str)
+        {
+            return string.Join("", str.Split(Path.GetInvalidFileNameChars()));
         }
     }
 }
