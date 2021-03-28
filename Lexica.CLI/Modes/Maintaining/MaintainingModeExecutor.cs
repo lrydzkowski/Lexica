@@ -224,21 +224,21 @@ namespace Lexica.CLI.Modes.Maintaining
             Console.Clear();
             if (beforeVerification)
             {
-                Console.Write(" (Enter) Answer; ");
+                Console.Write(" (Enter) Answer");
             }
             else
             {
-                Console.Write(" (Enter) Next question; ");
-                Console.Write("\\o Override; ");
-                Console.Write("\\r Restart; ");
-                Console.Write("\\c Close;");
+                Console.Write(" (Enter) Next question;");
+                Console.Write(" \\o Override;");
+                Console.Write(" \\r Restart;");
+                Console.Write(" \\c Close;");
             }
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine($" Result: {currentResult}/{numberOfQuestions}");
             Console.WriteLine();
             Console.WriteLine($"   {question}");
-            Console.WriteLine("   -----------------------------------");
+            Console.WriteLine("   ----------------------------------------------------------------------");
             Console.Write("   # ");
             Console.Write(answer);
         }
