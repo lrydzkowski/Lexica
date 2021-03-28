@@ -33,6 +33,10 @@ namespace Lexica.Words
             if (Set == null)
             {
                 LastLoadSetOperationResult = SetService.Load(FilesSources);
+                if (!LastLoadSetOperationResult.Result && LastLoadSetOperationResult.Errors?.Count > 0)
+                {
+                    throw new Exception(LastLoadSetOperationResult.Errors[0].Message);
+                }
                 Set = LastLoadSetOperationResult.Data;
             }
             return LastLoadSetOperationResult?.Result ?? true;

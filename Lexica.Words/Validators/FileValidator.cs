@@ -59,7 +59,7 @@ namespace Lexica.Words.Validators
                     result.AddError(
                         new Error<Dictionary<string, string>>(
                             (int)Words.Models.ErrorCodesEnum.TooManySemicolons,
-                            $"There are too many semicolons in file {fileName}, line {i + 1}. There should be only 1 semicolons.",
+                            $"There are too many semicolons in file {fileName}, line {i + 1}. There should be only one semicolon.",
                             errorInfo
                         )
                     );
