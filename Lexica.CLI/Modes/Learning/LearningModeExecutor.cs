@@ -67,12 +67,11 @@ namespace Lexica.CLI.Modes.Learning
                     break;
                 }
                 // Show question.
-                (int closedQuestionsResult, int openQuestionsResult) = modeManager.GetResult();
                 PresentQuestion(
-                    question, 
-                    closedQuestionsResult, 
+                    question,
+                    modeManager.GetResult(QuestionTypeEnum.Closed), 
                     modeManager.GetNumberOfQuestions(QuestionTypeEnum.Closed), 
-                    openQuestionsResult, 
+                    modeManager.GetResult(QuestionTypeEnum.Open), 
                     modeManager.GetNumberOfQuestions(QuestionTypeEnum.Open)
                 );
                 // Verify answer.
@@ -81,7 +80,16 @@ namespace Lexica.CLI.Modes.Learning
                 bool isAnswerCorrect = answerResult?.Result ?? false;
                 string correctAnswer = string.Join(", ", answerResult?.PossibleAnswers ?? new List<string>());
                 // Show result.
-                PresentResult(isAnswerCorrect, correctAnswer);
+                PresentResult(
+                    question,
+                    modeManager.GetResult(QuestionTypeEnum.Closed),
+                    modeManager.GetNumberOfQuestions(QuestionTypeEnum.Closed),
+                    modeManager.GetResult(QuestionTypeEnum.Open),
+                    modeManager.GetNumberOfQuestions(QuestionTypeEnum.Open),
+                    answer, 
+                    isAnswerCorrect, 
+                    correctAnswer
+                );
                 // Handle user commands (shortcuts).
                 CommandEnum command = HandleCommand();
                 if (command == CommandEnum.Close)
@@ -98,14 +106,13 @@ namespace Lexica.CLI.Modes.Learning
                     modeManager.OverridePreviousMistake();
                 }
                 // Save logs in file.
-                (closedQuestionsResult, openQuestionsResult) = modeManager.GetResult();
                 WriteLog(
                     isAnswerCorrect,
                     question.Content,
                     correctAnswer,
-                    closedQuestionsResult,
+                    modeManager.GetResult(QuestionTypeEnum.Closed),
                     modeManager.GetNumberOfQuestions(QuestionTypeEnum.Closed),
-                    openQuestionsResult,
+                    modeManager.GetResult(QuestionTypeEnum.Open),
                     modeManager.GetNumberOfQuestions(QuestionTypeEnum.Open),
                     modeManager.AnswersRegister
                 );
@@ -174,30 +181,39 @@ namespace Lexica.CLI.Modes.Learning
             int closedQuestionsCurrentResult, 
             int numberOfClosedQuestions, 
             int openQuestionsCurrentResult, 
-            int numberOfOpenQuestions)
+            int numberOfOpenQuestions,
+            string answer = "",
+            bool beforeVerification = true)
         {
             Console.Clear();
-            Console.Write("\\p Play pronunciation; ");
-            Console.Write("(Enter) Answer; ");
-            Console.Write("\\o Override; ");
-            Console.Write("\\r Restart; ");
-            Console.Write("\\c Close;");
+            if (beforeVerification)
+            {
+                Console.Write(" (Enter) Answer");
+            }
+            else
+            {
+                Console.Write(" (Enter) Next question;");
+                Console.Write(" \\o Override;");
+                Console.Write(" \\r Restart;");
+                Console.Write(" \\c Close;");
+            }
             Console.WriteLine();
             Console.WriteLine();
-            Console.WriteLine($"Closed questions result: {closedQuestionsCurrentResult}/{numberOfClosedQuestions}");
-            Console.WriteLine($"Open questions result: {openQuestionsCurrentResult}/{numberOfOpenQuestions}");
+            Console.WriteLine($" Closed questions result: {closedQuestionsCurrentResult}/{numberOfClosedQuestions}");
+            Console.WriteLine($" Open questions result: {openQuestionsCurrentResult}/{numberOfOpenQuestions}");
             Console.WriteLine();
-            Console.WriteLine($"  {question.Content}");
+            Console.WriteLine($"   {question.Content}");
             if (question.PossibleAnswers != null && question.PossibleAnswers.Count > 0)
             {
                 Console.WriteLine();
                 for (int i = 0; i < question.PossibleAnswers.Count; i++)
                 {
-                    Console.WriteLine($"  {i + 1}. {question.PossibleAnswers[i]}");
+                    Console.WriteLine($"   {i + 1}. {question.PossibleAnswers[i]}");
                 }
             }
-            Console.WriteLine("  ------------------------------");
-            Console.Write("  # ");
+            Console.WriteLine("   ----------------------------------------------------------------------");
+            Console.Write("   # ");
+            Console.Write(answer);
         }
 
         private string ReadAnswer()
@@ -206,25 +222,43 @@ namespace Lexica.CLI.Modes.Learning
             return answer;
         }
 
-        private void PresentResult(bool result, string? correctAnswer = null)
+        private void PresentResult(
+            Question question,
+            int closedQuestionsCurrentResult,
+            int numberOfClosedQuestions,
+            int openQuestionsCurrentResult,
+            int numberOfOpenQuestions,
+            string answer,
+            bool result,
+            string? correctAnswer = null)
         {
             ConsoleColor standardForegroundColor = Console.ForegroundColor;
+            PresentQuestion(
+                question,
+                closedQuestionsCurrentResult,
+                numberOfClosedQuestions,
+                openQuestionsCurrentResult,
+                numberOfOpenQuestions,
+                answer,
+                false
+            );
+            Console.WriteLine();
             if (result)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine();
-                Console.Write("  Correct answer :)  ");
+                Console.Write("   Correct answer :)  ");
                 Console.ForegroundColor = ConsoleColor.White;
             }
             else
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine();
-                Console.Write("  Wrong answer :(  ");
+                Console.Write("   Wrong answer :(  ");
                 if (correctAnswer != null)
                 {
                     Console.WriteLine();
-                    Console.Write("  Correct answer is: ");
+                    Console.Write("   Correct answer is: ");
                     Console.ForegroundColor = ConsoleColor.White;
                     Console.Write($"{correctAnswer}  ");
                 }
@@ -243,9 +277,6 @@ namespace Lexica.CLI.Modes.Learning
                     return CommandEnum.Restart;
                 case "\\c":
                     return CommandEnum.Close;
-                case "\\p":
-                    // play pronuciation
-                    break;
             }
             return CommandEnum.None;
         }

@@ -35,13 +35,14 @@ namespace Lexica.LearningMode
 
         public Tuple<int, int> GetResult()
         {
-            int closedResult = AnswersRegister[QuestionTypeEnum.Closed]
+            return new Tuple<int, int>(GetResult(QuestionTypeEnum.Closed), GetResult(QuestionTypeEnum.Open));
+        }
+
+        public int GetResult(QuestionTypeEnum questionType)
+        {
+            return AnswersRegister[questionType]
                 .Select(x => x.Value.Translations.CurrentValue + x.Value.Words.CurrentValue)
                 .Sum();
-            int openResult = AnswersRegister[QuestionTypeEnum.Open]
-                .Select(x => x.Value.Translations.CurrentValue + x.Value.Words.CurrentValue)
-                .Sum();
-            return new Tuple<int, int>(closedResult, openResult);
         }
 
         public int GetSumResult()
