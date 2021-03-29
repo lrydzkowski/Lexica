@@ -29,5 +29,23 @@ namespace Lexica.Core.Extensions
         {
             return string.Join("", str.Split(Path.GetInvalidFileNameChars()));
         }
+
+        public static bool OrdinalContains(this string s, string value, bool ignoreCase = false)
+        {
+            return s != null 
+                && s.IndexOf(value, ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal) >= 0;
+        }
+
+        public static bool OrdinalStartsWith(this string s, string value, bool ignoreCase = false)
+        {
+            return s != null 
+                && s.StartsWith(value, ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
+        }
+
+        public static bool OrdinalEndsWith(this string s, string value, bool ignoreCase = false)
+        {
+            return s != null 
+                && s.EndsWith(value, ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
+        } 
     }
 }
