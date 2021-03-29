@@ -91,9 +91,11 @@ namespace Lexica.CLI
             services.AddSingleton<IPronunciation, PronunciationService>();
 
             services.AddExecutorServices();
-            services.AddCoreServices();
+            services.AddCoreModuleServices();
 
             services.AddEFServices();
+
+            services.AddCoreLibraryServices();
 
             IServiceProvider serviceProvider = services.BuildServiceProvider();
 

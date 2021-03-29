@@ -7,7 +7,7 @@ namespace Lexica.CLI.Core.Extensions
 {
     static class ServiceCollectionExtensions
     {
-        public static void AddCoreServices(this IServiceCollection services)
+        public static void AddCoreModuleServices(this IServiceCollection services)
         {
             var executorsTypes = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(x => x.GetTypes())
