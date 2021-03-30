@@ -128,20 +128,15 @@ namespace Lexica.Pronunciation.Forvo
             return recordsInfo;
         }
 
-        public async Task<string> DownloadFile(
-            string url,
-            string word,
-            string suffix = "",
-            string extension = "mp3",
-            bool overwrite = false)
+        public async Task<string> DownloadFile(string url, string word, string suffix = "", string extension = "mp3")
         {
             using var webClient = new WebClient();
-            string fileName = $"{word}-{suffix}".RemoveInvalidFileNameChars() + $".{extension}";
-            string path = Path.Combine(ForvoSettings.DownloadTempPath, fileName);
-            if (File.Exists(fileName) || overwrite)
+            if (suffix.Length > 0)
             {
-                return fileName;
+                suffix = '-' + suffix;
             }
+            string fileName = $"{word}{suffix}".RemoveInvalidFileNameChars() + $".{extension}";
+            string path = Path.Combine(ForvoSettings.DownloadTempPath, fileName);
             await webClient.DownloadFileTaskAsync(new Uri(url), path);
             return path;
         }
