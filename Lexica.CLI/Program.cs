@@ -3,12 +3,11 @@ using Lexica.CLI.Core;
 using Lexica.CLI.Core.Config;
 using Lexica.CLI.Core.Extensions;
 using Lexica.CLI.Executors.Extensions;
+using Lexica.Core.Extensions;
 using Lexica.Core.Services;
 using Lexica.EF;
 using Lexica.EF.Extensions;
 using Lexica.Pronunciation;
-using Lexica.Pronunciation.Forvo;
-using Lexica.Pronunciation.Forvo.Config;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -87,8 +86,13 @@ namespace Lexica.CLI
             );
 
             // Pronunciation service
-            services.AddSingleton<ForvoSettings>(configService.Get().Forvo ?? new ForvoSettings());
-            services.AddSingleton<IPronunciation, PronunciationService>();
+            //services.AddSingleton(configService.Get().Forvo ?? new Pronunciation.Forvo.Config.ForvoSettings());
+            //services.AddSingleton<IPronunciation, Pronunciation.Forvo.PronunciationService>();
+            services.AddSingleton(
+                configService.Get().WebDictionary
+                ?? new Pronunciation.WebDictionary.Config.WebDictionarySettings()
+            );
+            services.AddSingleton<IPronunciation, Pronunciation.WebDictionary.PronunciationService>();
 
             services.AddExecutorServices();
             services.AddCoreModuleServices();
