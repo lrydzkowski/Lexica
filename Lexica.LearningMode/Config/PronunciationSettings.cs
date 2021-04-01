@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Lexica.LearningMode.Config
 {
-    public class LearningSettings
+    public class PronunciationSettings
     {
-        public int? NumOfLevels { get; set; }
+        public bool WordsMode { get; set; } = false;
 
-        public PronunciationSettings PlayPronuncation { get; set; } = new PronunciationSettings();
+        public bool TranslationsMode { get; set; } = false;
     }
 }

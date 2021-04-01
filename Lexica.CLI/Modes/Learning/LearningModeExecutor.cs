@@ -10,6 +10,7 @@ using Lexica.LearningMode;
 using Lexica.LearningMode.Config;
 using Lexica.LearningMode.Models;
 using Lexica.LearningMode.Services;
+using Lexica.Pronunciation;
 using Lexica.Words;
 using Lexica.Words.Config;
 using Lexica.Words.Services;
@@ -31,13 +32,17 @@ namespace Lexica.CLI.Modes.Learning
             ILogger<LearningModeExecutor> logger,
             JsonService jsonService,
             LocationService locationService,
-            ILearningHistoryService learningHistoryService)
+            ILearningHistoryService learningHistoryService,
+            IPronunciation pronunciationService,
+            ILogger<IPronunciation> pronunciationLogger)
         {
             ConfigService = configService;
             Logger = logger;
             JsonService = jsonService;
             LocationService = locationService;
             LearningHistoryService = learningHistoryService;
+            PronunciationService = pronunciationService;
+            PronunciationLogger = pronunciationLogger;
         }
 
         private ConfigService<AppSettings> ConfigService { get; set; }
@@ -49,6 +54,10 @@ namespace Lexica.CLI.Modes.Learning
         private LocationService LocationService { get; set; }
 
         public ILearningHistoryService LearningHistoryService { get; set; }
+
+        private IPronunciation PronunciationService { get; set; }
+
+        private ILogger<IPronunciation> PronunciationLogger { get; set; }
 
         private WordsSettings WordsSettings { get; set; } = new WordsSettings();
 
@@ -65,6 +74,11 @@ namespace Lexica.CLI.Modes.Learning
                 if (question == null)
                 {
                     break;
+                }
+                if (LearningSettings.PlayPronuncation.TranslationsMode 
+                    && modeManager.CurrentQuestionInfo?.ModeType == ModeTypeEnum.Words)
+                {
+                    PlayPronunciation(modeManager.CurrentQuestionInfo.Entry.Words ?? new List<string>());
                 }
                 // Show question.
                 PresentQuestion(
@@ -90,6 +104,12 @@ namespace Lexica.CLI.Modes.Learning
                     isAnswerCorrect, 
                     correctAnswer
                 );
+                // Play pronunciation.
+                if (LearningSettings.PlayPronuncation.WordsMode
+                    && modeManager.CurrentQuestionInfo?.ModeType == ModeTypeEnum.Translations)
+                {
+                    PlayPronunciation(modeManager.CurrentQuestionInfo.Entry.Words ?? new List<string>());
+                }
                 // Handle user commands (shortcuts).
                 CommandEnum command = HandleCommand();
                 if (command == CommandEnum.Close)
@@ -174,6 +194,17 @@ namespace Lexica.CLI.Modes.Learning
             var setModeOperator = new SetModeOperator(setService, fileSources);
             var modeManager = new Manager(setModeOperator, LearningSettings);
             return modeManager;
+        }
+
+        private void PlayPronunciation(List<string> words)
+        {
+            _ = PronunciationService.PlayAsync(words)
+                .ContinueWith(
+                    x => PronunciationLogger.LogError(
+                        x.Exception, "An unexpected error occured in pronunciation service."
+                    ),
+                    TaskContinuationOptions.OnlyOnFaulted
+                );
         }
 
         private void PresentQuestion(
