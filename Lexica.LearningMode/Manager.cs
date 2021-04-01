@@ -85,7 +85,7 @@ namespace Lexica.LearningMode
                         if (    !AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed, ModeTypeEnum.Translations)
                             &&  !AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed, ModeTypeEnum.Words))
                         {
-                            ModeTypeEnum closedQuestionMode = rnd.Next(1) == 1
+                            ModeTypeEnum closedQuestionMode = rnd.Next(2) == 1
                                 ? ModeTypeEnum.Translations
                                 : ModeTypeEnum.Words;
                             if (closedQuestionMode == ModeTypeEnum.Translations)
