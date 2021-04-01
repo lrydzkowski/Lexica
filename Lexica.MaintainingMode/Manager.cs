@@ -58,10 +58,10 @@ namespace Lexica.MaintainingMode
                     switch (ModeType)
                     {
                         case ModeTypeEnum.Translations:
-                            questionWords = entry.Words;
+                            questionWords = entry.Translations;
                             break;
                         case ModeTypeEnum.Words:
-                            questionWords = entry.Translations;
+                            questionWords = entry.Words;
                             break;
                     }
                     yield return new Question(string.Join(", ", questionWords), QuestionTypeEnum.Open);
@@ -100,10 +100,10 @@ namespace Lexica.MaintainingMode
             switch (ModeType)
             {
                 case ModeTypeEnum.Translations:
-                    correctWords = CurrentEntry.Translations;
+                    correctWords = CurrentEntry.Words;
                     break;
                 case ModeTypeEnum.Words:
-                    correctWords = CurrentEntry.Words;
+                    correctWords = CurrentEntry.Translations;
                     break;
             }
             correctWords.Sort();

@@ -79,7 +79,7 @@ namespace Lexica.CLI.Modes.Maintaining
                     break;
                 }
                 // Play pronunciation.
-                if (MaintainingSettings.PlayPronuncation.TranslationsMode && ModeType == ModeTypeEnum.Translations)
+                if (MaintainingSettings.PlayPronuncation.WordsMode && ModeType == ModeTypeEnum.Words)
                 {
                     PlayPronunciation(modeManager.CurrentEntry?.Words ?? new List<string>());
                 }
@@ -100,7 +100,7 @@ namespace Lexica.CLI.Modes.Maintaining
                     correctAnswer
                 );
                 // Play pronunciation.
-                if (MaintainingSettings.PlayPronuncation.WordsMode && ModeType == ModeTypeEnum.Words)
+                if (MaintainingSettings.PlayPronuncation.TranslationsMode && ModeType == ModeTypeEnum.Translations)
                 {
                     PlayPronunciation(modeManager.CurrentEntry?.Words ?? new List<string>());
                 }
