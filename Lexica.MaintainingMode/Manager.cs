@@ -61,6 +61,7 @@ namespace Lexica.MaintainingMode
                             questionWords = entry.Translations;
                             break;
                         case ModeTypeEnum.Words:
+                        case ModeTypeEnum.Pronunciation:
                             questionWords = entry.Words;
                             break;
                     }
@@ -100,6 +101,7 @@ namespace Lexica.MaintainingMode
             switch (ModeType)
             {
                 case ModeTypeEnum.Translations:
+                case ModeTypeEnum.Pronunciation:
                     correctWords = CurrentEntry.Words;
                     break;
                 case ModeTypeEnum.Words:

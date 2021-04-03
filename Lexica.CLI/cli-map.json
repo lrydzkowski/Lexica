@@ -34,11 +34,6 @@
               "Name": "learning",
               "Shortcut": "l",
               "ExecutorClass": "Lexica.CLI.Modes.Learning.LearningModeExecutor"
-            },
-            {
-              "Name": "spelling",
-              "Shortcut": "s",
-              "ExecutorClass": "Lexica.CLI.Modes.Spelling.SpellingModeExecutor"
             }
           ]
         }

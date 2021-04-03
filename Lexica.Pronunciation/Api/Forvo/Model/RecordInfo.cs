@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Lexica.Pronunciation.Forvo.Model
+namespace Lexica.Pronunciation.Api.Forvo.Model
 {
     public class RecordInfo
     {

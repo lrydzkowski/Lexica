@@ -1,8 +1,7 @@
 ﻿using Lexica.EF.Config;
 using Lexica.LearningMode.Config;
 using Lexica.MaintainingMode.Config;
-using Lexica.Pronunciation.Forvo.Config;
-using Lexica.Pronunciation.WebDictionary.Config;
+using Lexica.Pronunciation.Config;
 using Lexica.Words.Config;
 
 namespace Lexica.CLI.Core.Config
@@ -17,8 +16,6 @@ namespace Lexica.CLI.Core.Config
 
         public LearningSettings? Learning { get; set; }
 
-        public ForvoSettings? Forvo { get; set; }
-
-        public WebDictionarySettings? WebDictionary { get; set; }
+        public PronunciationApiSettings? PronunciationApi { get; set; }
     }
 }

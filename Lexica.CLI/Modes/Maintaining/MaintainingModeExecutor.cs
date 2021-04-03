@@ -21,7 +21,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Lexica.CLI.Modes.Maintaining
@@ -78,13 +77,28 @@ namespace Lexica.CLI.Modes.Maintaining
                 {
                     break;
                 }
+                List<string> words = modeManager.CurrentEntry?.Words ?? new List<string>();
                 // Play pronunciation.
-                if (MaintainingSettings.PlayPronuncation.WordsMode && ModeType == ModeTypeEnum.Words)
+                if (ModeType == ModeTypeEnum.Pronunciation)
                 {
-                    PlayPronunciation(modeManager.CurrentEntry?.Words ?? new List<string>());
+                    if (!await PlayPronunciation(words))
+                    {
+                        modeManager.UpdateAnswersRegister(2);
+                        continue;
+                    }
+                }
+                // Play background pronunciation.
+                if (ModeType == ModeTypeEnum.Words && MaintainingSettings.PlayPronuncation.WordsMode)
+                {
+                    PlayBackgroundPronunciation(words);
                 }
                 // Show question.
-                PresentQuestion(question.Content, modeManager.GetResult(), modeManager.GetNumberOfQuestions());
+                string questionContent = "";
+                if (ModeType != ModeTypeEnum.Pronunciation)
+                {
+                    questionContent = question.Content;
+                }
+                PresentQuestion(questionContent, modeManager.GetResult(), modeManager.GetNumberOfQuestions());
                 // Verify answer.
                 string answer = ReadAnswer();
                 AnswerResult? answerResult = modeManager.VerifyAnswer(answer);
@@ -92,17 +106,17 @@ namespace Lexica.CLI.Modes.Maintaining
                 string correctAnswer = string.Join(", ", answerResult?.PossibleAnswers ?? new List<string>());
                 // Show result.
                 PresentResult(
-                    question.Content, 
+                    questionContent, 
                     modeManager.GetResult(), 
                     modeManager.GetNumberOfQuestions(),
                     answer,
                     isAnswerCorrect, 
                     correctAnswer
                 );
-                // Play pronunciation.
-                if (MaintainingSettings.PlayPronuncation.TranslationsMode && ModeType == ModeTypeEnum.Translations)
+                // Play background pronunciation.
+                if (ModeType == ModeTypeEnum.Translations && MaintainingSettings.PlayPronuncation.TranslationsMode)
                 {
-                    PlayPronunciation(modeManager.CurrentEntry?.Words ?? new List<string>());
+                    PlayBackgroundPronunciation(words);
                 }
                 // Handle user commands (shortcuts).
                 CommandEnum command = HandleCommand();
@@ -203,7 +217,12 @@ namespace Lexica.CLI.Modes.Maintaining
             return modeManager;
         }
 
-        private void PlayPronunciation(List<string> words)
+        private async Task<bool> PlayPronunciation(List<string> words)
+        {
+            return await PronunciationService.PlayAsync(words);
+        }
+
+        private void PlayBackgroundPronunciation(List<string> words)
         {
             _ = PronunciationService.PlayAsync(words)
                 .ContinueWith(
@@ -237,7 +256,10 @@ namespace Lexica.CLI.Modes.Maintaining
             Console.WriteLine();
             Console.WriteLine($" Result: {currentResult}/{numberOfQuestions}");
             Console.WriteLine();
-            Console.WriteLine($"   {question}");
+            if (question.Length > 0)
+            {
+                Console.WriteLine($"   {question}");
+            }
             Console.WriteLine("   ----------------------------------------------------------------------");
             Console.Write("   # ");
             Console.Write(answer);

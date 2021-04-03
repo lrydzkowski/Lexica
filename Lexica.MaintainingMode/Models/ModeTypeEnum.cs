@@ -8,6 +8,7 @@ namespace Lexica.MaintainingMode.Models
     {
         Words = 0,
         Translations = 1,
-        Mixed = 2
+        Mixed = 2,
+        Pronunciation = 3
     }
 }

@@ -1,6 +1,4 @@
 ﻿using Lexica.Core.Extensions;
-using Lexica.Pronunciation.Forvo.Config;
-using Lexica.Pronunciation.Forvo.Model;
 using NetCoreAudio;
 using System;
 using System.Collections.Generic;
@@ -12,8 +10,10 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Lexica.Pronunciation.Api.Forvo.Config;
+using Lexica.Pronunciation.Api.Forvo.Model;
 
-namespace Lexica.Pronunciation.Forvo
+namespace Lexica.Pronunciation.Api.Forvo
 {
     public class PronunciationService : IPronunciation
     {

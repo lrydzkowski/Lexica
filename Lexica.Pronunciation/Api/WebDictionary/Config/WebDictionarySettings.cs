@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Lexica.Pronunciation.WebDictionary.Config
+namespace Lexica.Pronunciation.Api.WebDictionary.Config
 {
     public class WebDictionarySettings
     {

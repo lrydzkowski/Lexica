@@ -1,19 +1,17 @@
 ﻿using Lexica.Core.Extensions;
 using Lexica.Core.Services;
-using Lexica.Pronunciation.WebDictionary.Config;
+using Lexica.Pronunciation.Api.WebDictionary.Config;
 using Microsoft.Extensions.Logging;
 using NetCoreAudio;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Lexica.Pronunciation.WebDictionary
+namespace Lexica.Pronunciation.Api.WebDictionary
 {
     public class PronunciationService : IPronunciation
     {
