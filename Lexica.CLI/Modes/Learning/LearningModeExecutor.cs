@@ -67,6 +67,7 @@ namespace Lexica.CLI.Modes.Learning
 
         public async Task ExecuteAsync(List<string>? args = null)
         {
+            Console.Clear();
             VerifyParameters(args);
             Manager modeManager = GetModeManager();
             foreach (Question? question in modeManager.GetQuestions())
@@ -216,10 +217,11 @@ namespace Lexica.CLI.Modes.Learning
             string answer = "",
             bool beforeVerification = true)
         {
-            Console.Clear();
+            int lineAfterRendering = 7;
+            Console.SetCursorPosition(0, 0);
             if (beforeVerification)
             {
-                Console.Write(" (Enter) Answer");
+                Console.Write(" (Enter) Answer".PadRight(80));
             }
             else
             {
@@ -230,21 +232,37 @@ namespace Lexica.CLI.Modes.Learning
             }
             Console.WriteLine();
             Console.WriteLine();
-            Console.WriteLine($" Closed questions result: {closedQuestionsCurrentResult}/{numberOfClosedQuestions}");
-            Console.WriteLine($" Open questions result: {openQuestionsCurrentResult}/{numberOfOpenQuestions}");
+            Console.WriteLine($"  Closed questions result: {closedQuestionsCurrentResult}/{numberOfClosedQuestions}".PadRight(80));
+            Console.WriteLine($"  Open questions result: {openQuestionsCurrentResult}/{numberOfOpenQuestions}".PadRight(80));
             Console.WriteLine();
-            Console.WriteLine($"   {question.Content}");
+            var previousForegroundColor = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"  {question.Content}".PadRight(80));
+            Console.ForegroundColor = previousForegroundColor;
             if (question.PossibleAnswers != null && question.PossibleAnswers.Count > 0)
             {
-                Console.WriteLine();
+                lineAfterRendering = 11;
                 for (int i = 0; i < question.PossibleAnswers.Count; i++)
                 {
-                    Console.WriteLine($"   {i + 1}. {question.PossibleAnswers[i]}");
+                    Console.WriteLine($"  {i + 1}. {question.PossibleAnswers[i]}".PadRight(80));
                 }
             }
-            Console.WriteLine("   ----------------------------------------------------------------------");
-            Console.Write("   # ");
-            Console.Write(answer);
+            Console.WriteLine("  ".PadRight(80, '-'));
+            Console.Write("  # ".PadRight(80));
+            if (answer.Length > 0)
+            {
+                Console.SetCursorPosition(4, lineAfterRendering);
+                Console.Write(answer);
+            }
+            Console.WriteLine();
+            Console.WriteLine(" ".PadRight(80));
+            Console.WriteLine(" ".PadRight(80));
+            Console.WriteLine(" ".PadRight(80));
+            Console.WriteLine(" ".PadRight(80));
+            Console.WriteLine(" ".PadRight(80));
+            Console.WriteLine(" ".PadRight(80));
+            Console.WriteLine(" ".PadRight(80));
+            Console.SetCursorPosition(4, lineAfterRendering);
         }
 
         private string ReadAnswer()
@@ -278,18 +296,18 @@ namespace Lexica.CLI.Modes.Learning
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine();
-                Console.Write("   Correct answer :)  ");
+                Console.Write("  Correct answer :)  ");
                 Console.ForegroundColor = ConsoleColor.White;
             }
             else
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine();
-                Console.Write("   Wrong answer :(  ");
+                Console.Write("  Wrong answer :(  ");
                 if (correctAnswer != null)
                 {
                     Console.WriteLine();
-                    Console.Write("   Correct answer is: ");
+                    Console.Write("  Correct answer is: ");
                     Console.ForegroundColor = ConsoleColor.White;
                     Console.Write($"{correctAnswer}  ");
                 }
@@ -343,7 +361,7 @@ namespace Lexica.CLI.Modes.Learning
             Console.Clear();
             ConsoleColor standardForegroundColor = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("The end :) ");
+            Console.Write(" The end :) ");
             Console.ForegroundColor = standardForegroundColor;
             Console.ReadLine();
         }

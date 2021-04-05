@@ -69,6 +69,7 @@ namespace Lexica.CLI.Modes.Maintaining
 
         public async Task ExecuteAsync(List<string>? args = null)
         {
+            Console.Clear();
             VerifyParameters(args);
             Manager modeManager = GetModeManager();
             foreach (Question? question in modeManager.GetQuestions())
@@ -240,10 +241,11 @@ namespace Lexica.CLI.Modes.Maintaining
             string answer = "", 
             bool beforeVerification = true)
         {
-            Console.Clear();
+            int lineAfterRendering = 5;
+            Console.SetCursorPosition(0, 0);
             if (beforeVerification)
             {
-                Console.Write(" (Enter) Answer");
+                Console.Write(" (Enter) Answer".PadRight(80));
             }
             else
             {
@@ -254,15 +256,28 @@ namespace Lexica.CLI.Modes.Maintaining
             }
             Console.WriteLine();
             Console.WriteLine();
-            Console.WriteLine($" Result: {currentResult}/{numberOfQuestions}");
+            Console.WriteLine($"  Result: {currentResult}/{numberOfQuestions}".PadRight(80));
             Console.WriteLine();
             if (question.Length > 0)
             {
-                Console.WriteLine($"   {question}");
+                lineAfterRendering = 6;
+                var previousForegroundColor = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine($"  {question}".PadRight(80));
+                Console.ForegroundColor = previousForegroundColor;
             }
-            Console.WriteLine("   ----------------------------------------------------------------------");
-            Console.Write("   # ");
-            Console.Write(answer);
+            Console.WriteLine("  ".PadRight(80, '-'));
+            Console.Write("  # ".PadRight(80));
+            if (answer.Length > 0)
+            {
+                Console.SetCursorPosition(4, lineAfterRendering);
+                Console.Write(answer);
+            }
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine(" ".PadRight(80));
+            Console.WriteLine(" ".PadRight(80));
+            Console.SetCursorPosition(4, lineAfterRendering);
         }
 
         private string ReadAnswer()
@@ -286,18 +301,18 @@ namespace Lexica.CLI.Modes.Maintaining
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine();
-                Console.Write("   Correct answer :)  ");
+                Console.Write("  Correct answer :)  ");
                 Console.ForegroundColor = ConsoleColor.White;
             }
             else
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine();
-                Console.Write("   Wrong answer :(  ");
+                Console.Write("  Wrong answer :(  ");
                 if (correctAnswer.Length > 0)
                 {
                     Console.WriteLine();
-                    Console.Write("   Correct answer is: ");
+                    Console.Write("  Correct answer is: ");
                     Console.ForegroundColor = ConsoleColor.White;
                     Console.Write($"{correctAnswer}  ");
                 }
