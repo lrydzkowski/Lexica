@@ -1,5 +1,5 @@
 ﻿using Lexica.EF.Services;
-using Lexica.LearningMode.Services;
+using Lexica.Learning.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Lexica.EF.Extensions

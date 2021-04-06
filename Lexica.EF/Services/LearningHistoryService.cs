@@ -1,5 +1,5 @@
 ﻿using Lexica.EF.Models;
-using Lexica.LearningMode.Services;
+using Lexica.Learning.Services;
 using System;
 using System.Collections.Generic;
 using System.Text;

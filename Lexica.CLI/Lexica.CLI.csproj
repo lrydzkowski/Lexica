@@ -45,9 +45,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Lexica.EF\Lexica.EF.csproj" />
-    <ProjectReference Include="..\Lexica.LearningMode\Lexica.LearningMode.csproj" />
+    <ProjectReference Include="..\Lexica.Learning\Lexica.Learning.csproj" />
     <ProjectReference Include="..\Lexica.Pronunciation\Lexica.Pronunciation.csproj" />
-    <ProjectReference Include="..\Lexica.Words\Lexica.Words.csproj" />
   </ItemGroup>
 
   <ItemGroup>

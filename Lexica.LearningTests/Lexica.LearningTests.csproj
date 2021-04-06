@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Lexica.LearningMode\Lexica.LearningMode.csproj" />
+    <ProjectReference Include="..\Lexica.Learning\Lexica.Learning.csproj" />
   </ItemGroup>
 
 </Project>

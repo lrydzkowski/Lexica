@@ -1,5 +1,5 @@
 ﻿using Lexica.EF.Config;
-using Lexica.LearningMode.Config;
+using Lexica.Learning.Config;
 using Lexica.Pronunciation.Config;
 using Lexica.Words.Config;
 

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Lexica.LearningMode.Services
+namespace Lexica.Learning.Services
 {
     public interface ILearningHistoryService
     {

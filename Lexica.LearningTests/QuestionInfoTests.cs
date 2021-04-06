@@ -1,11 +1,11 @@
 using Lexica.Core.Models;
-using Lexica.LearningMode.Models;
+using Lexica.Learning.Models;
 using Lexica.Words.Models;
 using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace Lexica.LearningModeTests
+namespace Lexica.LearningTests
 {
     public class QuestionInfoTests
     {

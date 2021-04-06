@@ -21,11 +21,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lexica.Words", "Lexica.Word
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lexica.WordsTests", "Lexica.WordsTests\Lexica.WordsTests.csproj", "{E66F3E1A-F316-4E15-B594-17093755EFE8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lexica.LearningMode", "Lexica.LearningMode\Lexica.LearningMode.csproj", "{63282BF6-FF85-491A-A56E-51EE7A27C987}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lexica.LearningModeTests", "Lexica.LearningModeTests\Lexica.LearningModeTests.csproj", "{A4A297E7-EBC7-4F72-B8A2-1ED7BDFF1421}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lexica.Pronunciation", "Lexica.Pronunciation\Lexica.Pronunciation.csproj", "{CB90B661-935C-4ACD-9E08-9F5C02C38E7E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lexica.Learning", "Lexica.Learning\Lexica.Learning.csproj", "{BC3CA8FE-D143-4455-AED2-E81210088B29}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lexica.LearningTests", "Lexica.LearningTests\Lexica.LearningTests.csproj", "{624920F0-F101-4695-AE6E-9465F48847B5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,18 +57,18 @@ Global
 		{E66F3E1A-F316-4E15-B594-17093755EFE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E66F3E1A-F316-4E15-B594-17093755EFE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E66F3E1A-F316-4E15-B594-17093755EFE8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{63282BF6-FF85-491A-A56E-51EE7A27C987}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{63282BF6-FF85-491A-A56E-51EE7A27C987}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{63282BF6-FF85-491A-A56E-51EE7A27C987}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{63282BF6-FF85-491A-A56E-51EE7A27C987}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A4A297E7-EBC7-4F72-B8A2-1ED7BDFF1421}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A4A297E7-EBC7-4F72-B8A2-1ED7BDFF1421}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A4A297E7-EBC7-4F72-B8A2-1ED7BDFF1421}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A4A297E7-EBC7-4F72-B8A2-1ED7BDFF1421}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CB90B661-935C-4ACD-9E08-9F5C02C38E7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CB90B661-935C-4ACD-9E08-9F5C02C38E7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CB90B661-935C-4ACD-9E08-9F5C02C38E7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CB90B661-935C-4ACD-9E08-9F5C02C38E7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC3CA8FE-D143-4455-AED2-E81210088B29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC3CA8FE-D143-4455-AED2-E81210088B29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC3CA8FE-D143-4455-AED2-E81210088B29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC3CA8FE-D143-4455-AED2-E81210088B29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{624920F0-F101-4695-AE6E-9465F48847B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{624920F0-F101-4695-AE6E-9465F48847B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{624920F0-F101-4695-AE6E-9465F48847B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{624920F0-F101-4695-AE6E-9465F48847B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

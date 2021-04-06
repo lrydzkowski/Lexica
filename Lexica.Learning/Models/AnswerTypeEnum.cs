@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Lexica.LearningMode.Models
+namespace Lexica.Learning.Models
 {
     public enum AnswerTypeEnum
     {

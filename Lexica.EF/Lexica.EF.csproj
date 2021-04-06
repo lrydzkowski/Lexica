@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Lexica.Core\Lexica.Core.csproj" />
-    <ProjectReference Include="..\Lexica.LearningMode\Lexica.LearningMode.csproj" />
+    <ProjectReference Include="..\Lexica.Learning\Lexica.Learning.csproj" />
     <ProjectReference Include="..\Lexica.Words\Lexica.Words.csproj" />
   </ItemGroup>
 

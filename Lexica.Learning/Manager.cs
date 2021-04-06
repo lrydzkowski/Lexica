@@ -1,13 +1,13 @@
 ﻿using Lexica.Core.Models;
-using Lexica.LearningMode.Config;
-using Lexica.LearningMode.Models;
+using Lexica.Learning.Config;
+using Lexica.Learning.Models;
 using Lexica.Words;
 using Lexica.Words.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Lexica.LearningMode
+namespace Lexica.Learning
 {
     public class Manager
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Lexica.LearningMode.Config
+namespace Lexica.Learning.Config
 {
     public class PronunciationSettings
     {
