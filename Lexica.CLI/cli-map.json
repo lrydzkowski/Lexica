@@ -26,11 +26,6 @@
           "DefaultExecutorClass": "Lexica.CLI.Executors.Modes.ModeHelp",
           "Commands": [
             {
-              "Name": "maintaining",
-              "Shortcut": "m",
-              "ExecutorClass": "Lexica.CLI.Modes.Maintaining.MaintainingModeExecutor"
-            },
-            {
               "Name": "learning",
               "Shortcut": "l",
               "ExecutorClass": "Lexica.CLI.Modes.Learning.LearningModeExecutor"

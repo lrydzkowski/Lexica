@@ -4,7 +4,6 @@ using Lexica.CLI.Core.Services;
 using Lexica.CLI.Executors;
 using Lexica.CLI.Modes.Learning.Models;
 using Lexica.Core.IO;
-using Lexica.Core.Models;
 using Lexica.Core.Services;
 using Lexica.LearningMode;
 using Lexica.LearningMode.Config;
@@ -63,6 +62,8 @@ namespace Lexica.CLI.Modes.Learning
 
         private LearningSettings LearningSettings { get; set; } = new LearningSettings();
 
+        private ModeEnum Mode { get; set; }
+
         private List<string> FilePaths { get; set; } = new List<string>();
 
         public async Task ExecuteAsync(List<string>? args = null)
@@ -76,10 +77,24 @@ namespace Lexica.CLI.Modes.Learning
                 {
                     break;
                 }
-                if (LearningSettings.PlayPronuncation.TranslationsMode 
-                    && modeManager.CurrentQuestionInfo?.ModeType == ModeTypeEnum.Words)
+                List<string> words = modeManager.CurrentQuestionInfo?.Entry.Words ?? new List<string>();
+                // Play pronunciation.
+                if (Mode == ModeEnum.Spelling)
                 {
-                    PlayPronunciation(modeManager.CurrentQuestionInfo.Entry.Words ?? new List<string>());
+                    if (!await PlayPronunciation(words))
+                    {
+                        modeManager.UpdateAnswersRegister(LearningSettings.NumOfLevels);
+                        continue;
+                    }
+                }
+                else
+                {
+                    // Play background pronunciation.
+                    if (LearningSettings.PlayPronuncation.TranslationsAnswer
+                        && modeManager.CurrentQuestionInfo?.AnswerType == AnswerTypeEnum.Translations)
+                    {
+                        PlayBackgroundPronunciation(words);
+                    }
                 }
                 // Show question.
                 PresentQuestion(
@@ -106,10 +121,11 @@ namespace Lexica.CLI.Modes.Learning
                     correctAnswer
                 );
                 // Play pronunciation.
-                if (LearningSettings.PlayPronuncation.WordsMode
-                    && modeManager.CurrentQuestionInfo?.ModeType == ModeTypeEnum.Translations)
+                if (Mode != ModeEnum.Spelling
+                    && LearningSettings.PlayPronuncation.WordsAnswer
+                    && modeManager.CurrentQuestionInfo?.AnswerType == AnswerTypeEnum.Words)
                 {
-                    PlayPronunciation(modeManager.CurrentQuestionInfo.Entry.Words ?? new List<string>());
+                    PlayBackgroundPronunciation(words);
                 }
                 // Handle user commands (shortcuts).
                 CommandEnum command = HandleCommand();
@@ -168,10 +184,20 @@ namespace Lexica.CLI.Modes.Learning
             LearningSettings = ConfigService.Config.Learning;
             if (args == null || args.Count == 0)
             {
+                throw new ArgsException("There are no arguments.");
+            }
+            bool enumParsingResult = Enum.TryParse(args[0], out ModeEnum mode);
+            if (!enumParsingResult)
+            {
+                throw new ArgsException("Mode type argument is incorrect.");
+            }
+            Mode = mode;
+            if (args.Count == 1)
+            {
                 throw new ArgsException("There are no file paths arguments.");
             }
             FilePaths = new List<string>();
-            for (int i = 0; i < args.Count; i++)
+            for (int i = 1; i < args.Count; i++)
             {
                 FilePaths.Add(args[i]);
             }
@@ -193,11 +219,16 @@ namespace Lexica.CLI.Modes.Learning
                 fileSources.Add(new FileSource(filePath));
             }
             var setModeOperator = new SetModeOperator(setService, fileSources);
-            var modeManager = new Manager(setModeOperator, LearningSettings);
+            var modeManager = new Manager(setModeOperator, LearningSettings, Mode);
             return modeManager;
         }
 
-        private void PlayPronunciation(List<string> words)
+        private async Task<bool> PlayPronunciation(List<string> words)
+        {
+            return await PronunciationService.PlayAsync(words);
+        }
+
+        private void PlayBackgroundPronunciation(List<string> words)
         {
             _ = PronunciationService.PlayAsync(words)
                 .ContinueWith(
@@ -217,7 +248,19 @@ namespace Lexica.CLI.Modes.Learning
             string answer = "",
             bool beforeVerification = true)
         {
-            int lineAfterRendering = 7;
+            int lineAfterRendering = 0;
+            switch (Mode)
+            {
+                case ModeEnum.Spelling:
+                    lineAfterRendering = 5;
+                    break;
+                case ModeEnum.OnlyOpen:
+                    lineAfterRendering = 6;
+                    break;
+                case ModeEnum.Full:
+                    lineAfterRendering = 7;
+                    break;
+            }
             Console.SetCursorPosition(0, 0);
             if (beforeVerification)
             {
@@ -232,13 +275,28 @@ namespace Lexica.CLI.Modes.Learning
             }
             Console.WriteLine();
             Console.WriteLine();
-            Console.WriteLine($"  Closed questions result: {closedQuestionsCurrentResult}/{numberOfClosedQuestions}".PadRight(80));
-            Console.WriteLine($"  Open questions result: {openQuestionsCurrentResult}/{numberOfOpenQuestions}".PadRight(80));
-            Console.WriteLine();
-            var previousForegroundColor = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"  {question.Content}".PadRight(80));
-            Console.ForegroundColor = previousForegroundColor;
+            switch (Mode)
+            {
+                case ModeEnum.Full:
+                    Console.Write($"  Closed questions result: ");
+                    Console.WriteLine($"{closedQuestionsCurrentResult}/{numberOfClosedQuestions}".PadRight(80));
+                    Console.Write($"  Open questions result: ");
+                    Console.WriteLine($"{openQuestionsCurrentResult}/{numberOfOpenQuestions}".PadRight(80));
+                    Console.WriteLine();
+                    break;
+                default:
+                    Console.Write($"  Result: ");
+                    Console.WriteLine($"{openQuestionsCurrentResult}/{numberOfOpenQuestions}".PadRight(80));
+                    Console.WriteLine();
+                    break;
+            }
+            if (Mode != ModeEnum.Spelling)
+            {
+                var previousForegroundColor = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine($"  {question.Content}".PadRight(80));
+                Console.ForegroundColor = previousForegroundColor;
+            }
             if (question.PossibleAnswers != null && question.PossibleAnswers.Count > 0)
             {
                 lineAfterRendering = 11;
@@ -326,6 +384,8 @@ namespace Lexica.CLI.Modes.Learning
                     return CommandEnum.Restart;
                 case "\\c":
                     return CommandEnum.Close;
+                default:
+                    break;
             }
             return CommandEnum.None;
         }

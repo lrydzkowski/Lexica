@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Lexica.MaintainingMode.Models
+namespace Lexica.LearningMode.Models
 {
-    public enum UpdateAnswersRegisterOperationType
+    public enum UpdateAnswersRegisterOperationTypeEnum
     {
         Add = 0,
         Set = 1

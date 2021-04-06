@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace Lexica.LearningMode.Models
 {
-    public enum UpdateAnswersRegisterOperationType
+    public enum ModeEnum
     {
-        Add = 0,
-        Set = 1
+        Spelling = 0,
+        OnlyOpen = 1,
+        Full = 2
     }
 }

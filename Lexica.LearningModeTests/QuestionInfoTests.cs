@@ -22,7 +22,7 @@ namespace Lexica.LearningModeTests
                         new List<string>() { "translation1", "translation2" }
                     ),
                     QuestionTypeEnum.Closed,
-                    ModeTypeEnum.Translations,
+                    AnswerTypeEnum.Translations,
                     null,
                     null
                 },
@@ -35,7 +35,7 @@ namespace Lexica.LearningModeTests
                         new List<string>() { "translation1", "translation2" }
                     ),
                     QuestionTypeEnum.Open,
-                    ModeTypeEnum.Words,
+                    AnswerTypeEnum.Words,
                     new List<string> { "test1", "test2" },
                     new List<string> { "test2", "test1" }
                 }
@@ -47,7 +47,7 @@ namespace Lexica.LearningModeTests
         public void CompareQuestionInfo_EqualObjects_ReturnsTrue(
             Entry entry,
             QuestionTypeEnum questionType,
-            ModeTypeEnum modeType,
+            AnswerTypeEnum modeType,
             List<string>? possibleAnswers1,
             List<string>? possibleAnswers2)
         {
@@ -82,8 +82,8 @@ namespace Lexica.LearningModeTests
                     ),
                     QuestionTypeEnum.Closed,
                     QuestionTypeEnum.Open,
-                    ModeTypeEnum.Translations,
-                    ModeTypeEnum.Translations,
+                    AnswerTypeEnum.Translations,
+                    AnswerTypeEnum.Translations,
                     null,
                     null
                 },
@@ -103,8 +103,8 @@ namespace Lexica.LearningModeTests
                     ),
                     QuestionTypeEnum.Open,
                     QuestionTypeEnum.Open,
-                    ModeTypeEnum.Translations,
-                    ModeTypeEnum.Words,
+                    AnswerTypeEnum.Translations,
+                    AnswerTypeEnum.Words,
                     null,
                     null
                 },
@@ -124,8 +124,8 @@ namespace Lexica.LearningModeTests
                     ),
                     QuestionTypeEnum.Open,
                     QuestionTypeEnum.Open,
-                    ModeTypeEnum.Translations,
-                    ModeTypeEnum.Translations,
+                    AnswerTypeEnum.Translations,
+                    AnswerTypeEnum.Translations,
                     new List<string> { "test2" },
                     null
                 },
@@ -145,8 +145,8 @@ namespace Lexica.LearningModeTests
                     ),
                     QuestionTypeEnum.Open,
                     QuestionTypeEnum.Open,
-                    ModeTypeEnum.Translations,
-                    ModeTypeEnum.Translations,
+                    AnswerTypeEnum.Translations,
+                    AnswerTypeEnum.Translations,
                     new List<string> { "test2" },
                     new List<string> { "test2", "test1" },
                 }
@@ -160,8 +160,8 @@ namespace Lexica.LearningModeTests
             Entry entry2,
             QuestionTypeEnum questionType1,
             QuestionTypeEnum questionType2,
-            ModeTypeEnum modeType1,
-            ModeTypeEnum modeType2,
+            AnswerTypeEnum modeType1,
+            AnswerTypeEnum modeType2,
             List<string>? possibleAnswers1,
             List<string>? possibleAnswers2)
         {

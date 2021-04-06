@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Lexica.Core.Models
+namespace Lexica.LearningMode.Models
 {
     public class AnswerResult
     {

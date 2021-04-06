@@ -128,10 +128,10 @@ namespace Lexica.Words
                 return Set.Entries.GetRange(0, Set.Entries.Count);
             }
             var rnd = new Random();
-            int drawnIndex = 0;
             List<int> drawnIndexes = new();
             for (int i = 0; i < numOfEntries; i++)
             {
+                int drawnIndex;
                 do
                 {
                     drawnIndex = rnd.Next(0, Set.Entries.Count - 1);

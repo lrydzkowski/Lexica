@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Lexica.LearningMode.Models
 {
-    public enum ModeTypeEnum
+    public enum AnswerTypeEnum
     {
         Words = 0,
         Translations = 1

@@ -11,10 +11,11 @@ namespace Lexica.LearningMode
 {
     public class Manager
     {
-        public Manager(SetModeOperator setOperator, LearningSettings settings)
+        public Manager(SetModeOperator setOperator, LearningSettings settings, ModeEnum mode)
         {
             SetOperator = setOperator;
             Settings = settings;
+            Mode = mode;
             Reset();
         }
 
@@ -22,13 +23,15 @@ namespace Lexica.LearningMode
 
         private LearningSettings Settings { get; set; }
 
+        private ModeEnum Mode { get; set; }
+
         public QuestionInfo? CurrentQuestionInfo { get; private set; } = null;
 
-        public Dictionary<QuestionTypeEnum, Dictionary<string, AnswerRegister>> AnswersRegister { get; private set; }
+        public Dictionary<QuestionTypeEnum, Dictionary<string, AnswerRegister>> AnswersRegister { get; private set; } 
+            = new Dictionary<QuestionTypeEnum, Dictionary<string, AnswerRegister>>();
 
         public void Reset()
         {
-            AnswersRegister = new Dictionary<QuestionTypeEnum, Dictionary<string, AnswerRegister>>();
             AnswersRegister[QuestionTypeEnum.Closed] = new Dictionary<string, AnswerRegister>();
             AnswersRegister[QuestionTypeEnum.Open] = new Dictionary<string, AnswerRegister>();
         }
@@ -51,9 +54,9 @@ namespace Lexica.LearningMode
             return closedResult + openResult;
         }
 
-        public IEnumerable<Question?> GetQuestions(bool randomizeEachIteration = true)
+        public IEnumerable<Question?> GetQuestions(bool randomizeEachIteration = true, int pieceSize = 8)
         {
-            foreach (Entry? entry in SetOperator.GetEntries(true, randomizeEachIteration, 7))
+            foreach (Entry? entry in SetOperator.GetEntries(true, randomizeEachIteration, pieceSize))
             {
                 if (entry == null)
                 {
@@ -72,106 +75,86 @@ namespace Lexica.LearningMode
                 }
                 else
                 {
-                    bool translationsQuestion = false;
-                    bool wordsQuestion = false;
                     QuestionTypeEnum questionType = QuestionTypeEnum.Closed;
                     List<string> questionWords = new();
-                    ModeTypeEnum modeType = ModeTypeEnum.Translations;
+                    AnswerTypeEnum answerType = AnswerTypeEnum.Translations;
                     List<string>? possibleAnswers = null;
                     if (!AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed)) // pytanie zamknięte
                     {
                         questionType = QuestionTypeEnum.Closed;
                         var rnd = new Random();
-                        if (    !AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed, ModeTypeEnum.Translations)
-                            &&  !AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed, ModeTypeEnum.Words))
+                        if (    !AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed, AnswerTypeEnum.Translations)
+                            &&  !AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed, AnswerTypeEnum.Words))
                         {
-                            ModeTypeEnum closedQuestionMode = rnd.Next(2) == 1
-                                ? ModeTypeEnum.Translations
-                                : ModeTypeEnum.Words;
-                            if (closedQuestionMode == ModeTypeEnum.Translations)
-                            {
-                                translationsQuestion = true;
-                            }
-                            else
-                            {
-                                wordsQuestion = true;
-                            }
+                            answerType = rnd.Next(2) == 1 ? AnswerTypeEnum.Translations : AnswerTypeEnum.Words;
                         }
-                        else if (!AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed, ModeTypeEnum.Translations))
+                        else if (!AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed, AnswerTypeEnum.Words))
                         {
-                            translationsQuestion = true;
+                            answerType = AnswerTypeEnum.Words;
                         }
-                        else if (!AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed, ModeTypeEnum.Words))
+                        else if (!AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed, AnswerTypeEnum.Translations))
                         {
-                            wordsQuestion = true;
+                            answerType = AnswerTypeEnum.Translations;
                         }
-                        if (translationsQuestion)
+                        switch (answerType)
                         {
-                            modeType = ModeTypeEnum.Translations;
-                            questionWords = entry.Translations;
-                            possibleAnswers = SetOperator.GetRandomEntries(4)
-                                .Select(x => string.Join(", ", x.Words))
-                                .ToList();
-                            string properAnswer = string.Join(", ", entry.Words);
-                            if (!possibleAnswers.Contains(properAnswer))
-                            {
-                                possibleAnswers[rnd.Next(0, 4)] = string.Join(", ", entry.Words);
-                            }
-                        }
-                        else if (wordsQuestion)
-                        {
-                            modeType = ModeTypeEnum.Words;
-                            questionWords = entry.Words;
-                            possibleAnswers = SetOperator.GetRandomEntries(4)
-                                .Select(x => string.Join(", ", x.Translations))
-                                .ToList();
-                            string properAnswer = string.Join(", ", entry.Translations);
-                            if (!possibleAnswers.Contains(properAnswer))
-                            {
-                                possibleAnswers[rnd.Next(0, 4)] = string.Join(", ", entry.Translations);
-                            }
+                            case AnswerTypeEnum.Words:
+                                questionWords = entry.Translations;
+                                possibleAnswers = SetOperator.GetRandomEntries(4)
+                                    .Select(x => string.Join(", ", x.Words))
+                                    .ToList();
+                                string wordsProperAnswer = string.Join(", ", entry.Words);
+                                if (!possibleAnswers.Contains(wordsProperAnswer))
+                                {
+                                    possibleAnswers[rnd.Next(0, 4)] = string.Join(", ", entry.Words);
+                                }
+                                break;
+                            case AnswerTypeEnum.Translations:
+                                questionWords = entry.Words;
+                                possibleAnswers = SetOperator.GetRandomEntries(4)
+                                    .Select(x => string.Join(", ", x.Translations))
+                                    .ToList();
+                                string translationsProperAnswer = string.Join(", ", entry.Translations);
+                                if (!possibleAnswers.Contains(translationsProperAnswer))
+                                {
+                                    possibleAnswers[rnd.Next(0, 4)] = string.Join(", ", entry.Translations);
+                                }
+                                break;
                         }
                     }
                     else if (!AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Open)) // pytanie otwarte
                     {
                         questionType = QuestionTypeEnum.Open;
-                        if (    !AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Open, ModeTypeEnum.Translations)
-                            &&  !AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Open, ModeTypeEnum.Words))
+                        if (    !AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Open, AnswerTypeEnum.Translations)
+                            &&  !AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Open, AnswerTypeEnum.Words))
                         {
                             var rnd = new Random();
-                            ModeTypeEnum closedQuestionMode = rnd.Next(1) == 1
-                                ? ModeTypeEnum.Translations
-                                : ModeTypeEnum.Words;
-                            if (closedQuestionMode == ModeTypeEnum.Translations)
-                            {
-                                translationsQuestion = true;
-                            }
-                            else
-                            {
-                                wordsQuestion = true;
-                            }
+                            answerType = rnd.Next(2) == 1 ? AnswerTypeEnum.Translations : AnswerTypeEnum.Words;
                         }
-                        else if (!AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Open, ModeTypeEnum.Translations))
+                        else if (!AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Open, AnswerTypeEnum.Words))
                         {
-                            translationsQuestion = true;
+                            answerType = AnswerTypeEnum.Words;
                         }
-                        else if (!AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Open, ModeTypeEnum.Words))
+                        else if (!AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Open, AnswerTypeEnum.Translations))
                         {
-                            wordsQuestion = true;
+                            answerType = AnswerTypeEnum.Translations;
                         }
-                        if (translationsQuestion)
+                        switch (answerType)
                         {
-                            modeType = ModeTypeEnum.Translations;
-                            questionWords = entry.Translations;
-                        }
-                        else if (wordsQuestion)
-                        {
-                            modeType = ModeTypeEnum.Words;
-                            questionWords = entry.Words;
+                            case AnswerTypeEnum.Words:
+                                questionWords = entry.Translations;
+                                break;
+                            case AnswerTypeEnum.Translations:
+                                questionWords = entry.Words;
+                                if (Mode == ModeEnum.Spelling)
+                                {
+                                    answerType = AnswerTypeEnum.Words;
+                                }
+                                break;
                         }
                     }
 
-                    var nextQuestionInfo = new QuestionInfo(entry, questionType, modeType, possibleAnswers);
+                    var nextQuestionInfo = new QuestionInfo(entry, questionType, answerType, possibleAnswers);
                     // Condition to prevent questions repetition
                     if (!IsCurrentQuestionTheLastOne() && nextQuestionInfo.Equals(CurrentQuestionInfo))
                     {
@@ -192,19 +175,12 @@ namespace Lexica.LearningMode
 
         public int GetNumberOfQuestions(QuestionTypeEnum questionType)
         {
-            return SetOperator.GetNumberOfEntries() * (GetNumOfRequiredAnswers(questionType) * 2);
-        }
-
-        private bool AreEntryQuestionsCompleted(Entry entry)
-        {
-            return AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed) 
-                && AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Open);
-        }
-
-        private bool AreEntryQuestionsCompleted(Entry entry, QuestionTypeEnum questionTypeEnum)
-        {
-            return AreEntryQuestionsCompleted(entry, questionTypeEnum, ModeTypeEnum.Translations)
-                && AreEntryQuestionsCompleted(entry, questionTypeEnum, ModeTypeEnum.Words);
+            int multiplier = 2;
+            if (Mode == ModeEnum.Spelling)
+            {
+                multiplier = 1;
+            }
+            return SetOperator.GetNumberOfEntries() * (GetNumOfRequiredAnswers(questionType) * multiplier);
         }
 
         private bool IsCurrentQuestionTheLastOne()
@@ -217,14 +193,37 @@ namespace Lexica.LearningMode
             return GetNumberOfQuestions() == GetSumResult();
         }
 
-        private bool AreEntryQuestionsCompleted(Entry entry, QuestionTypeEnum questionTypeEnum, ModeTypeEnum mode)
+        private bool AreEntryQuestionsCompleted(Entry entry)
         {
+            return AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed) 
+                && AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Open);
+        }
+
+        private bool AreEntryQuestionsCompleted(Entry entry, QuestionTypeEnum questionTypeEnum)
+        {
+            return AreEntryQuestionsCompleted(entry, questionTypeEnum, AnswerTypeEnum.Translations)
+                && AreEntryQuestionsCompleted(entry, questionTypeEnum, AnswerTypeEnum.Words);
+        }
+
+        private bool AreEntryQuestionsCompleted(
+            Entry entry,
+            QuestionTypeEnum questionTypeEnum,
+            AnswerTypeEnum answerType)
+        {
+            if (Mode != ModeEnum.Full && questionTypeEnum == QuestionTypeEnum.Closed)
+            {
+                return true;
+            }
+            if (Mode == ModeEnum.Spelling && answerType == AnswerTypeEnum.Translations)
+            {
+                return true;
+            }
             if (!AnswersRegister[questionTypeEnum].ContainsKey(entry.Id))
             {
                 return false;
             }
-            string modeTypeKey = mode.ToString("g");
-            int currentValue = AnswersRegister[questionTypeEnum][entry.Id][modeTypeKey].CurrentValue;
+            string answerTypeKey = answerType.ToString("g");
+            int currentValue = AnswersRegister[questionTypeEnum][entry.Id][answerTypeKey].CurrentValue;
             if (currentValue < GetNumOfRequiredAnswers(questionTypeEnum))
             {
                 return false;
@@ -238,9 +237,16 @@ namespace Lexica.LearningMode
             switch (questionType)
             {
                 case QuestionTypeEnum.Closed:
-                    return 1;
+                    if (Mode == ModeEnum.Full)
+                    {
+                        numOfRequiredAnswers = 1;
+                    }
+                    break;
                 case QuestionTypeEnum.Open:
-                    return Settings.NumOfLevels ?? 2;
+                    numOfRequiredAnswers = Settings.NumOfLevels;
+                    break;
+                default:
+                    break;
             }
             return numOfRequiredAnswers;
         }
@@ -277,7 +283,7 @@ namespace Lexica.LearningMode
             else
             {
                 result = false;
-                UpdateAnswersRegister(0, UpdateAnswersRegisterOperationType.Set);
+                UpdateAnswersRegister(0, UpdateAnswersRegisterOperationTypeEnum.Set);
             }
 
             return new AnswerResult(result, correctWords);
@@ -285,7 +291,7 @@ namespace Lexica.LearningMode
 
         public void UpdateAnswersRegister(
             int value, 
-            UpdateAnswersRegisterOperationType operationType = UpdateAnswersRegisterOperationType.Add)
+            UpdateAnswersRegisterOperationTypeEnum operationType = UpdateAnswersRegisterOperationTypeEnum.Add)
         {
             if (CurrentQuestionInfo == null)
             {
@@ -297,26 +303,26 @@ namespace Lexica.LearningMode
         private void UpdateAnswersRegister(
             QuestionInfo questionInfo, 
             int value,
-            UpdateAnswersRegisterOperationType operationType = UpdateAnswersRegisterOperationType.Add)
+            UpdateAnswersRegisterOperationTypeEnum operationType = UpdateAnswersRegisterOperationTypeEnum.Add)
         {
-            string modeTypeKey = questionInfo.ModeType.ToString("g");
+            string answerTypeKey = questionInfo.AnswerType.ToString("g");
             if (!AnswersRegister[questionInfo.QuestionType].ContainsKey(questionInfo.Entry.Id))
             {
                 AnswersRegister[questionInfo.QuestionType][questionInfo.Entry.Id] = new AnswerRegister();
-                AnswersRegister[questionInfo.QuestionType][questionInfo.Entry.Id][modeTypeKey] = new AnswerRegisterValue();
+                AnswersRegister[questionInfo.QuestionType][questionInfo.Entry.Id][answerTypeKey] = new AnswerRegisterValue();
             }
             switch (operationType)
             {
-                case UpdateAnswersRegisterOperationType.Add:
-                    AnswersRegister[questionInfo.QuestionType][questionInfo.Entry.Id][modeTypeKey].PreviousValue
-                        += AnswersRegister[questionInfo.QuestionType][questionInfo.Entry.Id][modeTypeKey].CurrentValue;
-                    AnswersRegister[questionInfo.QuestionType][questionInfo.Entry.Id][modeTypeKey].CurrentValue 
+                case UpdateAnswersRegisterOperationTypeEnum.Add:
+                    AnswersRegister[questionInfo.QuestionType][questionInfo.Entry.Id][answerTypeKey].PreviousValue
+                        += AnswersRegister[questionInfo.QuestionType][questionInfo.Entry.Id][answerTypeKey].CurrentValue;
+                    AnswersRegister[questionInfo.QuestionType][questionInfo.Entry.Id][answerTypeKey].CurrentValue 
                         += value;
                     break;
-                case UpdateAnswersRegisterOperationType.Set:
-                    AnswersRegister[questionInfo.QuestionType][questionInfo.Entry.Id][modeTypeKey].PreviousValue
-                        += AnswersRegister[questionInfo.QuestionType][questionInfo.Entry.Id][modeTypeKey].CurrentValue;
-                    AnswersRegister[questionInfo.QuestionType][questionInfo.Entry.Id][modeTypeKey].CurrentValue 
+                case UpdateAnswersRegisterOperationTypeEnum.Set:
+                    AnswersRegister[questionInfo.QuestionType][questionInfo.Entry.Id][answerTypeKey].PreviousValue
+                        += AnswersRegister[questionInfo.QuestionType][questionInfo.Entry.Id][answerTypeKey].CurrentValue;
+                    AnswersRegister[questionInfo.QuestionType][questionInfo.Entry.Id][answerTypeKey].CurrentValue 
                         = value;
                     break;
             }
@@ -329,9 +335,9 @@ namespace Lexica.LearningMode
                 return;
             }
             QuestionInfo questionInfo = CurrentQuestionInfo;
-            string modeTypeKey = questionInfo.ModeType.ToString("g");
-            AnswersRegister[questionInfo.QuestionType][questionInfo.Entry.Id][modeTypeKey].CurrentValue
-                = AnswersRegister[questionInfo.QuestionType][questionInfo.Entry.Id][modeTypeKey].PreviousValue + 1;
+            string answerTypeKey = questionInfo.AnswerType.ToString("g");
+            AnswersRegister[questionInfo.QuestionType][questionInfo.Entry.Id][answerTypeKey].CurrentValue
+                = AnswersRegister[questionInfo.QuestionType][questionInfo.Entry.Id][answerTypeKey].PreviousValue + 1;
         }
     }
 }

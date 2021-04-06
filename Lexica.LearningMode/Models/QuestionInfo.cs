@@ -13,12 +13,12 @@ namespace Lexica.LearningMode.Models
         public QuestionInfo(
             Entry entry, 
             QuestionTypeEnum questionType, 
-            ModeTypeEnum modeType, 
+            AnswerTypeEnum answerType, 
             List<string>? possibleAnswers)
         {
             Entry = entry;
             QuestionType = questionType;
-            ModeType = modeType;
+            AnswerType = answerType;
             PossibleAnswers = possibleAnswers;
         }
 
@@ -26,20 +26,20 @@ namespace Lexica.LearningMode.Models
 
         public QuestionTypeEnum QuestionType { get; private set; }
 
-        public ModeTypeEnum ModeType { get; private set; }
+        public AnswerTypeEnum AnswerType { get; private set; }
 
         public List<string>? PossibleAnswers { get; private set; }
 
         public List<string> GetCorrectAnswers()
         {
             List<string> correctWords = new();
-            switch (ModeType)
+            switch (AnswerType)
             {
-                case ModeTypeEnum.Translations:
-                    correctWords = Entry.Words;
-                    break;
-                case ModeTypeEnum.Words:
+                case AnswerTypeEnum.Translations:
                     correctWords = Entry.Translations;
+                    break;
+                case AnswerTypeEnum.Words:
+                    correctWords = Entry.Words;
                     break;
             }
             correctWords.Sort();
@@ -57,15 +57,15 @@ namespace Lexica.LearningMode.Models
                 var questionInfo = (QuestionInfo)obj;
                 return questionInfo.Entry.Equals(Entry)
                     && questionInfo.QuestionType == QuestionType
-                    && questionInfo.ModeType == ModeType
+                    && questionInfo.AnswerType == AnswerType
                     && ListsEquals(questionInfo.PossibleAnswers, PossibleAnswers);
             }
         }
 
         private bool ListsEquals(List<string>? list1, List<string>? list2)
         {
-            list1 = list1 ?? new List<string>();
-            list2 = list2 ?? new List<string>();
+            list1 ??= new List<string>();
+            list2 ??= new List<string>();
             IEnumerable<string> isFirstOnly = list1.Except(list2);
             IEnumerable<string> isSecondOnly = list2.Except(list1);
             return !isFirstOnly.Any() && !isSecondOnly.Any();

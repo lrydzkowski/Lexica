@@ -62,7 +62,7 @@ namespace Lexica.Pronunciation.Api.WebDictionary
                         continue;
                     }
                 }
-                player.Play(mp3FilePath).Wait();
+                await player.Play(mp3FilePath);
                 played = true;
             }
 
