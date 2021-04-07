@@ -96,17 +96,18 @@ namespace Lexica.Learning
                         {
                             answerType = AnswerTypeEnum.Translations;
                         }
+                        int numOfPossibleAnswers = 4;
                         switch (answerType)
                         {
                             case AnswerTypeEnum.Words:
                                 questionWords = entry.Translations;
-                                possibleAnswers = WordsSetOperator.GetRandomEntries(4)
+                                possibleAnswers = WordsSetOperator.GetRandomEntries(numOfPossibleAnswers)
                                     .Select(x => string.Join(", ", x.Words))
                                     .ToList();
                                 string wordsProperAnswer = string.Join(", ", entry.Words);
                                 if (!possibleAnswers.Contains(wordsProperAnswer))
                                 {
-                                    possibleAnswers[rnd.Next(0, 4)] = string.Join(", ", entry.Words);
+                                    possibleAnswers[rnd.Next(0, numOfPossibleAnswers)] = string.Join(", ", entry.Words);
                                 }
                                 break;
                             case AnswerTypeEnum.Translations:
@@ -117,7 +118,9 @@ namespace Lexica.Learning
                                 string translationsProperAnswer = string.Join(", ", entry.Translations);
                                 if (!possibleAnswers.Contains(translationsProperAnswer))
                                 {
-                                    possibleAnswers[rnd.Next(0, 4)] = string.Join(", ", entry.Translations);
+                                    possibleAnswers[rnd.Next(0, numOfPossibleAnswers)] = string.Join(
+                                        ", ", entry.Translations
+                                    );
                                 }
                                 break;
                         }
@@ -175,7 +178,7 @@ namespace Lexica.Learning
 
         public int GetNumberOfQuestions(QuestionTypeEnum questionType)
         {
-            int multiplier = 2;
+            int multiplier = Enum.GetNames(typeof(AnswerTypeEnum)).Length;
             if (Mode == ModeEnum.Spelling)
             {
                 multiplier = 1;

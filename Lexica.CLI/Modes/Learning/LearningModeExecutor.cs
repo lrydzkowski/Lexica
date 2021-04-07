@@ -73,30 +73,22 @@ namespace Lexica.CLI.Modes.Learning
             LearningModeOperator modeOperator = GetLearningModeOperator();
             foreach (Question? question in modeOperator.GetQuestions())
             {
-                if (question == null)
+                if (question == null || modeOperator.CurrentQuestionInfo == null)
                 {
                     break;
                 }
-                List<string> words = modeOperator.CurrentQuestionInfo?.Entry.Words ?? new List<string>();
-                // Play pronunciation.
                 if (Mode == ModeEnum.Spelling)
                 {
-                    if (!await PlayPronunciation(words))
-                    {
-                        modeOperator.UpdateAnswersRegister(LearningSettings.NumOfLevels);
-                        continue;
-                    }
+                    bool played = await PlayPronunciation(modeOperator.CurrentQuestionInfo.Entry.Words, modeOperator);
+                    if (!played) continue;
                 }
                 else
                 {
-                    // Play background pronunciation.
-                    if (LearningSettings.PlayPronuncation.TranslationsAnswer
-                        && modeOperator.CurrentQuestionInfo?.AnswerType == AnswerTypeEnum.Translations)
-                    {
-                        PlayBackgroundPronunciation(words);
-                    }
+                    PlayBackgroundPronunciation(
+                        modeOperator.CurrentQuestionInfo.Entry.Words, 
+                        modeOperator.CurrentQuestionInfo.AnswerType
+                    );
                 }
-                // Show question.
                 PresentQuestion(
                     question,
                     modeOperator.GetResult(QuestionTypeEnum.Closed),
@@ -104,12 +96,10 @@ namespace Lexica.CLI.Modes.Learning
                     modeOperator.GetResult(QuestionTypeEnum.Open),
                     modeOperator.GetNumberOfQuestions(QuestionTypeEnum.Open)
                 );
-                // Verify answer.
                 string answer = ReadAnswer();
                 AnswerResult? answerResult = modeOperator.VerifyAnswer(answer);
                 bool isAnswerCorrect = answerResult?.Result ?? false;
                 string correctAnswer = string.Join(", ", answerResult?.PossibleAnswers ?? new List<string>());
-                // Show result.
                 PresentResult(
                     question,
                     modeOperator.GetResult(QuestionTypeEnum.Closed),
@@ -120,14 +110,13 @@ namespace Lexica.CLI.Modes.Learning
                     isAnswerCorrect, 
                     correctAnswer
                 );
-                // Play pronunciation.
-                if (Mode != ModeEnum.Spelling
-                    && LearningSettings.PlayPronuncation.WordsAnswer
-                    && modeOperator.CurrentQuestionInfo?.AnswerType == AnswerTypeEnum.Words)
+                if (Mode != ModeEnum.Spelling)
                 {
-                    PlayBackgroundPronunciation(words);
+                    PlayBackgroundPronunciation(
+                        modeOperator.CurrentQuestionInfo.Entry.Words,
+                        modeOperator.CurrentQuestionInfo.AnswerType
+                    );
                 }
-                // Handle user commands (shortcuts).
                 CommandEnum command = HandleCommand();
                 if (command == CommandEnum.Close)
                 {
@@ -142,7 +131,6 @@ namespace Lexica.CLI.Modes.Learning
                 {
                     modeOperator.OverridePreviousMistake();
                 }
-                // Save logs in file.
                 WriteLog(
                     isAnswerCorrect,
                     question.Content,
@@ -153,20 +141,17 @@ namespace Lexica.CLI.Modes.Learning
                     modeOperator.GetNumberOfQuestions(QuestionTypeEnum.Open),
                     modeOperator.AnswersRegister
                 );
-                // Save history in database.
-                if (modeOperator.CurrentQuestionInfo != null)
-                {
-                    await LearningHistoryService.SaveAsync(
-                        modeOperator.CurrentQuestionInfo.Entry.SetPath.Namespace,
-                        modeOperator.CurrentQuestionInfo.Entry.SetPath.Name,
-                        question.Content,
-                        modeOperator.CurrentQuestionInfo.QuestionType.ToString().ToLower(),
-                        answer,
-                        correctAnswer,
-                        isAnswerCorrect
-                    );
-                }
+                await LearningHistoryService.SaveAsync(
+                    modeOperator.CurrentQuestionInfo.Entry.SetPath.Namespace,
+                    modeOperator.CurrentQuestionInfo.Entry.SetPath.Name,
+                    question.Content,
+                    modeOperator.CurrentQuestionInfo.QuestionType.ToString().ToLower(),
+                    answer,
+                    correctAnswer,
+                    isAnswerCorrect
+                );
             }
+
             ShowSummary();
         }
 
@@ -223,13 +208,26 @@ namespace Lexica.CLI.Modes.Learning
             return learningModeOperator;
         }
 
-        private async Task<bool> PlayPronunciation(List<string> words)
+        private async Task<bool> PlayPronunciation(List<string> words, LearningModeOperator modeOperator)
         {
-            return await PronunciationService.PlayAsync(words);
+            bool result = await PronunciationService.PlayAsync(words);
+            if (!result)
+            {
+                modeOperator.UpdateAnswersRegister(LearningSettings.NumOfLevels);
+            }
+            return result;
         }
 
-        private void PlayBackgroundPronunciation(List<string> words)
+        private void PlayBackgroundPronunciation(List<string> words, AnswerTypeEnum answerType)
         {
+            if (answerType == AnswerTypeEnum.Translations && !LearningSettings.PlayPronuncation.TranslationsAnswer)
+            {
+                return;
+            }
+            if (answerType == AnswerTypeEnum.Words && !LearningSettings.PlayPronuncation.WordsAnswer)
+            {
+                return;
+            }
             _ = PronunciationService.PlayAsync(words)
                 .ContinueWith(
                     x => PronunciationLogger.LogError(
