@@ -2,7 +2,7 @@
 using Lexica.Core.Services;
 using Lexica.Pronunciation.Api.WebDictionary.Config;
 using Microsoft.Extensions.Logging;
-using NetCoreAudio;
+using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -37,45 +37,81 @@ namespace Lexica.Pronunciation.Api.WebDictionary
 
         public UrlService UrlService { get; private set; }
 
-        public async Task<bool> PlayAsync(string word)
+        public async Task<bool> AudioExists(string word)
         {
-            return await PlayAsync(new List<string>() { word });
+            return await AudioExists(new List<string> { word });
         }
 
-        public async Task<bool> PlayAsync(List<string> words)
+        public async Task<bool> AudioExists(List<string> words)
         {
-            var player = new Player();
-            bool played = false;
             foreach (string word in words)
             {
-                string? mp3FilePath = GetFilePath(word);
-                if (!File.Exists(mp3FilePath))
+                string? mp3FilePath = await DownloadFile(word);
+                if (mp3FilePath == null)
                 {
-                    string? mp3FileUrl = await GetFileUrl(word);
-                    if (mp3FileUrl == null)
-                    {
-                        continue;
-                    }
-                    mp3FilePath = await DownloadFile(mp3FileUrl, word);
-                    if (!File.Exists(mp3FilePath))
-                    {
-                        continue;
-                    }
+                    return false;
                 }
-                await player.Play(mp3FilePath);
-                played = true;
             }
-
-            return played;
+            return true;
         }
 
-        public string GetFilePath(string word, string extension = "mp3")
+        public async Task PlayAsync(string word)
+        {
+            await PlayAsync(new List<string>() { word });
+        }
+
+        public async Task PlayAsync(List<string> words)
+        {
+            foreach (string word in words)
+            {
+                string? mp3FilePath = await DownloadFile(word);
+                if (mp3FilePath != null)
+                {
+                    await PlayMp3Async(mp3FilePath);
+                }
+            }
+        }
+
+        private async Task PlayMp3Async(string mp3FilePath)
+        {
+            using (var audioFile = new AudioFileReader(mp3FilePath))
+            using (var outputDevice = new WaveOutEvent())
+            {
+                outputDevice.Init(audioFile);
+                outputDevice.Play();
+                int totalTime = Convert.ToInt32(Math.Floor(audioFile.TotalTime.TotalMilliseconds));
+                await Task.Delay(totalTime);
+            }
+        }
+
+        private async Task<string?> DownloadFile(string word)
+        {
+            string filePath = GetFilePath(word);
+            if (File.Exists(filePath))
+            {
+                return filePath;
+            }
+            string? mp3FileUrl = await GetFileUrl(word);
+            if (mp3FileUrl == null)
+            {
+                return null;
+            }
+            using var webClient = new WebClient();
+            await webClient.DownloadFileTaskAsync(new Uri(mp3FileUrl), filePath);
+            if (filePath == null || !File.Exists(filePath))
+            {
+                return null;
+            }
+            return filePath;
+        }
+
+        private string GetFilePath(string word, string extension = "mp3")
         {
             string fileName = word.RemoveInvalidFileNameChars() + '.' + extension;
             return Path.Combine(Settings.DownloadTempPath, fileName);
         }
 
-        public async Task<string?> GetFileUrl(string word)
+        private async Task<string?> GetFileUrl(string word)
         {
             using var client = new HttpClient();
             string dictionaryPageUrl = GetPageUrl(word);
@@ -103,26 +139,10 @@ namespace Lexica.Pronunciation.Api.WebDictionary
             return UrlService.Combine(Settings.Host, fileUrl);
         }
 
-        public string GetPageUrl(string word)
+        private string GetPageUrl(string word)
         {
             string escapedWord = word.Replace(" ", "-");
-            return UrlService.Combine(Settings.Host, Settings.UrlPath, escapedWord);
-        }
-
-        public async Task<string?> DownloadFile(
-            string url,
-            string word,
-            string extension = "mp3",
-            bool overwrite = false)
-        {
-            string filePath = GetFilePath(word, extension);
-            if (File.Exists(filePath) && !overwrite)
-            {
-                return filePath;
-            }
-            using var webClient = new WebClient();
-            await webClient.DownloadFileTaskAsync(new Uri(url), filePath);
-            return filePath;
+            return UrlService.Combine(Settings.Host, Settings.UrlPath.Replace("{word}", escapedWord));
         }
     }
 }

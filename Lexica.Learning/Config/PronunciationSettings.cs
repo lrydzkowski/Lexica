@@ -8,8 +8,8 @@ namespace Lexica.Learning.Config
 {
     public class PronunciationSettings
     {
-        public bool WordsAnswer { get; set; } = false;
+        public bool BeforeAnswer { get; set; } = false;
 
-        public bool TranslationsAnswer { get; set; } = false;
+        public bool AfterAnswer { get; set; } = false;
     }
 }

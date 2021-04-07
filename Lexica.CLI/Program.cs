@@ -86,11 +86,6 @@ namespace Lexica.CLI
             );
 
             // Pronunciation service
-            //services.AddSingleton(
-            //    configService.Get().Pronunciation?.Api.Forvo 
-            //    ?? new Pronunciation.Api.Forvo.Config.ForvoSettings()
-            //);
-            //services.AddSingleton<IPronunciation, Pronunciation.Api.Forvo.PronunciationService>();
             services.AddSingleton(
                 configService.Get().PronunciationApi?.WebDictionary
                 ?? new Pronunciation.Api.WebDictionary.Config.WebDictionarySettings()

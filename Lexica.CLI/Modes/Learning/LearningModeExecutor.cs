@@ -67,10 +67,16 @@ namespace Lexica.CLI.Modes.Learning
 
         private List<string> FilePaths { get; set; } = new List<string>();
 
+        private enum WhenEnum
+        {
+            BeforeAnswer = 0,
+            AfterAnswer = 1
+        };
+
         public async Task ExecuteAsync(List<string>? args = null)
         {
-            Console.Clear();
             VerifyParameters(args);
+            Console.Clear();
             LearningModeOperator modeOperator = GetLearningModeOperator();
             foreach (Question? question in modeOperator.GetQuestions())
             {
@@ -78,18 +84,17 @@ namespace Lexica.CLI.Modes.Learning
                 {
                     break;
                 }
-                if (Mode == ModeEnum.Spelling)
+                if (Mode == ModeEnum.Spelling 
+                    && !await PronunciationAudioExists(modeOperator.CurrentQuestionInfo.Entry.Words))
                 {
-                    bool played = await PlayPronunciation(modeOperator.CurrentQuestionInfo.Entry.Words, modeOperator);
-                    if (!played) continue;
+                    modeOperator.UpdateAnswersRegister(LearningSettings.NumOfLevels);
+                    continue;
                 }
-                else
-                {
-                    PlayBackgroundPronunciation(
-                        modeOperator.CurrentQuestionInfo.Entry.Words, 
-                        modeOperator.CurrentQuestionInfo.AnswerType
-                    );
-                }
+                PlayPronunciationAudio(
+                    modeOperator.CurrentQuestionInfo.Entry.Words,
+                    WhenEnum.BeforeAnswer, 
+                    modeOperator.CurrentQuestionInfo.AnswerType
+                );
                 PresentQuestion(
                     question,
                     modeOperator.GetResult(QuestionTypeEnum.Closed),
@@ -111,13 +116,11 @@ namespace Lexica.CLI.Modes.Learning
                     isAnswerCorrect, 
                     correctAnswer
                 );
-                if (Mode != ModeEnum.Spelling)
-                {
-                    PlayBackgroundPronunciation(
-                        modeOperator.CurrentQuestionInfo.Entry.Words,
-                        modeOperator.CurrentQuestionInfo.AnswerType
-                    );
-                }
+                PlayPronunciationAudio(
+                    modeOperator.CurrentQuestionInfo.Entry.Words,
+                    WhenEnum.AfterAnswer,
+                    modeOperator.CurrentQuestionInfo.AnswerType
+                );
                 CommandEnum command = HandleCommand();
                 if (command == CommandEnum.Close)
                 {
@@ -209,23 +212,18 @@ namespace Lexica.CLI.Modes.Learning
             return learningModeOperator;
         }
 
-        private async Task<bool> PlayPronunciation(List<string> words, LearningModeOperator modeOperator)
+        private async Task<bool> PronunciationAudioExists(List<string> words)
         {
-            bool result = await PronunciationService.PlayAsync(words);
-            if (!result)
-            {
-                modeOperator.UpdateAnswersRegister(LearningSettings.NumOfLevels);
-            }
-            return result;
+            return await PronunciationService.AudioExists(words);
         }
 
-        private void PlayBackgroundPronunciation(List<string> words, AnswerTypeEnum answerType)
+        private void PlayPronunciationAudio(List<string> words, WhenEnum whenWasInvoked, AnswerTypeEnum answerType)
         {
-            if (answerType == AnswerTypeEnum.Translations && !LearningSettings.PlayPronuncation.TranslationsAnswer)
+            if (whenWasInvoked == WhenEnum.BeforeAnswer && !AudioCanBePlayedBeforeAnswer(answerType))
             {
                 return;
             }
-            if (answerType == AnswerTypeEnum.Words && !LearningSettings.PlayPronuncation.WordsAnswer)
+            if (whenWasInvoked == WhenEnum.AfterAnswer && !AudioCanBePlayedAfterAnswer(answerType))
             {
                 return;
             }
@@ -236,6 +234,27 @@ namespace Lexica.CLI.Modes.Learning
                     ),
                     TaskContinuationOptions.OnlyOnFaulted
                 );
+        }
+
+        private bool AudioCanBePlayedBeforeAnswer(AnswerTypeEnum answerType)
+        {
+            if (Mode == ModeEnum.Spelling 
+                || (LearningSettings.PlayPronuncation.BeforeAnswer && answerType == AnswerTypeEnum.Translations))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private bool AudioCanBePlayedAfterAnswer(AnswerTypeEnum answerType)
+        {
+            if (Mode != ModeEnum.Spelling 
+                && LearningSettings.PlayPronuncation.AfterAnswer 
+                && answerType == AnswerTypeEnum.Words)
+            {
+                return true;
+            }
+            return false;
         }
 
         private void PresentQuestion(
