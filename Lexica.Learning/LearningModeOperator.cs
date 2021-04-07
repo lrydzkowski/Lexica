@@ -9,17 +9,17 @@ using System.Linq;
 
 namespace Lexica.Learning
 {
-    public class Manager
+    public class LearningModeOperator
     {
-        public Manager(SetModeOperator setOperator, LearningSettings settings, ModeEnum mode)
+        public LearningModeOperator(WordsSetOperator wordsSetOperator, LearningSettings settings, ModeEnum mode)
         {
-            SetOperator = setOperator;
+            WordsSetOperator = wordsSetOperator;
             Settings = settings;
             Mode = mode;
             Reset();
         }
 
-        private SetModeOperator SetOperator { get; set; }
+        private WordsSetOperator WordsSetOperator { get; set; }
 
         private LearningSettings Settings { get; set; }
 
@@ -56,7 +56,7 @@ namespace Lexica.Learning
 
         public IEnumerable<Question?> GetQuestions(bool randomizeEachIteration = true, int pieceSize = 8)
         {
-            foreach (Entry? entry in SetOperator.GetEntries(true, randomizeEachIteration, pieceSize))
+            foreach (Entry? entry in WordsSetOperator.GetEntries(true, randomizeEachIteration, pieceSize))
             {
                 if (entry == null)
                 {
@@ -100,7 +100,7 @@ namespace Lexica.Learning
                         {
                             case AnswerTypeEnum.Words:
                                 questionWords = entry.Translations;
-                                possibleAnswers = SetOperator.GetRandomEntries(4)
+                                possibleAnswers = WordsSetOperator.GetRandomEntries(4)
                                     .Select(x => string.Join(", ", x.Words))
                                     .ToList();
                                 string wordsProperAnswer = string.Join(", ", entry.Words);
@@ -111,7 +111,7 @@ namespace Lexica.Learning
                                 break;
                             case AnswerTypeEnum.Translations:
                                 questionWords = entry.Words;
-                                possibleAnswers = SetOperator.GetRandomEntries(4)
+                                possibleAnswers = WordsSetOperator.GetRandomEntries(4)
                                     .Select(x => string.Join(", ", x.Translations))
                                     .ToList();
                                 string translationsProperAnswer = string.Join(", ", entry.Translations);
@@ -180,7 +180,7 @@ namespace Lexica.Learning
             {
                 multiplier = 1;
             }
-            return SetOperator.GetNumberOfEntries() * (GetNumOfRequiredAnswers(questionType) * multiplier);
+            return WordsSetOperator.GetNumberOfEntries() * (GetNumOfRequiredAnswers(questionType) * multiplier);
         }
 
         private bool IsCurrentQuestionTheLastOne()

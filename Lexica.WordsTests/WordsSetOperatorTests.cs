@@ -11,7 +11,7 @@ using Xunit;
 
 namespace Lexica.WordsTests
 {
-    public class SetModeOperatorTests
+    public class WordsSetOperatorTests
     {
         [Theory]
         [InlineData("Lexica.WordsTests/Resources/Importer/Embedded/Correct/example_set_1.txt")]
@@ -21,15 +21,15 @@ namespace Lexica.WordsTests
             var fileValidator = new FileValidator(new ValidationData());
             var setService = new SetService(fileValidator);
             var fileSource = new EmbeddedSource(filePath, Assembly.GetExecutingAssembly());
-            var setModeOperator = new SetModeOperator(setService, fileSource);
+            var wordsSetOperator = new WordsSetOperator(setService, fileSource);
 
-            if (!setModeOperator.LoadSet())
+            if (!wordsSetOperator.LoadSet())
             {
                 throw new Exception("Set is null.");
             }
 
             string str1 = "";
-            foreach (Entry? entry1 in setModeOperator.GetEntries(false, true))
+            foreach (Entry? entry1 in wordsSetOperator.GetEntries(false, true))
             {
                 if (entry1 == null)
                 {
@@ -39,7 +39,7 @@ namespace Lexica.WordsTests
             }
 
             string str2 = "";
-            foreach (Entry? entry2 in setModeOperator.GetEntries(false, true))
+            foreach (Entry? entry2 in wordsSetOperator.GetEntries(false, true))
             {
                 if (entry2 == null)
                 {
@@ -80,15 +80,15 @@ namespace Lexica.WordsTests
             var fileValidator = new FileValidator(new ValidationData());
             var setService = new SetService(fileValidator);
             var fileSource = new EmbeddedSource(filePath, Assembly.GetExecutingAssembly());
-            var setModeOperator = new SetModeOperator(setService, fileSource);
+            var wordsSetOperator = new WordsSetOperator(setService, fileSource);
 
-            if (!setModeOperator.LoadSet())
+            if (!wordsSetOperator.LoadSet())
             {
                 throw new Exception("Set is null.");
             }
 
             int index = 0;
-            foreach (Entry? entry in setModeOperator.GetEntries(false, true))
+            foreach (Entry? entry in wordsSetOperator.GetEntries(false, true))
             {
                 if (entry == null)
                 {

@@ -8,16 +8,16 @@ using System.Collections.Generic;
 
 namespace Lexica.Words
 {
-    public class SetModeOperator
+    public class WordsSetOperator
     {
-        public SetModeOperator(ISetService setService, List<ISource> filesSources)
+        public WordsSetOperator(ISetService setService, List<ISource> filesSources)
         {
             SetService = setService;
             FilesSources = filesSources;
             LoadSet();
         }
 
-        public SetModeOperator(ISetService setService, ISource fileSource) 
+        public WordsSetOperator(ISetService setService, ISource fileSource) 
             : this(setService, new List<ISource>() { fileSource }) { }
 
         private ISetService SetService { get; set; }
