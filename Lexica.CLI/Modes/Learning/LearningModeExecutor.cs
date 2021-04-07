@@ -3,6 +3,7 @@ using Lexica.CLI.Core.Config;
 using Lexica.CLI.Core.Services;
 using Lexica.CLI.Executors;
 using Lexica.CLI.Modes.Learning.Models;
+using Lexica.Core.Extensions;
 using Lexica.Core.IO;
 using Lexica.Core.Services;
 using Lexica.Learning;
@@ -171,7 +172,7 @@ namespace Lexica.CLI.Modes.Learning
             {
                 throw new ArgsException("There are no arguments.");
             }
-            bool enumParsingResult = Enum.TryParse(args[0], out ModeEnum mode);
+            bool enumParsingResult = Enum.TryParse(args[0].UppercaseFirst(), out ModeEnum mode);
             if (!enumParsingResult)
             {
                 throw new ArgsException("Mode type argument is incorrect.");
