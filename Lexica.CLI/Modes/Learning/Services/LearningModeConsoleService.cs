@@ -7,6 +7,24 @@ namespace Lexica.CLI.Modes.Learning.Services
 {
     class LearningModeConsoleService : IService
     {
+        public LearningModeConsoleService(BuildService buildService, VersionService versionService)
+        {
+            BuildService = buildService;
+            VersionService = versionService;
+        }
+
+        public BuildService BuildService { get; private set; }
+
+        public VersionService VersionService { get; private set; }
+
+        public void SetVersionInWindowTitle()
+        {
+            string appName = "Lexica";
+            string version = VersionService.GetVersion();
+            string build = BuildService.GetBuild();
+            Console.Title = $"{appName} {version} - Build: {build}";
+        }
+
         public void ClearConsole()
         {
             Console.Clear();

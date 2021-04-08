@@ -81,8 +81,9 @@ namespace Lexica.CLI.Modes.Learning
 
         public async Task ExecuteAsync(List<string>? args = null)
         {
+            ConsoleService.SetVersionInWindowTitle();
+            ConsoleService.ClearConsole();
             VerifyParameters(args);
-            Console.Clear();
             LearningModeOperator modeOperator = GetLearningModeOperator();
             foreach (Question? question in modeOperator.GetQuestions())
             {
