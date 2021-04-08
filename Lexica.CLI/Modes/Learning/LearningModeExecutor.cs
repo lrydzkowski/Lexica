@@ -20,6 +20,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -175,8 +176,9 @@ namespace Lexica.CLI.Modes.Learning
             {
                 throw new ArgsException("There are no arguments.");
             }
-            bool enumParsingResult = Enum.TryParse(args[0].UppercaseFirst(), out ModeEnum mode);
-            if (!enumParsingResult)
+            string modeArg = string.Join("", args[0].ToLower().Split('-').Select(x => x.UppercaseFirst()));
+            bool modeEnumParsingResult = Enum.TryParse(modeArg, out ModeEnum mode);
+            if (!modeEnumParsingResult)
             {
                 throw new ArgsException("Mode type argument is incorrect.");
             }
