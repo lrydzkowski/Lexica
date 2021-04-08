@@ -8,12 +8,15 @@ namespace Lexica.Learning.Models
     {
         public bool Result { get; private set; }
 
-        public List<string> PossibleAnswers { get; private set; }
+        public List<string> GivenAnswers { get; private set; }
 
-        public AnswerResult(bool result, List<string> possibleAnswers)
+        public List<string> CorrectAnswers { get; private set; }
+
+        public AnswerResult(bool result, List<string> givenAnswers, List<string> correctAnswers)
         {
             Result = result;
-            PossibleAnswers = possibleAnswers;
+            GivenAnswers = givenAnswers;
+            CorrectAnswers = correctAnswers;
         }
     }
 }

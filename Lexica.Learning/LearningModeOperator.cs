@@ -275,11 +275,11 @@ namespace Lexica.Learning
             }
             List<string> answerWords = input.Split(',').Select(x => x.Trim()).ToList<string>();
             answerWords.Sort();
-            List<string> correctWords = CurrentQuestionInfo.GetCorrectAnswers();
-            correctWords.Sort();
+            List<string> correctAnswers = CurrentQuestionInfo.GetCorrectAnswers();
+            correctAnswers.Sort();
 
             bool result = true;
-            if (string.Join(',', answerWords) == string.Join(',', correctWords))
+            if (string.Join(',', answerWords) == string.Join(',', correctAnswers))
             {
                 UpdateAnswersRegister(1);
             }
@@ -289,7 +289,7 @@ namespace Lexica.Learning
                 UpdateAnswersRegister(0, UpdateAnswersRegisterOperationTypeEnum.Set);
             }
 
-            return new AnswerResult(result, correctWords);
+            return new AnswerResult(result, answerWords, correctAnswers);
         }
 
         public void UpdateAnswersRegister(

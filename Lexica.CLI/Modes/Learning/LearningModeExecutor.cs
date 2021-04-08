@@ -119,7 +119,10 @@ namespace Lexica.CLI.Modes.Learning
                 string answer = ConsoleService.ReadAnswer();
                 AnswerResult? answerResult = modeOperator.VerifyAnswer(answer);
                 bool isAnswerCorrect = answerResult?.Result ?? false;
-                string correctAnswer = string.Join(", ", answerResult?.PossibleAnswers ?? new List<string>());
+                string givenAnswers = answerResult?.GivenAnswers == null 
+                    ? answer 
+                    : string.Join(", ", answerResult.GivenAnswers);
+                string correctAnswer = string.Join(", ", answerResult?.CorrectAnswers ?? new List<string>());
                 ConsoleService.PresentResult(
                     Mode,
                     question,
@@ -173,7 +176,7 @@ namespace Lexica.CLI.Modes.Learning
                     Mode.ToString().ToLower(),
                     question.Content,
                     modeOperator.CurrentQuestionInfo.QuestionType.ToString().ToLower(),
-                    answer,
+                    givenAnswers,
                     correctAnswer,
                     isAnswerCorrect
                 );
