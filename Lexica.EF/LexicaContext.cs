@@ -8,8 +8,6 @@ namespace Lexica.EF
 {
     public class LexicaContext : DbContext
     {
-        public DbSet<MaintainingHistoryTable> MaintainingHistoryRecords => Set<MaintainingHistoryTable>();
-
         public DbSet<LearningHistoryTable> LearningHistoryRecords => Set<LearningHistoryTable>();
 
         public LexicaContext() : base() { }
@@ -31,8 +29,6 @@ namespace Lexica.EF
 
         private void CreateWordsTables(ModelBuilder modelBuilder)
         {
-            var maintainingHistoryTable = modelBuilder.Entity<MaintainingHistoryTable>()
-                .ToTable("maintaining_history", "modes");
             var learningHistoryTable = modelBuilder.Entity<LearningHistoryTable>()
                 .ToTable("learning_history", "modes");
         }

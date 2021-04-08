@@ -19,6 +19,9 @@ namespace Lexica.EF.Models
         [Column("name")]
         public string Name { get; set; } = "";
 
+        [Column("mode")]
+        public string Mode { get; set; } = "";
+
         [Column("question")]
         public string Question { get; set; } = "";
 

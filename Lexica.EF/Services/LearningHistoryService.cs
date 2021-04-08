@@ -18,7 +18,8 @@ namespace Lexica.EF.Services
 
         public async Task SaveAsync(
             string namespaceName, 
-            string fileName, 
+            string fileName,
+            string mode,
             string question, 
             string questionType,
             string answer, 
@@ -28,6 +29,7 @@ namespace Lexica.EF.Services
             var historyTable = new LearningHistoryTable();
             historyTable.Namespace = namespaceName;
             historyTable.Name = fileName;
+            historyTable.Mode = mode;
             historyTable.Question = question;
             historyTable.QuestionType = questionType;
             historyTable.Answer = answer;

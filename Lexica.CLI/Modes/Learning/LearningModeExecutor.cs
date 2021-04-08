@@ -170,6 +170,7 @@ namespace Lexica.CLI.Modes.Learning
                 await LearningHistoryService.SaveAsync(
                     modeOperator.CurrentQuestionInfo.Entry.SetPath.Namespace,
                     modeOperator.CurrentQuestionInfo.Entry.SetPath.Name,
+                    Mode.ToString().ToLower(),
                     question.Content,
                     modeOperator.CurrentQuestionInfo.QuestionType.ToString().ToLower(),
                     answer,

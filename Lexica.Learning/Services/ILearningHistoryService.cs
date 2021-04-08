@@ -9,8 +9,9 @@ namespace Lexica.Learning.Services
     public interface ILearningHistoryService
     {
         public Task SaveAsync(
-            string namespaceName, 
-            string fileName, 
+            string namespaceName,
+            string fileName,
+            string mode,
             string question,
             string questionType,
             string answer, 
