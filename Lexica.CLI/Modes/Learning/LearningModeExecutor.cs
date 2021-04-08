@@ -135,7 +135,8 @@ namespace Lexica.CLI.Modes.Learning
                     },
                     answer, 
                     isAnswerCorrect, 
-                    correctAnswer
+                    correctAnswer,
+                    modeOperator.CurrentQuestionInfo.Entry.ToString()
                 );
                 PlayPronunciationAudio(
                     modeOperator.CurrentQuestionInfo.Entry.Words,

@@ -143,7 +143,8 @@ namespace Lexica.CLI.Modes.Learning.Services
             ResultStatus openQuestionsResultStatus,
             string answer,
             bool result,
-            string? correctAnswer = null)
+            string correctAnswer,
+            string entryInfo)
         {
             ConsoleColor standardForegroundColor = Console.ForegroundColor;
             PresentQuestion(
@@ -160,7 +161,14 @@ namespace Lexica.CLI.Modes.Learning.Services
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine();
                 Console.Write("  Correct answer :)  ");
-                Console.ForegroundColor = ConsoleColor.White;
+                if (mode == ModeEnum.Spelling)
+                {
+                    Console.WriteLine();
+                    Console.ForegroundColor = standardForegroundColor;
+                    Console.Write($"  Entry: ");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write(entryInfo);
+                }
             }
             else
             {

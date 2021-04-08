@@ -57,5 +57,10 @@ namespace Lexica.Words.Models
         {
             return base.GetHashCode();
         }
+
+        public override string ToString()
+        {
+            return string.Join(", ", Words) + ';' + string.Join(", ", Translations);
+        }
     }
 }
