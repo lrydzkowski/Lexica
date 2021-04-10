@@ -31,7 +31,7 @@ namespace Lexica.Core.Services
             LoadConfig();
         }
 
-        private OperationResult<IList<string>> Validate(string configContents, string configSchemaContents)
+        private static OperationResult<IList<string>> Validate(string configContents, string configSchemaContents)
         {
             JSchema schema = JSchema.Parse(configSchemaContents);
             JObject confObj = JObject.Parse(configContents);
@@ -46,7 +46,9 @@ namespace Lexica.Core.Services
         {
             string configContents = ConfigSource.GetContents();
             string configSchemaContents = ConfigSchemaSource.GetContents();
-            OperationResult<IList<string>> validationResult = Validate(configContents, configSchemaContents);
+            OperationResult<IList<string>> validationResult = ConfigService<T>.Validate(
+                configContents, configSchemaContents
+            );
             if (!validationResult.Result)
             {
                 var exception = new WrongConfigException($"File {ConfigSource.Name} has a wrong structure.");

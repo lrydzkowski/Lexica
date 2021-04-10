@@ -22,7 +22,7 @@ namespace Lexica.Core.Extensions
 
         public static string UppercaseFirst(this string str)
         {
-            return char.ToUpper(str[0]) + str.Substring(1);
+            return char.ToUpper(str[0]) + str[1..];
         }
 
         public static string RemoveInvalidFileNameChars(this string str)
@@ -32,8 +32,8 @@ namespace Lexica.Core.Extensions
 
         public static bool OrdinalContains(this string s, string value, bool ignoreCase = false)
         {
-            return s != null 
-                && s.IndexOf(value, ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal) >= 0;
+            return s != null
+                && s.Contains(value, ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
         }
 
         public static bool OrdinalStartsWith(this string s, string value, bool ignoreCase = false)

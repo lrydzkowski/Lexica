@@ -20,7 +20,7 @@ namespace Lexica.Core.IO
 
         public List<ISource> GetContents()
         {
-            List<ISource> sourceList = new List<ISource>();
+            List<ISource> sourceList = new();
             string[] listOfResources = Assembly.GetManifestResourceNames();
             string path = Path.Replace("/", ".");
             foreach (string resourceName in listOfResources)
@@ -28,7 +28,7 @@ namespace Lexica.Core.IO
                 if (resourceName.IndexOf(path) == 0)
                 {
                     string[] rnParts = resourceName.Split('.');
-                    string fileName = rnParts[rnParts.Length - 2] + '.' + rnParts[rnParts.Length - 1];
+                    string fileName = rnParts[^2] + '.' + rnParts[^1];
                     var resourceDirPath = resourceName.ReplaceLastOccurence(fileName, "").Replace(".", "/");
                     var resourceFullPath = resourceDirPath + fileName;
                     var embeddedSource = new EmbeddedSource(resourceFullPath, Assembly);

@@ -28,7 +28,7 @@ namespace Lexica.Core.Services
 			string result = "";
 			bool inQuery = false, inFragment = false;
 
-			string CombineEnsureSingleSeparator(string a, string b, char separator)
+            static string CombineEnsureSingleSeparator(string a, string b, char separator)
 			{
 				if (string.IsNullOrEmpty(a)) return b;
 				if (string.IsNullOrEmpty(b)) return a;

@@ -62,7 +62,7 @@ namespace CoreTests
             var configSchemaSource = new EmbeddedSource(schemaPath, Assembly.GetExecutingAssembly());
 
             // Act
-            void action() => new ConfigService<Settings>(configSource, configSchemaSource);
+            void action() => _ = new ConfigService<Settings>(configSource, configSchemaSource);
 
             // Assert
             WrongConfigException ex = Assert.Throws<WrongConfigException>(action);

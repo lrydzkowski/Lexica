@@ -26,8 +26,8 @@ namespace Lexica.Words.Services
         {
             var result = new OperationResult<Set?>(null);
 
-            List<SetPath> setPaths = new List<SetPath>();
-            List<Entry> entries = new List<Entry>();
+            List<SetPath> setPaths = new();
+            List<Entry> entries = new();
 
             foreach (ISource fileSource in filesSources)
             {
@@ -41,7 +41,7 @@ namespace Lexica.Words.Services
                 }
 
                 List<string> lines = contents.Split("\n").Select(x => x.Trim()).ToList();
-                List<Entry> currentFileEntries = new List<Entry>();
+                List<Entry> currentFileEntries = new();
                 for (int i = 0; i < lines.Count; i++)
                 {
                     string line = lines[i];

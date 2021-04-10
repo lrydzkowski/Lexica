@@ -27,9 +27,9 @@ namespace Lexica.EF
             }
         }
 
-        private void CreateWordsTables(ModelBuilder modelBuilder)
+        private static void CreateWordsTables(ModelBuilder modelBuilder)
         {
-            var learningHistoryTable = modelBuilder.Entity<LearningHistoryTable>()
+            _ = modelBuilder.Entity<LearningHistoryTable>()
                 .ToTable("learning_history", "modes");
         }
 

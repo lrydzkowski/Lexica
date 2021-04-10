@@ -72,16 +72,14 @@ namespace Lexica.Pronunciation.Api.WebDictionary
             }
         }
 
-        private async Task PlayMp3Async(string mp3FilePath)
+        private static async Task PlayMp3Async(string mp3FilePath)
         {
-            using (var audioFile = new AudioFileReader(mp3FilePath))
-            using (var outputDevice = new WaveOutEvent())
-            {
-                outputDevice.Init(audioFile);
-                outputDevice.Play();
-                int totalTime = Convert.ToInt32(Math.Floor(audioFile.TotalTime.TotalMilliseconds));
-                await Task.Delay(totalTime);
-            }
+            using var audioFile = new AudioFileReader(mp3FilePath);
+            using var outputDevice = new WaveOutEvent();
+            outputDevice.Init(audioFile);
+            outputDevice.Play();
+            int totalTime = Convert.ToInt32(Math.Floor(audioFile.TotalTime.TotalMilliseconds));
+            await Task.Delay(totalTime);
         }
 
         private async Task<string?> DownloadFile(string word)

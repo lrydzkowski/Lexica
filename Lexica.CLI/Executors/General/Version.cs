@@ -7,7 +7,7 @@ namespace Lexica.CLI.Executors.General
 {
     class Version : IExecutor
     {
-        private BuildService _buildService;
+        private readonly BuildService _buildService;
 
         public Version(BuildService buildService)
         {

@@ -26,15 +26,17 @@ namespace Lexica.EF.Services
             string properAnswer, 
             bool isCorrect)
         {
-            var historyTable = new LearningHistoryTable();
-            historyTable.Namespace = namespaceName;
-            historyTable.Name = fileName;
-            historyTable.Mode = mode;
-            historyTable.Question = question;
-            historyTable.QuestionType = questionType;
-            historyTable.Answer = answer;
-            historyTable.ProperAnswer = properAnswer;
-            historyTable.IsCorrect = isCorrect;
+            var historyTable = new LearningHistoryTable
+            {
+                Namespace = namespaceName,
+                Name = fileName,
+                Mode = mode,
+                Question = question,
+                QuestionType = questionType,
+                Answer = answer,
+                ProperAnswer = properAnswer,
+                IsCorrect = isCorrect
+            };
             DbContext.LearningHistoryRecords.Add(historyTable);
             await DbContext.SaveChangesAsync();
         }

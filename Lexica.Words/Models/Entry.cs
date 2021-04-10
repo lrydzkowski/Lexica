@@ -46,7 +46,7 @@ namespace Lexica.Words.Models
             }
         }
 
-        private bool ListsEquals(List<string> list1, List<string> list2)
+        private static bool ListsEquals(List<string> list1, List<string> list2)
         {
             IEnumerable<string> isFirstOnly = list1.Except(list2);
             IEnumerable<string> isSecondOnly = list2.Except(list1);

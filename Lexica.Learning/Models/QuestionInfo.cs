@@ -62,7 +62,7 @@ namespace Lexica.Learning.Models
             }
         }
 
-        private bool ListsEquals(List<string>? list1, List<string>? list2)
+        private static bool ListsEquals(List<string>? list1, List<string>? list2)
         {
             list1 ??= new List<string>();
             list2 ??= new List<string>();

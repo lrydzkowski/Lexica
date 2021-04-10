@@ -42,7 +42,7 @@ namespace Lexica.Words.Validators
                     { "FileName", fileName },
                     { "Line", (i + 1).ToString() }
                 };
-                if (line.IndexOf(";") == -1)
+                if (!line.Contains(";", StringComparison.CurrentCulture))
                 {
                     result.AddError(
                         new Error<Dictionary<string, string>>(

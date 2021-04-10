@@ -31,8 +31,8 @@ namespace Lexica.Core.IO
 
         public List<ISource> GetContents()
         {
-            List<ISource> fileSourceList = new List<ISource>();
-            DirectoryInfo di = new DirectoryInfo(DirectoryPath);
+            List<ISource> fileSourceList = new();
+            DirectoryInfo di = new(DirectoryPath);
             foreach (FileInfo fi in di.EnumerateFiles())
             {
                 var fileSource = new FileSource(Path.Combine(DirectoryPath, fi.Name));

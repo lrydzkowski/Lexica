@@ -17,7 +17,7 @@ namespace CoreTests
         public void Init_NotExistedFile_ThrowsFileNotFoundException(string filePath)
         {
             // Act
-            void action() => new FileSource(filePath);
+            void action() => _ = new FileSource(filePath);
 
             // Assert
             FileNotFoundException ex = Assert.Throws<FileNotFoundException>(action);
