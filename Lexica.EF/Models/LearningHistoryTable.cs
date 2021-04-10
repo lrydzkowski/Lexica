@@ -11,7 +11,7 @@ namespace Lexica.EF.Models
     public class LearningHistoryTable
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("operation_id")]
-        public long OperationId { get; set; }
+        public int OperationId { get; set; }
 
         [Column("namespace")]
         public string Namespace { get; set; } = "";

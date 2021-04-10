@@ -82,7 +82,7 @@ namespace Lexica.CLI
 
             // Entity Framework Core
             services.AddDbContext<LexicaContext>(
-                opts => opts.UseNpgsql(configService.Get().Database?.ConnectionString)
+                opts => opts.UseSqlite($"Data Source={configService.Get().Database?.FilePath}")
             );
 
             // Pronunciation service

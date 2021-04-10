@@ -21,9 +21,9 @@ namespace Lexica.EF
                 ConfigService<DatabaseSettings> appSettings = ConfigService<DatabaseSettings>.Get(
                     "database", Assembly.GetExecutingAssembly()
                 );
-                string? connectionString = appSettings.Get().ConnectionString;
+                string filePath = appSettings.Get().FilePath;
 
-                optionsBuilder.UseNpgsql(connectionString);
+                optionsBuilder.UseSqlite($"Data Source={filePath}");
             }
         }
 

@@ -6,6 +6,6 @@ namespace Lexica.EF.Config
 {
     public class DatabaseSettings
     {
-        public string? ConnectionString { get; set; }
+        public string FilePath { get; set; } = "";
     }
 }

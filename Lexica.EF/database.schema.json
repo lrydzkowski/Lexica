@@ -4,11 +4,11 @@
   "title": "Lexica.EF configuration",
   "type": "object",
   "properties": {
-    "ConnectionString": {
+    "FilePath": {
       "type": "string"
     }
   },
   "required": [
-    "ConnectionString"
+    "FilePath"
   ]
 }
