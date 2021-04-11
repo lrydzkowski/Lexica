@@ -8,9 +8,15 @@ namespace Lexica.CLI.Modes.Learning.Models
 {
     class ResultStatus
     {
-        public int NumOfCorrectAnswers { get; set; }
+        public ResultStatus(int numOfCorrectAnswers, int numOfQuestions)
+        {
+            NumOfCorrectAnswers = numOfCorrectAnswers;
+            NumOfQuestions = numOfQuestions;
+        }
 
-        public int NumOfQuestions { get; set; }
+        public int NumOfCorrectAnswers { get; private set; }
+
+        public int NumOfQuestions { get; private set; }
 
         public override string ToString()
         {

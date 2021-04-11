@@ -13,5 +13,7 @@ namespace Lexica.Learning.Config
         public bool ResetAfterMistake { get; set; } = false;
 
         public PronunciationSettings PlayPronuncation { get; set; } = new PronunciationSettings();
+
+        public bool SaveDebugLogs { get; set; } = false;
     }
 }

@@ -105,16 +105,14 @@ namespace Lexica.CLI.Modes.Learning
                 ConsoleService.PresentQuestion(
                     Mode,
                     question,
-                    new ResultStatus()
-                    {
-                        NumOfCorrectAnswers = modeOperator.GetResult(QuestionTypeEnum.Closed),
-                        NumOfQuestions = modeOperator.GetNumberOfQuestions(QuestionTypeEnum.Closed)
-                    },
-                    new ResultStatus()
-                    {
-                        NumOfCorrectAnswers = modeOperator.GetResult(QuestionTypeEnum.Open),
-                        NumOfQuestions = modeOperator.GetNumberOfQuestions(QuestionTypeEnum.Open)
-                    }
+                    new ResultStatus(
+                        modeOperator.GetResult(QuestionTypeEnum.Closed),
+                        modeOperator.GetNumberOfQuestions(QuestionTypeEnum.Closed)
+                    ),
+                    new ResultStatus(
+                        modeOperator.GetResult(QuestionTypeEnum.Open),
+                        modeOperator.GetNumberOfQuestions(QuestionTypeEnum.Open)
+                    )
                 );
                 string answer = ConsoleService.ReadAnswer();
                 AnswerResult? answerResult = modeOperator.VerifyAnswer(answer);
@@ -126,16 +124,14 @@ namespace Lexica.CLI.Modes.Learning
                 ConsoleService.PresentResult(
                     Mode,
                     question,
-                    new ResultStatus()
-                    {
-                        NumOfCorrectAnswers = modeOperator.GetResult(QuestionTypeEnum.Closed),
-                        NumOfQuestions = modeOperator.GetNumberOfQuestions(QuestionTypeEnum.Closed)
-                    },
-                    new ResultStatus()
-                    {
-                        NumOfCorrectAnswers = modeOperator.GetResult(QuestionTypeEnum.Open),
-                        NumOfQuestions = modeOperator.GetNumberOfQuestions(QuestionTypeEnum.Open)
-                    },
+                    new ResultStatus(
+                        modeOperator.GetResult(QuestionTypeEnum.Closed), 
+                        modeOperator.GetNumberOfQuestions(QuestionTypeEnum.Closed)
+                    ),
+                    new ResultStatus(
+                        modeOperator.GetResult(QuestionTypeEnum.Open),
+                        modeOperator.GetNumberOfQuestions(QuestionTypeEnum.Open)
+                    ),
                     answer, 
                     isAnswerCorrect, 
                     correctAnswer,
@@ -160,16 +156,6 @@ namespace Lexica.CLI.Modes.Learning
                 {
                     modeOperator.OverridePreviousMistake();
                 }
-                WriteLog(
-                    isAnswerCorrect,
-                    question.Content,
-                    correctAnswer,
-                    modeOperator.GetResult(QuestionTypeEnum.Closed),
-                    modeOperator.GetNumberOfQuestions(QuestionTypeEnum.Closed),
-                    modeOperator.GetResult(QuestionTypeEnum.Open),
-                    modeOperator.GetNumberOfQuestions(QuestionTypeEnum.Open),
-                    modeOperator.AnswersRegister
-                );
                 await LearningHistoryService.SaveRecordToDbAsync(
                     modeOperator.CurrentQuestionInfo.Entry.SetPath.Namespace,
                     modeOperator.CurrentQuestionInfo.Entry.SetPath.Name,
@@ -179,6 +165,20 @@ namespace Lexica.CLI.Modes.Learning
                     givenAnswer,
                     correctAnswer,
                     isAnswerCorrect
+                );
+                WriteLog(
+                    isAnswerCorrect,
+                    question.Content,
+                    correctAnswer,
+                    new ResultStatus(
+                        modeOperator.GetResult(QuestionTypeEnum.Closed),
+                        modeOperator.GetNumberOfQuestions(QuestionTypeEnum.Closed)
+                    ),
+                    new ResultStatus(
+                        modeOperator.GetResult(QuestionTypeEnum.Open),
+                        modeOperator.GetNumberOfQuestions(QuestionTypeEnum.Open)
+                    ),
+                    modeOperator.AnswersRegister
                 );
             }
 
@@ -288,26 +288,27 @@ namespace Lexica.CLI.Modes.Learning
             bool result,
             string question,
             string answers,
-            int closedQuestionsCurrentResult,
-            int numberOfClosedQuestions,
-            int openQuestionsCurrentResult,
-            int numberOfOpenQuestions,
+            ResultStatus closedQuestionsResultStatus,
+            ResultStatus openQuestionsResultStatus,
             Dictionary<QuestionTypeEnum, Dictionary<string, AnswerRegister>> answersRegister)
         {
-            JsonSerializerOptions options = JsonService.GetJsonSerializerOptions(true, null);
-            string logData = JsonSerializer.Serialize(
-                new
-                {
-                    Result = result,
-                    Question = question,
-                    Answers = answers,
-                    ClosedQuestionsProgress = $"{closedQuestionsCurrentResult}/{numberOfClosedQuestions}",
-                    OpenQuestionsProgress = $"{openQuestionsCurrentResult}/{numberOfOpenQuestions}",
-                    AnswersRegister = answersRegister
-                },
-                options
-            );
-            Logger.LogDebug(logData);
+            if (LearningSettings.SaveDebugLogs)
+            {
+                JsonSerializerOptions options = JsonService.GetJsonSerializerOptions(true, null);
+                string logData = JsonSerializer.Serialize(
+                    new
+                    {
+                        Result = result,
+                        Question = question,
+                        Answers = answers,
+                        ClosedQuestionsProgress = closedQuestionsResultStatus.ToString(),
+                        OpenQuestionsProgress = openQuestionsResultStatus.ToString(),
+                        AnswersRegister = answersRegister
+                    },
+                    options
+                );
+                Logger.LogDebug(logData);
+            }
         }
     }
 }
