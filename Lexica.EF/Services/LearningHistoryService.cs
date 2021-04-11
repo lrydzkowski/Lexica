@@ -16,7 +16,7 @@ namespace Lexica.EF.Services
 
         public LexicaContext DbContext { get; set; }
 
-        public async Task SaveAsync(
+        public async Task SaveRecordToDbAsync(
             string namespaceName, 
             string fileName,
             string mode,
@@ -37,7 +37,7 @@ namespace Lexica.EF.Services
                 ProperAnswer = properAnswer,
                 IsCorrect = isCorrect
             };
-            DbContext.LearningHistoryRecords.Add(historyTable);
+            await DbContext.LearningHistoryRecords.AddAsync(historyTable);
             await DbContext.SaveChangesAsync();
         }
     }

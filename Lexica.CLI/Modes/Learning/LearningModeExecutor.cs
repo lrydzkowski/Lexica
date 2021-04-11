@@ -119,7 +119,7 @@ namespace Lexica.CLI.Modes.Learning
                 string answer = ConsoleService.ReadAnswer();
                 AnswerResult? answerResult = modeOperator.VerifyAnswer(answer);
                 bool isAnswerCorrect = answerResult?.Result ?? false;
-                string givenAnswers = answerResult?.GivenAnswers == null 
+                string givenAnswer = answerResult?.GivenAnswers == null 
                     ? answer 
                     : string.Join(", ", answerResult.GivenAnswers);
                 string correctAnswer = string.Join(", ", answerResult?.CorrectAnswers ?? new List<string>());
@@ -170,13 +170,13 @@ namespace Lexica.CLI.Modes.Learning
                     modeOperator.GetNumberOfQuestions(QuestionTypeEnum.Open),
                     modeOperator.AnswersRegister
                 );
-                await LearningHistoryService.SaveAsync(
+                await LearningHistoryService.SaveRecordToDbAsync(
                     modeOperator.CurrentQuestionInfo.Entry.SetPath.Namespace,
                     modeOperator.CurrentQuestionInfo.Entry.SetPath.Name,
                     Mode.ToString().ToLower(),
                     question.Content,
                     modeOperator.CurrentQuestionInfo.QuestionType.ToString().ToLower(),
-                    givenAnswers,
+                    givenAnswer,
                     correctAnswer,
                     isAnswerCorrect
                 );

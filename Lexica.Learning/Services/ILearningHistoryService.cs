@@ -8,7 +8,7 @@ namespace Lexica.Learning.Services
 {
     public interface ILearningHistoryService
     {
-        public Task SaveAsync(
+        public Task SaveRecordToDbAsync(
             string namespaceName,
             string fileName,
             string mode,
