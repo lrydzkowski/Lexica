@@ -81,9 +81,10 @@ namespace Lexica.CLI.Modes.Learning
 
         public async Task ExecuteAsync(List<string>? args = null)
         {
+            VerifyConfiguration();
+            VerifyParameters(args);
             ConsoleService.SetVersionInWindowTitle();
             ConsoleService.ClearConsole();
-            VerifyParameters(args);
             LearningModeOperator modeOperator = GetLearningModeOperator();
             foreach (Question? question in modeOperator.GetQuestions())
             {
@@ -186,7 +187,7 @@ namespace Lexica.CLI.Modes.Learning
             ConsoleService.ClearConsole();
         }
 
-        private void VerifyParameters(List<string>? args = null)
+        private void VerifyConfiguration()
         {
             if (ConfigService.Config?.Words == null)
             {
@@ -198,6 +199,10 @@ namespace Lexica.CLI.Modes.Learning
                 throw new Exception("Learning settings are empty.");
             }
             LearningSettings = ConfigService.Config.Learning;
+        }
+
+        private void VerifyParameters(List<string>? args = null)
+        {
             if (args == null || args.Count == 0)
             {
                 throw new ArgsException("There are no arguments.");
