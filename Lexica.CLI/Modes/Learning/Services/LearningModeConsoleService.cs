@@ -144,7 +144,7 @@ namespace Lexica.CLI.Modes.Learning.Services
             string answer,
             bool result,
             string correctAnswer,
-            string entryInfo)
+            string translationsInfo)
         {
             ConsoleColor standardForegroundColor = Console.ForegroundColor;
             PresentQuestion(
@@ -161,14 +161,6 @@ namespace Lexica.CLI.Modes.Learning.Services
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine();
                 Console.Write("  Correct answer :)  ");
-                if (mode == ModeEnum.Spelling)
-                {
-                    Console.WriteLine();
-                    Console.ForegroundColor = standardForegroundColor;
-                    Console.Write($"  Entry: ");
-                    Console.ForegroundColor = ConsoleColor.White;
-                    Console.Write(entryInfo);
-                }
             }
             else
             {
@@ -180,9 +172,20 @@ namespace Lexica.CLI.Modes.Learning.Services
                     Console.WriteLine();
                     Console.Write("  Correct answer is: ");
                     Console.ForegroundColor = ConsoleColor.White;
-                    Console.Write($"{correctAnswer}  ");
+                    Console.Write(correctAnswer);
                 }
             }
+            if (mode == ModeEnum.Spelling)
+            {
+                Console.WriteLine();
+                Console.ForegroundColor = standardForegroundColor;
+                Console.Write($"  Translations: ");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(translationsInfo);
+            }
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.Write("  ");
             Console.ForegroundColor = standardForegroundColor;
         }
 

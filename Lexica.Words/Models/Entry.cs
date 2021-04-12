@@ -60,7 +60,20 @@ namespace Lexica.Words.Models
 
         public override string ToString()
         {
-            return string.Join(", ", Words) + ';' + string.Join(", ", Translations);
+            return ToString(EntryPartEnum.Words) + ';' + ToString(EntryPartEnum.Translations);
+        }
+
+        public string ToString(EntryPartEnum part)
+        {
+            switch (part)
+            {
+                case EntryPartEnum.Words:
+                    return string.Join(", ", Words);
+                case EntryPartEnum.Translations:
+                    return string.Join(", ", Translations);
+                default:
+                    return "";
+            }
         }
     }
 }

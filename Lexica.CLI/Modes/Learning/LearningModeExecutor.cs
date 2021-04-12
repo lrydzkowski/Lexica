@@ -135,7 +135,7 @@ namespace Lexica.CLI.Modes.Learning
                     answer, 
                     isAnswerCorrect, 
                     correctAnswer,
-                    modeOperator.CurrentQuestionInfo.Entry.ToString()
+                    modeOperator.CurrentQuestionInfo.Entry.ToString(Words.Models.EntryPartEnum.Translations)
                 );
                 PlayPronunciationAudio(
                     modeOperator.CurrentQuestionInfo.Entry.Words,
@@ -183,6 +183,7 @@ namespace Lexica.CLI.Modes.Learning
             }
 
             ConsoleService.ShowSummary();
+            ConsoleService.ClearConsole();
         }
 
         private void VerifyParameters(List<string>? args = null)
