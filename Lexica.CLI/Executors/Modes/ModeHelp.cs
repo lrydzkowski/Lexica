@@ -14,9 +14,9 @@ namespace Lexica.CLI.Executors.Modes
             Console.WriteLine("  -m  | --mode          Run mode.");
             Console.WriteLine();
             Console.WriteLine("Available modes:");
-            Console.WriteLine("  m   | maintaining     Maintaining mode.");
-            Console.WriteLine("  l   | learning        Learning mode.");
-            Console.WriteLine("  m   | spelling        Spelling mode.");
+            Console.WriteLine("  s   | spelling        Check your spelling.");
+            Console.WriteLine("  f   | full            Full path of learning with closed and open questions.");
+            Console.WriteLine("  oo  | only-open       Only open questions.");
         }
     }
 }

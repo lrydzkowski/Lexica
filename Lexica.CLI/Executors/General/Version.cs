@@ -7,17 +7,20 @@ namespace Lexica.CLI.Executors.General
 {
     class Version : IExecutor
     {
-        private readonly BuildService _buildService;
-
-        public Version(BuildService buildService)
+        public Version(BuildService buildService, VersionService versionService)
         {
-            _buildService = buildService;
+            BuildService = buildService;
+            VersionService = versionService;
         }
+
+        public BuildService BuildService { get; private set; }
+
+        public VersionService VersionService { get; private set; }
 
         public void Execute(List<string>? args = null)
         {
-            string version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "";
-            string build = _buildService.GetBuild();
+            string version = VersionService.GetVersion();
+            string build = BuildService.GetBuild();
             if (build.Length == 0)
             {
                 build = "-";

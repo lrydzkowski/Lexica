@@ -22,7 +22,7 @@ namespace Lexica.CLI.Modes.Learning.Services
             string appName = "Lexica";
             string version = VersionService.GetVersion();
             string build = BuildService.GetBuild();
-            Console.Title = $"{appName} {version} - Build: {build}";
+            Console.Title = $"{appName} {version} ({build})";
         }
 
         public void ClearConsole()
