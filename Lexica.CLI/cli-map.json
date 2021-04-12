@@ -26,9 +26,22 @@
           "DefaultExecutorClass": "Lexica.CLI.Executors.Modes.ModeHelp",
           "Commands": [
             {
-              "Name": "learning",
-              "Shortcut": "l",
-              "ExecutorClass": "Lexica.CLI.Modes.Learning.LearningModeExecutor"
+              "Name": "spelling",
+              "Shortcut": "s",
+              "ExecutorClass": "Lexica.CLI.Modes.Learning.LearningModeExecutor",
+              "AddNameToArguments":  true
+            },
+            {
+              "Name": "full",
+              "Shortcut": "f",
+              "ExecutorClass": "Lexica.CLI.Modes.Learning.LearningModeExecutor",
+              "AddNameToArguments": true
+            },
+            {
+              "Name": "only-open",
+              "Shortcut": "oo",
+              "ExecutorClass": "Lexica.CLI.Modes.Learning.LearningModeExecutor",
+              "AddNameToArguments": true
             }
           ]
         }

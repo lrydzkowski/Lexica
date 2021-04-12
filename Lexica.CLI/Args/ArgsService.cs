@@ -62,6 +62,11 @@ namespace Lexica.CLI.Args
                     {
                         throw new ArgsException($"Type {executorClassName} doesn't exist.");
                     }
+                    List<string> parameters = command.Parameters;
+                    if (command.AddNameToArguments == true)
+                    {
+                        parameters.Insert(0, command.Name);
+                    }
 
                     if (typeof(IExecutor).IsAssignableFrom(type))
                     {
@@ -70,7 +75,7 @@ namespace Lexica.CLI.Args
                         {
                             throw new Exception($"Service {executorClassName} doesn't exist.");
                         }
-                        syncExecutor.Execute(command.Parameters);
+                        syncExecutor.Execute(parameters);
                         return;
                     }
                     else if (typeof(IAsyncExecutor).IsAssignableFrom(type))
@@ -80,7 +85,7 @@ namespace Lexica.CLI.Args
                         {
                             throw new Exception($"Service {executorClassName} doesn't exist.");
                         }
-                        await asyncExecutor.ExecuteAsync(command.Parameters);
+                        await asyncExecutor.ExecuteAsync(parameters);
                         return;
                     }
                     else

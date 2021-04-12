@@ -18,6 +18,9 @@
         "DefaultExecutorClass": {
           "type": "string"
         },
+        "AddNameToArguments": {
+          "type": "boolean"
+        },
         "Commands": {
           "type": "array",
           "items": {
