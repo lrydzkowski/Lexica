@@ -158,12 +158,10 @@ namespace Lexica.Learning
                     }
 
                     var nextQuestionInfo = new QuestionInfo(entry, questionType, answerType, possibleAnswers);
-                    // Condition to prevent questions repetition
-                    if (!IsCurrentQuestionTheLastOne() && nextQuestionInfo.Equals(CurrentQuestionInfo))
+                    if (!IsCurrentQuestionTheLastOne() && IsQuestionRepeated(nextQuestionInfo))
                     {
                         continue;
                     }
-
                     CurrentQuestionInfo = nextQuestionInfo;
 
                     yield return new Question(string.Join(", ", questionWords), questionType, possibleAnswers);
@@ -232,6 +230,11 @@ namespace Lexica.Learning
                 return false;
             }
             return true;
+        }
+
+        public bool IsQuestionRepeated(QuestionInfo nextQuestionInfo)
+        {
+            return nextQuestionInfo.Entry.Equals(CurrentQuestionInfo?.Entry);
         }
 
         public int GetNumOfRequiredAnswers(QuestionTypeEnum questionType)
