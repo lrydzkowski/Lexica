@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace Lexica.CLI.Args
 {
-    class ArgsService : IService
+    static class ArgsHandler
     {
-        public async Task RunAsync(string[] args, IServiceProvider servicesProvider)
+        public static async Task RunAsync(string[] args, IServiceProvider servicesProvider)
         {
             var cliMapSource = new EmbeddedSource("cli-map.json", Assembly.GetExecutingAssembly());
             var cliMapSchemaSource = new EmbeddedSource("cli-map.schema.json", Assembly.GetExecutingAssembly());

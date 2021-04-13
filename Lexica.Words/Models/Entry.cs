@@ -65,15 +65,12 @@ namespace Lexica.Words.Models
 
         public string ToString(EntryPartEnum part)
         {
-            switch (part)
+            return part switch
             {
-                case EntryPartEnum.Words:
-                    return string.Join(", ", Words);
-                case EntryPartEnum.Translations:
-                    return string.Join(", ", Translations);
-                default:
-                    return "";
-            }
+                EntryPartEnum.Words => string.Join(", ", Words),
+                EntryPartEnum.Translations => string.Join(", ", Translations),
+                _ => "",
+            };
         }
     }
 }
