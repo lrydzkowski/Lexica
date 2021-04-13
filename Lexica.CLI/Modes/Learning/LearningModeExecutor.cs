@@ -86,7 +86,10 @@ namespace Lexica.CLI.Modes.Learning
             ConsoleService.SetVersionInWindowTitle();
             ConsoleService.ClearConsole();
             LearningModeOperator modeOperator = GetLearningModeOperator();
-            foreach (Question? question in modeOperator.GetQuestions())
+            IEnumerable<Question?> questionsEnumerable = modeOperator.GetQuestions(
+                randomizeEachIteration: true, pieceSize: GetPieceSize()
+            );
+            foreach (Question? question in questionsEnumerable)
             {
                 if (question == null || modeOperator.CurrentQuestionInfo == null)
                 {
@@ -243,6 +246,16 @@ namespace Lexica.CLI.Modes.Learning
             var wordsSetOperator = new WordsSetOperator(setService, fileSources);
             var learningModeOperator = new LearningModeOperator(wordsSetOperator, LearningSettings, Mode);
             return learningModeOperator;
+        }
+
+        private int GetPieceSize()
+        {
+            int pieceSize = -1;
+            if (Mode == ModeEnum.Full)
+            {
+                pieceSize = -1;
+            }
+            return pieceSize;
         }
 
         private async Task<bool> PronunciationAudioExists(List<string> words)
