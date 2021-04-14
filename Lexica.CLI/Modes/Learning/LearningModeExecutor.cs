@@ -33,7 +33,6 @@ namespace Lexica.CLI.Modes.Learning
             ConfigService<AppSettings> configService,
             ILogger<LearningModeExecutor> logger,
             JsonService jsonService,
-            LocationService locationService,
             ILearningHistoryService learningHistoryService,
             IPronunciation pronunciationService,
             ILogger<IPronunciation> pronunciationLogger,
@@ -42,7 +41,6 @@ namespace Lexica.CLI.Modes.Learning
             ConfigService = configService;
             Logger = logger;
             JsonService = jsonService;
-            LocationService = locationService;
             LearningHistoryService = learningHistoryService;
             PronunciationService = pronunciationService;
             PronunciationLogger = pronunciationLogger;
@@ -54,8 +52,6 @@ namespace Lexica.CLI.Modes.Learning
         private ILogger<LearningModeExecutor> Logger { get; set; }
 
         private JsonService JsonService { get; set; }
-
-        private LocationService LocationService { get; set; }
 
         public ILearningHistoryService LearningHistoryService { get; set; }
 
@@ -187,7 +183,6 @@ namespace Lexica.CLI.Modes.Learning
             }
 
             ConsoleService.ShowSummary();
-            ConsoleService.ClearConsole();
         }
 
         private void VerifyConfiguration()
@@ -235,10 +230,10 @@ namespace Lexica.CLI.Modes.Learning
             var fileSources = new List<ISource>();
             for (int i = 0; i < FilePaths.Count; i++)
             {
-                string absolutePath = WordsSettings.DirectoryPath ?? LocationService.GetExecutingAssemblyLocation();
+                string absolutePath = WordsSettings.DirectoryPath ?? AppDomain.CurrentDomain.BaseDirectory;
                 if (FilePaths[i].StartsWith('.'))
                 {
-                    absolutePath = LocationService.GetExecutingAssemblyLocation();
+                    absolutePath = AppDomain.CurrentDomain.BaseDirectory;
                 }
                 string filePath = Path.Combine(absolutePath, FilePaths[i].TrimStart('.', '\\', '/'));
                 fileSources.Add(new FileSource(filePath));

@@ -1,6 +1,7 @@
 ﻿using Lexica.Core.IO;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace Lexica.CLI.Core.Services
@@ -9,7 +10,7 @@ namespace Lexica.CLI.Core.Services
     {
         public string GetBuild()
         {
-            var source = new FileSource("build");
+            var source = new FileSource(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "build"));
             return source.GetContents(true) ?? "";
         }
     }

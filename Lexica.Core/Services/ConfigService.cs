@@ -79,7 +79,8 @@ namespace Lexica.Core.Services
 
         public static ConfigService<T> Get(string name, Assembly assembly)
         {
-            var configSource = new FileSource($"{name}.json");
+            var configFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{name}.json");
+            var configSource = new FileSource(configFilePath);
             var configSchemaSource = new EmbeddedSource($"{name}.schema.json", assembly);
             var configService = new ConfigService<T>(configSource, configSchemaSource);
             

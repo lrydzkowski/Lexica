@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using NLog;
 using NLog.Extensions.Logging;
 using System;
+using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -78,7 +79,7 @@ namespace Lexica.CLI
 
             // Entity Framework Core
             services.AddDbContext<LexicaContext>(
-                opts => opts.UseSqlite($"Data Source={configService.Get().Database?.FilePath}")
+                opts => opts.UseSqlite($"Data Source={GetDbFilePath(configService)}")
             );
 
             // Pronunciation service
@@ -98,6 +99,18 @@ namespace Lexica.CLI
             IServiceProvider serviceProvider = services.BuildServiceProvider();
 
             return serviceProvider;
+        }
+
+        private static string GetDbFilePath(ConfigService<AppSettings> configService)
+        {
+            string dbFilePath = Path.Combine(
+                AppDomain.CurrentDomain.BaseDirectory, configService.Get().Database?.FilePath ?? ""
+            );
+            if (!File.Exists(dbFilePath))
+            {
+                throw new Exception($"Db file ({dbFilePath}) doesn't exist");
+            }
+            return dbFilePath;
         }
     }
 }
