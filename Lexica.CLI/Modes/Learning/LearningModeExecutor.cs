@@ -268,7 +268,7 @@ namespace Lexica.CLI.Modes.Learning
             {
                 return;
             }
-            _ = PronunciationService.PlayAsync(words)
+            _ = PronunciationService.PlayAsync(words.ToList())
                 .ContinueWith(
                     x => PronunciationLogger.LogError(
                         x.Exception, "An unexpected error occured in pronunciation service."
