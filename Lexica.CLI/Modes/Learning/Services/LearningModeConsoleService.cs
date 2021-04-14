@@ -196,7 +196,6 @@ namespace Lexica.CLI.Modes.Learning.Services
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write(" The end :) ");
             Console.ForegroundColor = standardForegroundColor;
-            Console.ReadLine();
         }
     }
 }
