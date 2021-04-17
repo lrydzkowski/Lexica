@@ -92,7 +92,7 @@ namespace Lexica.CLI.Modes.Learning
                 if (Mode == ModeEnum.Spelling 
                     && !await PronunciationAudioExists(modeOperator.CurrentQuestionInfo.Entry.Words))
                 {
-                    modeOperator.UpdateAnswersRegister(AppSettings.Learning?.NumOfLevels ?? 0);
+                    modeOperator.UpdateAnswersRegister(AppSettings.Learning?.NumOfOpenQuestions ?? 0);
                     continue;
                 }
                 PlayPronunciationAudio(

@@ -249,7 +249,7 @@ namespace Lexica.Learning
                     }
                     break;
                 case QuestionTypeEnum.Open:
-                    numOfRequiredAnswers = Settings.NumOfLevels;
+                    numOfRequiredAnswers = Settings.NumOfOpenQuestions;
                     break;
                 default:
                     break;
