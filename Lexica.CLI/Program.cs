@@ -62,17 +62,11 @@ namespace Lexica.CLI
         {
             var services = new ServiceCollection();
 
-            // NLog
-            services.AddLogging(loggingBuilder =>
-            {
-                loggingBuilder.ClearProviders();
-                loggingBuilder.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
-                loggingBuilder.AddNLog();
-            });
+            AddNLogService(services);
 
-            ConfigService<AppSettings> configService = RegisterConfigService(services);
-            RegisterDbContext(services);
-            RegisterPronunciationService(services, configService);
+            ConfigService<AppSettings> configService = AddConfigService(services);
+            AddDbContext(services);
+            AddPronunciationService(services, configService);
 
             services.AddExecutorServices();
             services.AddCoreModuleServices();
@@ -86,7 +80,17 @@ namespace Lexica.CLI
             return serviceProvider;
         }
 
-        private static ConfigService<AppSettings> RegisterConfigService(ServiceCollection services)
+        private static void AddNLogService(ServiceCollection services)
+        {
+            services.AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.ClearProviders();
+                loggingBuilder.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
+                loggingBuilder.AddNLog();
+            });
+        }
+
+        private static ConfigService<AppSettings> AddConfigService(ServiceCollection services)
         {
             ConfigService<AppSettings> configService = ConfigService<AppSettings>.Get(
                 "appsettings", Assembly.GetExecutingAssembly()
@@ -95,14 +99,14 @@ namespace Lexica.CLI
             return configService;
         }
 
-        private static void RegisterDbContext(ServiceCollection services)
+        private static void AddDbContext(ServiceCollection services)
         {
             services.AddDbContext<LexicaContext>(
                 opts => opts.UseSqlite(@"Data Source=.\\lexica.db")
             );
         }
 
-        private static void RegisterPronunciationService(
+        private static void AddPronunciationService(
             ServiceCollection services, 
             ConfigService<AppSettings> configService)
         {
