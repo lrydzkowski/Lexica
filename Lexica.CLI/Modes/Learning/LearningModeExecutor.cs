@@ -61,7 +61,7 @@ namespace Lexica.CLI.Modes.Learning
 
         private LearningModeConsoleService ConsoleService { get; set; }
 
-        private WordsSettings WordsSettings { get; set; } = new WordsSettings();
+        private WordsSettings? WordsSettings { get; set; } = null;
 
         private LearningSettings LearningSettings { get; set; } = new LearningSettings();
 
@@ -187,11 +187,7 @@ namespace Lexica.CLI.Modes.Learning
 
         private void VerifyConfiguration()
         {
-            if (ConfigService.Config?.Words == null)
-            {
-                throw new Exception("Words settings are empty.");
-            }
-            WordsSettings = ConfigService.Config.Words;
+            WordsSettings = ConfigService.Config?.Words;
             if (ConfigService.Config?.Learning == null)
             {
                 throw new Exception("Learning settings are empty.");
@@ -230,17 +226,26 @@ namespace Lexica.CLI.Modes.Learning
             var fileSources = new List<ISource>();
             for (int i = 0; i < FilePaths.Count; i++)
             {
-                string absolutePath = WordsSettings.DirectoryPath ?? AppDomain.CurrentDomain.BaseDirectory;
+                string absolutePath = WordsSettings?.DirectoryPath ?? AppDomain.CurrentDomain.BaseDirectory;
                 if (FilePaths[i].StartsWith('.'))
                 {
                     absolutePath = AppDomain.CurrentDomain.BaseDirectory;
                 }
                 string filePath = Path.Combine(absolutePath, FilePaths[i].TrimStart('.', '\\', '/'));
+                SetFileExists(filePath);
                 fileSources.Add(new FileSource(filePath));
             }
             var wordsSetOperator = new WordsSetOperator(setService, fileSources);
             var learningModeOperator = new LearningModeOperator(wordsSetOperator, LearningSettings, Mode);
             return learningModeOperator;
+        }
+
+        private void SetFileExists(string filePath)
+        {
+            if (!File.Exists(filePath))
+            {
+                throw new ArgsException($"Set file {filePath} doesn't exist.");
+            }
         }
 
         private int GetPieceSize()

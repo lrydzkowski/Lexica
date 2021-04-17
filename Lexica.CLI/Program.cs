@@ -14,7 +14,6 @@ using Microsoft.Extensions.Logging;
 using NLog;
 using NLog.Extensions.Logging;
 using System;
-using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -71,23 +70,9 @@ namespace Lexica.CLI
                 loggingBuilder.AddNLog();
             });
 
-            // Configuration
-            ConfigService<AppSettings> configService = ConfigService<AppSettings>.Get(
-                "appsettings", Assembly.GetExecutingAssembly()
-            );
-            services.AddSingleton<ConfigService<AppSettings>>(configService);
-
-            // Entity Framework Core
-            services.AddDbContext<LexicaContext>(
-                opts => opts.UseSqlite($"Data Source={GetDbFilePath(configService)}")
-            );
-
-            // Pronunciation service
-            services.AddSingleton(
-                configService.Get().PronunciationApi?.WebDictionary
-                ?? new Pronunciation.Api.WebDictionary.Config.WebDictionarySettings()
-            );
-            services.AddSingleton<IPronunciation, Pronunciation.Api.WebDictionary.PronunciationService>();
+            ConfigService<AppSettings> configService = RegisterConfigService(services);
+            RegisterDbContext(services);
+            RegisterPronunciationService(services, configService);
 
             services.AddExecutorServices();
             services.AddCoreModuleServices();
@@ -101,16 +86,31 @@ namespace Lexica.CLI
             return serviceProvider;
         }
 
-        private static string GetDbFilePath(ConfigService<AppSettings> configService)
+        private static ConfigService<AppSettings> RegisterConfigService(ServiceCollection services)
         {
-            string dbFilePath = Path.Combine(
-                AppDomain.CurrentDomain.BaseDirectory, configService.Get().Database?.FilePath ?? ""
+            ConfigService<AppSettings> configService = ConfigService<AppSettings>.Get(
+                "appsettings", Assembly.GetExecutingAssembly()
             );
-            if (!File.Exists(dbFilePath))
-            {
-                throw new Exception($"Db file ({dbFilePath}) doesn't exist");
-            }
-            return dbFilePath;
+            services.AddSingleton(configService);
+            return configService;
+        }
+
+        private static void RegisterDbContext(ServiceCollection services)
+        {
+            services.AddDbContext<LexicaContext>(
+                opts => opts.UseSqlite(@"Data Source=.\\lexica.db")
+            );
+        }
+
+        private static void RegisterPronunciationService(
+            ServiceCollection services, 
+            ConfigService<AppSettings> configService)
+        {
+            services.AddSingleton(
+                configService.Get().PronunciationApi?.WebDictionary
+                ?? new Pronunciation.Api.WebDictionary.Config.WebDictionarySettings()
+            );
+            services.AddSingleton<IPronunciation, Pronunciation.Api.WebDictionary.PronunciationService>();
         }
     }
 }
