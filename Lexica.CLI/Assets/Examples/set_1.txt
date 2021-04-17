@@ -1,30 +1,30 @@
-﻿withstand;wytrzymywać, opierać się
-judgement;orzeczenie, wyrok
-decision;decyzja, postanowienie
-groundhog;świstak
-adjournment;przełożenie na inny termin
-glamor;czar, urok
-fertility;płodność
-raven;kruk
-crow;wrona
-standoff;impas, patowa sytuacja
-stalemate;pat
-roofing tile;dachówka
-tile;kafelek
-thatched roof;dach pokryty strzechą
-awry;przekrzywiony
-relent;ustępować
-apprenticeships;staże
-allocation;przydział
-protective shield;przyłbica
-complex;kompleks
-exacerbate;zaostrzać, pogarszać
-wrinkle;zmarszczka
-candle;świeczka
-birthday cake;tort urodzinowy
-apple pie;jabłecznik
-baptism;chrzest
-breakdown;załamanie
-neglect;lekceważyć
-herbivorous;roślinożerny
-burgle;włamać się
+﻿withstand ; wytrzymywać, opierać się
+judgement ; orzeczenie, wyrok
+decision ; decyzja, postanowienie
+groundhog ; świstak
+adjournment ; przełożenie na inny termin
+glamor ; czar, urok
+fertility ; płodność
+raven ; kruk
+crow ; wrona
+standoff ; impas, patowa sytuacja
+stalemate ; pat
+roofing tile ; dachówka
+tile ; kafelek
+thatched roof ; dach pokryty strzechą
+awry ; przekrzywiony
+relent ; ustępować
+apprenticeships ; staże
+allocation ; przydział
+protective shield ; przyłbica
+complex ; kompleks
+exacerbate ; zaostrzać, pogarszać
+wrinkle ; zmarszczka
+candle ; świeczka
+birthday cake ; tort urodzinowy
+apple pie ; jabłecznik
+baptism ; chrzest
+breakdown ; załamanie
+neglect ; lekceważyć
+herbivorous ; roślinożerny
+burgle ; włamać się
