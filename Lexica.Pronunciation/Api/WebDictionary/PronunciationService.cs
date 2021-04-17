@@ -21,12 +21,6 @@ namespace Lexica.Pronunciation.Api.WebDictionary
             UrlService urlService)
         {
             Settings = settings;
-            if (!Directory.Exists(settings.DownloadTempPath))
-            {
-                throw new Exception(
-                    $"Directory {settings.DownloadTempPath} from settings (WebDictionary.DownloadTempPath) doesn't exist."
-                );
-            }
             Logger = logger;
             UrlService = urlService;
         }

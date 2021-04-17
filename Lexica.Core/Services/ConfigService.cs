@@ -22,13 +22,13 @@ namespace Lexica.Core.Services
 
         private ISource ConfigSchemaSource { get; set; }
 
-        public T? Config { get; private set; }
+        public T Config { get; private set; }
 
         public ConfigService(ISource configSource, ISource configSchemaSource)
         {
             ConfigSource = configSource;
             ConfigSchemaSource = configSchemaSource;
-            LoadConfig();
+            Config = LoadConfig();
         }
 
         private static OperationResult<IList<string>> Validate(string configContents, string configSchemaContents)
@@ -70,7 +70,7 @@ namespace Lexica.Core.Services
 
         public T Get(bool reload = false)
         {
-            if (reload || Config == null)
+            if (reload)
             {
                 return LoadConfig();
             }

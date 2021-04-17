@@ -7,12 +7,10 @@ namespace Lexica.CLI.Core.Config
 {
     public class AppSettings
     {
-        public DatabaseSettings? Database { get; set; }
+        public WordsSettings? Words { get; set; } = null;
 
-        public WordsSettings? Words { get; set; }
+        public LearningSettings Learning { get; set; } = new LearningSettings();
 
-        public LearningSettings? Learning { get; set; }
-
-        public PronunciationApiSettings? PronunciationApi { get; set; }
+        public PronunciationApiSettings? PronunciationApi { get; set; } = null;
     }
 }
