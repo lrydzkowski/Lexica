@@ -5,8 +5,8 @@ using Lexica.CLI.Core.Extensions;
 using Lexica.CLI.Executors.Extensions;
 using Lexica.Core.Extensions;
 using Lexica.Core.Services;
-using Lexica.EF;
-using Lexica.EF.Extensions;
+using Lexica.Database;
+using Lexica.Database.Extensions;
 using Lexica.Pronunciation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -61,18 +61,12 @@ namespace Lexica.CLI
         private static IServiceProvider ConfigureServices()
         {
             var services = new ServiceCollection();
-
             AddNLogService(services);
-
             ConfigService<AppSettings> configService = AddConfigService(services);
-            AddDbContext(services);
             AddPronunciationService(services, configService);
-
             services.AddExecutorServices();
             services.AddCoreModuleServices();
-
-            services.AddEFServices();
-
+            services.AddDatabaseServices();
             services.AddCoreLibraryServices();
 
             IServiceProvider serviceProvider = services.BuildServiceProvider();
@@ -97,13 +91,6 @@ namespace Lexica.CLI
             );
             services.AddSingleton(configService);
             return configService;
-        }
-
-        private static void AddDbContext(ServiceCollection services)
-        {
-            services.AddDbContext<LexicaContext>(
-                opts => opts.UseSqlite(@"Data Source=.\\lexica.db")
-            );
         }
 
         private static void AddPronunciationService(

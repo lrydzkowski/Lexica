@@ -44,7 +44,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Lexica.EF\Lexica.EF.csproj" />
+    <ProjectReference Include="..\Lexica.Database\Lexica.Database.csproj" />
     <ProjectReference Include="..\Lexica.Learning\Lexica.Learning.csproj" />
     <ProjectReference Include="..\Lexica.Pronunciation\Lexica.Pronunciation.csproj" />
   </ItemGroup>
