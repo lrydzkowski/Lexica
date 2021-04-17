@@ -224,7 +224,7 @@ namespace Lexica.CLI.Modes.Learning
             for (int i = 0; i < FilePaths.Count; i++)
             {
                 string absolutePath = AppSettings.Words != null 
-                    ? AppSettings.Words.DirectoryPath 
+                    ? AppSettings.Words.SetsDirectoryPath 
                     : AppDomain.CurrentDomain.BaseDirectory;
                 if (FilePaths[i].StartsWith('.'))
                 {
