@@ -100,7 +100,7 @@ namespace Lexica.Pronunciation.Api.WebDictionary
         private string GetFilePath(string word, string extension = "mp3")
         {
             string fileName = word.RemoveInvalidFileNameChars() + '.' + extension;
-            return Path.Combine(Settings.DownloadTempPath, fileName);
+            return Path.Combine(Settings.DownloadDirectoryPath, fileName);
         }
 
         private async Task<string?> GetFileUrl(string word)

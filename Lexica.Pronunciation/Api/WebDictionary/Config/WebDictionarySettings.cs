@@ -12,6 +12,6 @@ namespace Lexica.Pronunciation.Api.WebDictionary.Config
 
         public string UrlPath { get; set; } = "";
 
-        public string DownloadTempPath { get; set; } = "";
+        public string DownloadDirectoryPath { get; set; } = "";
     }
 }
