@@ -48,6 +48,26 @@ namespace Lexica.Learning
                 .Sum();
         }
 
+        public int GetCurrentQuestionResult(QuestionTypeEnum? questionType = null)
+        {
+            if (CurrentQuestionInfo == null)
+            {
+                return 0;
+            }
+            if (questionType == null)
+            {
+                questionType = CurrentQuestionInfo.QuestionType;
+            }
+            if (!AnswersRegister[(QuestionTypeEnum)questionType].ContainsKey(CurrentQuestionInfo.Entry.Id))
+            {
+                return 0;
+            }
+            return AnswersRegister[(QuestionTypeEnum)questionType]
+                [CurrentQuestionInfo.Entry.Id]
+                [CurrentQuestionInfo.AnswerType.ToString()]
+                .CurrentValue;
+        }
+
         public int GetSumResult()
         {
             (int closedResult, int openResult) = GetResult();
@@ -176,12 +196,27 @@ namespace Lexica.Learning
 
         public int GetNumberOfQuestions(QuestionTypeEnum questionType)
         {
+            return WordsSetOperator.GetNumberOfEntries() 
+                * (GetNumOfRequiredAnswers(questionType) * GetNumOfRequiredAnswersMultiplier());
+        }
+
+        public int GetNumberOfCurrentQuestions()
+        {
+            if (CurrentQuestionInfo == null)
+            {
+                return 0;
+            }
+            return GetNumOfRequiredAnswers(CurrentQuestionInfo.QuestionType) * GetNumOfRequiredAnswersMultiplier();
+        }
+
+        public int GetNumOfRequiredAnswersMultiplier()
+        {
             int multiplier = Enum.GetNames(typeof(AnswerTypeEnum)).Length;
             if (Mode == ModeEnum.Spelling)
             {
                 multiplier = 1;
             }
-            return WordsSetOperator.GetNumberOfEntries() * (GetNumOfRequiredAnswers(questionType) * multiplier);
+            return multiplier;
         }
 
         private bool IsCurrentQuestionTheLastOne()

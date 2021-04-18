@@ -22,5 +22,10 @@ namespace Lexica.CLI.Modes.Learning.Models
         {
             return $"{NumOfCorrectAnswers}/{NumOfQuestions}";
         }
+
+        public string ToString(int leftPad)
+        {
+            return NumOfCorrectAnswers.ToString().PadLeft(leftPad) + "/" + NumOfQuestions;
+        }
     }
 }

@@ -110,6 +110,10 @@ namespace Lexica.CLI.Modes.Learning
                     new ResultStatus(
                         modeOperator.GetResult(QuestionTypeEnum.Open),
                         modeOperator.GetNumberOfQuestions(QuestionTypeEnum.Open)
+                    ),
+                    new ResultStatus(
+                        modeOperator.GetCurrentQuestionResult(),
+                        modeOperator.GetNumberOfCurrentQuestions()
                     )
                 );
                 string answer = ConsoleService.ReadAnswer();
@@ -129,6 +133,10 @@ namespace Lexica.CLI.Modes.Learning
                     new ResultStatus(
                         modeOperator.GetResult(QuestionTypeEnum.Open),
                         modeOperator.GetNumberOfQuestions(QuestionTypeEnum.Open)
+                    ),
+                    new ResultStatus(
+                        modeOperator.GetCurrentQuestionResult(),
+                        modeOperator.GetNumberOfCurrentQuestions()
                     ),
                     answer, 
                     isAnswerCorrect, 

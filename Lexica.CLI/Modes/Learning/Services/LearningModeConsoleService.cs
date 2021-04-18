@@ -35,6 +35,7 @@ namespace Lexica.CLI.Modes.Learning.Services
             Question question,
             ResultStatus closedQuestionsResultStatus,
             ResultStatus openQuestionsResultStatus,
+            ResultStatus currentQuestionResultStatus,
             string answer = "",
             bool beforeVerification = true)
         {
@@ -42,13 +43,13 @@ namespace Lexica.CLI.Modes.Learning.Services
             switch (mode)
             {
                 case ModeEnum.Spelling:
-                    lineAfterRendering = 5;
-                    break;
-                case ModeEnum.OnlyOpen:
                     lineAfterRendering = 6;
                     break;
-                case ModeEnum.Full:
+                case ModeEnum.OnlyOpen:
                     lineAfterRendering = 7;
+                    break;
+                case ModeEnum.Full:
+                    lineAfterRendering = 8;
                     break;
             }
             Console.SetCursorPosition(0, 0);
@@ -68,18 +69,19 @@ namespace Lexica.CLI.Modes.Learning.Services
             switch (mode)
             {
                 case ModeEnum.Full:
-                    Console.Write($"  Closed questions result: ");
-                    Console.WriteLine(closedQuestionsResultStatus.ToString().PadRight(80));
-                    Console.Write($"  Open questions result: ");
-                    Console.WriteLine(openQuestionsResultStatus.ToString().PadRight(80));
-                    Console.WriteLine();
+                    Console.Write($"  Closed questions result: ".PadRight(27));
+                    Console.WriteLine(closedQuestionsResultStatus.ToString(leftPad: 4).PadRight(80));
+                    Console.Write($"  Open questions result: ".PadRight(27));
+                    Console.WriteLine(openQuestionsResultStatus.ToString(leftPad: 4).PadRight(80));
                     break;
                 default:
-                    Console.Write($"  Result: ");
-                    Console.WriteLine(openQuestionsResultStatus.ToString().PadRight(80));
-                    Console.WriteLine();
+                    Console.Write($"  Result: ".PadRight(27));
+                    Console.WriteLine(openQuestionsResultStatus.ToString(leftPad: 4).PadRight(80));
                     break;
             }
+            Console.Write($"  Current question result: ".PadRight(27));
+            Console.WriteLine(currentQuestionResultStatus.ToString(leftPad: 4).PadRight(80));
+            Console.WriteLine();
             if (mode != ModeEnum.Spelling)
             {
                 var previousForegroundColor = Console.ForegroundColor;
@@ -89,7 +91,7 @@ namespace Lexica.CLI.Modes.Learning.Services
             }
             if (question.PossibleAnswers != null && question.PossibleAnswers.Count > 0)
             {
-                lineAfterRendering = 11;
+                lineAfterRendering = 12;
                 for (int i = 0; i < question.PossibleAnswers.Count; i++)
                 {
                     Console.WriteLine($"  {i + 1}. {question.PossibleAnswers[i]}".PadRight(80));
@@ -103,6 +105,7 @@ namespace Lexica.CLI.Modes.Learning.Services
                 Console.Write(answer);
             }
             Console.WriteLine();
+            Console.WriteLine(" ".PadRight(80));
             Console.WriteLine(" ".PadRight(80));
             Console.WriteLine(" ".PadRight(80));
             Console.WriteLine(" ".PadRight(80));
@@ -141,6 +144,7 @@ namespace Lexica.CLI.Modes.Learning.Services
             Question question,
             ResultStatus closedQuestionsResultStatus,
             ResultStatus openQuestionsResultStatus,
+            ResultStatus currentQuestionResultStatus,
             string answer,
             bool result,
             string correctAnswer,
@@ -152,6 +156,7 @@ namespace Lexica.CLI.Modes.Learning.Services
                 question,
                 closedQuestionsResultStatus,
                 openQuestionsResultStatus,
+                currentQuestionResultStatus,
                 answer,
                 false
             );
@@ -171,7 +176,7 @@ namespace Lexica.CLI.Modes.Learning.Services
                 {
                     Console.WriteLine();
                     Console.Write("  Correct answer is: ");
-                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.ForegroundColor = ConsoleColor.Blue;
                     Console.Write(correctAnswer);
                 }
             }
@@ -180,7 +185,7 @@ namespace Lexica.CLI.Modes.Learning.Services
                 Console.WriteLine();
                 Console.ForegroundColor = standardForegroundColor;
                 Console.Write($"  Translations: ");
-                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.ForegroundColor = ConsoleColor.Blue;
                 Console.Write(translationsInfo);
             }
             Console.WriteLine();
