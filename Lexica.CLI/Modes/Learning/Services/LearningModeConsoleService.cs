@@ -83,7 +83,7 @@ namespace Lexica.CLI.Modes.Learning.Services
             if (mode != ModeEnum.Spelling)
             {
                 var previousForegroundColor = Console.ForegroundColor;
-                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.ForegroundColor = ConsoleColor.Blue;
                 Console.WriteLine($"  {question.Content}".PadRight(80));
                 Console.ForegroundColor = previousForegroundColor;
             }
@@ -158,20 +158,20 @@ namespace Lexica.CLI.Modes.Learning.Services
             Console.WriteLine();
             if (result)
             {
-                Console.ForegroundColor = ConsoleColor.Green;
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
                 Console.WriteLine();
                 Console.Write("  Correct answer :)  ");
             }
             else
             {
-                Console.ForegroundColor = ConsoleColor.Red;
+                Console.ForegroundColor = ConsoleColor.DarkRed;
                 Console.WriteLine();
                 Console.Write("  Wrong answer :(  ");
                 if (correctAnswer != null)
                 {
                     Console.WriteLine();
                     Console.Write("  Correct answer is: ");
-                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
                     Console.Write(correctAnswer);
                 }
             }
@@ -180,7 +180,7 @@ namespace Lexica.CLI.Modes.Learning.Services
                 Console.WriteLine();
                 Console.ForegroundColor = standardForegroundColor;
                 Console.Write($"  Translations: ");
-                Console.ForegroundColor = ConsoleColor.White;
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.Write(translationsInfo);
             }
             Console.WriteLine();
@@ -193,7 +193,7 @@ namespace Lexica.CLI.Modes.Learning.Services
         {
             ClearConsole();
             ConsoleColor standardForegroundColor = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.Green;
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.Write(" The end :) ");
             Console.ForegroundColor = standardForegroundColor;
         }
