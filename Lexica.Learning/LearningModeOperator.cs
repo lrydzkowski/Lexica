@@ -206,7 +206,7 @@ namespace Lexica.Learning
             {
                 return 0;
             }
-            return GetNumOfRequiredAnswers(CurrentQuestionInfo.QuestionType) * GetNumOfRequiredAnswersMultiplier();
+            return GetNumOfRequiredAnswers(CurrentQuestionInfo.QuestionType);
         }
 
         public int GetNumOfRequiredAnswersMultiplier()
