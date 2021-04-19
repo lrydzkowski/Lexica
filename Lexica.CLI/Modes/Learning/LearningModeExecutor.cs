@@ -260,7 +260,7 @@ namespace Lexica.CLI.Modes.Learning
             int pieceSize = -1;
             if (Mode == ModeEnum.Full)
             {
-                pieceSize = -1;
+                pieceSize = 7;
             }
             return pieceSize;
         }
