@@ -25,6 +25,7 @@ namespace Lexica.CLI.Core
         public static void ShowError(string msg)
         {
             Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.WriteLine("Error:");
             Console.WriteLine(msg);
             Console.ResetColor();
         }

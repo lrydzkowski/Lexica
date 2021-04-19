@@ -165,13 +165,13 @@ namespace Lexica.CLI.Modes.Learning.Services
             {
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
                 Console.WriteLine();
-                Console.Write("  Correct answer :)  ");
+                Console.Write("  Correct answer");
             }
             else
             {
                 Console.ForegroundColor = ConsoleColor.DarkRed;
                 Console.WriteLine();
-                Console.Write("  Wrong answer :(  ");
+                Console.Write("  Wrong answer");
                 if (correctAnswer != null)
                 {
                     Console.WriteLine();
@@ -199,7 +199,7 @@ namespace Lexica.CLI.Modes.Learning.Services
             ClearConsole();
             ConsoleColor standardForegroundColor = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.Write(" The end :) ");
+            Console.Write(" The end");
             Console.ForegroundColor = standardForegroundColor;
         }
     }

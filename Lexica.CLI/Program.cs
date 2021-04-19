@@ -55,6 +55,7 @@ namespace Lexica.CLI
                 // on Linux)
                 LogManager.Shutdown();
                 Console.ReadLine();
+                Console.Clear();
             }
         }
 
