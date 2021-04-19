@@ -50,12 +50,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Loco.Tools.Log">
-      <HintPath>..\..\..\LOCO\Loco.Tools\Loco.Tools.Log\bin\Release\netstandard2.0\Loco.Tools.Log.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="appsettings.sample.json">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
