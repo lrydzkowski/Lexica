@@ -1,4 +1,4 @@
-# Lexica (Release Candidate 1)
+# Lexica (RC1)
 
 English vocabulary learning software written in .NET Core 5 (C# console application). Application works only on
 Windows 10.
@@ -10,7 +10,7 @@ In order to use this application first you have to create a set of words (an exa
 of english words and their translations in your native language. Sets have to be kept in txt files in the following
 format:
 
-```
+```plain text
 compelling ; nieodparty, pociągający
 lunatic ; obłąkany, wariacki
 rule of thumb ; praktyczna zasada
@@ -38,7 +38,7 @@ as in the previous mode. For each entry there are at least four questions, two c
   - at least one open question about meaning in your native language.
 
 Application uses SQLite database for storing information about user's anwers ([more information](#database)). In the
-future this information will be used for statistics and for creating sets from entries which make an user the biggest
+future this information will be used for statistics and for creating sets from entries which made an user the biggest
 troubles.
 
 Application also uses a configuration file (appsettings.json) in which you can change options connected with running
@@ -48,7 +48,7 @@ modes ([more information](#configuration)).
 
 The simpliest way is just opening PowerShell in application main folder and using the following command:
 
-```
+```powershell
 .\Lexica.CLI.exe run --mode only-open .\Assets\Examples\set_1.txt
 ```
 
@@ -57,39 +57,39 @@ application main folder.
 
 The next step can be just showing help. You can do that in the following way:
 
-```
+```powershell
 .\Lexica.CLI.exe --help
 ```
 
 You can also show help for 'run' command:
 
-```
+```powershell
 .\Lexica.CLI.exe run --help
 ```
 
 If you want, you can open a mode with a few sets:
 
-```
+```powershell
 .\Lexica.CLI.exe run --mode full C:\Lexica\set_1.txt C:\Lexica\set_2.txt
 ```
 
 You can also use additional configuration to indicate a folder where you keep sets. In that case you can pass
 their paths relatively to that folder. For example, if you indicate a following path in your config:
 
-```
+```plain text
 C:\Lexica
 ```
 
 and in this folder there are following files:
 
-```
+```plain text
 set_1.txt
 set_2.txt
 ```
 
 then you can run application in the following way:
 
-```
+```powershell
 .\Lexica.CLI.exe run --mode full set_1.txt set_2.txt
 ```
 
@@ -98,7 +98,7 @@ then you can run application in the following way:
 Lexica uses configuration stored in appsettings.json file. Here is presented sample configuration with
 comments about available options:
 
-```
+```javascript
 {
   // A folder with sets. If you indicate this option, then you can run Lexica with paths to sets which are
   // relative to this folder (more information in 'How to use it' chapter). This part is optional.
@@ -144,14 +144,14 @@ comments about available options:
 
 ## Modes
 
-### Spelling
+### 'Spelling' mode
 
-#### Main goal of this mode
+#### Main goal of 'spelling' mode
 
 A main goal of this mode is to learn how to spell words and what is their pronunciation. This is the first phase
 of learning new English words.
 
-#### How it works
+#### How 'spelling' mode works
 
 - Each entry from given sets has its own counter which at the beginning is equal 0.
 - Entries in given sets are randomized.
@@ -170,14 +170,14 @@ of learning new English words.
 option then we go back to the first point.
   - Otherwise the mode is over.
 
-### Full
+### 'Full' mode
 
-#### Main goal of this mode
+#### Main goal of 'full' mode
 
 A main goal of this mode is to learn words meaning and remember them. This is the second phase of learning new English
 words.
 
-#### How it works
+#### How 'full' mode works
 
 - Each entry from given sets has 4 counters which at the beginning are equal 0:
   - A counter for closed questions about English meaning. For each entry a user has to reach this counter equals 1.
@@ -194,7 +194,7 @@ words.
   your native language meaning). If one counter isn't reached then the question type of this counter is asked.
   - Otherwise if there is at least one not reached open question counter then an open question is asked. If both
   counters aren't reached then the type of open question is randomly selected (question about English meaning or
-  question about your native language meaning). If one counter isn't reached then the question type of this counter is 
+  question about your native language meaning). If one counter isn't reached then the question type of this counter is
   asked.
   - Otherwise an entry is omitted and conditions for next entry are analyzed.
 - After giving a correct answer:
@@ -205,13 +205,13 @@ words.
 - After analyzing 7 entries, again all entries in sets are randomized and first 8 entries are analyzed.
 - In order to end this mode a user has to reached all counters.
 
-### Only open questions
+### 'Only open questions' mode
 
-#### Main goal of this mode
+#### Main goal of 'only open questions' mode
 
 The goal of this mode is providing the last phase of learning and memory maintaining.
 
-#### How it works
+#### How 'only open questions' mode works
 
 - Each entry from given sets has 2 counters which at the beginning are equal 0:
   - A counter for open questions about English meaning. For each entry a user has to reach this counter equals a
