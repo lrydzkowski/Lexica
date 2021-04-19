@@ -10,7 +10,12 @@ namespace Lexica.CLI.Core.Services
     {
         public string GetBuild()
         {
-            var source = new FileSource(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "build"));
+            string buildFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "build");
+            if (!File.Exists(buildFilePath))
+            {
+                return "";
+            }
+            var source = new FileSource(buildFilePath);
             return source.GetContents(true) ?? "";
         }
     }

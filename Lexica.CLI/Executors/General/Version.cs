@@ -21,11 +21,12 @@ namespace Lexica.CLI.Executors.General
         {
             string version = VersionService.GetVersion();
             string build = BuildService.GetBuild();
-            if (build.Length == 0)
+            Console.Write($"Lexica {version} (CLI)");
+            if (build.Length > 0)
             {
-                build = "-";
+                Console.Write($" (build: {build})");
             }
-            Console.WriteLine($"Lexica {version} (CLI) (build: {build})");
+            Console.WriteLine();
             Console.WriteLine("Copyright (c) Łukasz Rydzkowski");
         }
     }
