@@ -9,11 +9,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lexica.CLI", "Lexica.CLI\Lexica.CLI.csproj", "{B3618C78-79FA-4890-A2B2-1EDF016EE2B0}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lexica.Core", "Lexica.Core\Lexica.Core.csproj", "{89B2282C-FCBE-408F-B0CF-94C7505FB1F9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lexica.CoreTests", "Lexica.CoreTests\Lexica.CoreTests.csproj", "{DF27499C-D37C-47B0-BBF9-5F2AF6923260}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lexica.CLI", "Lexica.CLI\Lexica.CLI.csproj", "{B3618C78-79FA-4890-A2B2-1EDF016EE2B0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lexica.Words", "Lexica.Words\Lexica.Words.csproj", "{3039BEBA-3483-4BB0-9300-5A3A35AF37D1}"
 EndProject
