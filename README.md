@@ -184,6 +184,8 @@ option then we go back to the first point.
 The main goal of this mode is to learn words meaning and remember them. This is the second phase of learning new English
 words.
 
+[Video](https://www.youtube.com/watch?v=EvdRynAAdvc)
+
 #### How 'full' mode works
 
 - Each entry from given sets has 4 counters which at the beginning are equal 0:
@@ -218,6 +220,8 @@ words.
 #### The main goal of 'only open questions' mode
 
 The main goal of this mode is providing the last phase of learning and memory maintaining.
+
+[Video](https://www.youtube.com/watch?v=SMgRTgngvPY)
 
 #### How 'only open questions' mode works
 
