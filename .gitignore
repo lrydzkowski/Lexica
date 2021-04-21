@@ -363,4 +363,3 @@ MigrationBackup/
 .vscode
 
 Lexica.CLI/build
-Lexica.CLI/appsettings.json
