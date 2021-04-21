@@ -68,7 +68,7 @@
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="powershell.exe -ExecutionPolicy Bypass -File .\Assets\Scripts\update_build.ps1&#xD;&#xA;powershell.exe -ExecutionPolicy Bypass -File .\Assets\Scripts\init_appsettings.ps1" />
+    <Exec Command="powershell.exe -ExecutionPolicy Bypass -File .\Assets\Scripts\update_build.ps1" />
   </Target>
 
 </Project>
