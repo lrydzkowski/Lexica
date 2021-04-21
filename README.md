@@ -3,6 +3,14 @@
 English vocabulary learning software written in .NET Core 5 (C# console application). Application works only on
 Windows 10.
 
+## Table of contents
+
+- [How it works](#how-it-works)
+- [How to use it](#how-to-use-it)
+- [Configuration](#configuration)
+- [Modes](#modes)
+- [Technicalities](#technicalities)
+
 ## How it works
 
 In order to use this application first you have to create a set of words (an example set file is available in
