@@ -6,9 +6,9 @@ Windows 10.
 ## How it works
 
 In order to use this application first you have to create a set of words (an example set file is available in
-[project](https://github.com/lrydzkowski/Lexica/blob/develop/Lexica.CLI/Assets/Examples/set_1.txt). A words set consists
-of english words and their translations in your native language. Sets have to be kept in txt files in the following
-format:
+[project](https://github.com/lrydzkowski/Lexica/blob/develop/Lexica.CLI/Assets/Examples/set_1.txt)). A words set
+consists of english words and their translations in your native language. Sets have to be kept in txt files in the
+following format:
 
 ```plain text
 compelling ; nieodparty, pociągający
@@ -38,8 +38,7 @@ as in the previous mode. For each entry there are at least four questions, two c
   - at least one open question about meaning in your native language.
 
 Application uses SQLite database for storing information about user's anwers ([more information](#database)). In the
-future this information will be used for statistics and for creating sets from entries which made an user the biggest
-troubles.
+future data will be used for statistics and for creating sets from entries which made an user the biggest problems.
 
 Application also uses a configuration file (appsettings.json) in which you can change options connected with running
 modes ([more information](#configuration)).
@@ -116,10 +115,10 @@ comments about available options:
     "ResetAfterMistake": false,
     // Should pronunciation be played in 'full' and 'only-open' modes? This part is required.
     "PlayPronuncation": {
-      // A pronunciation record is played before answers to questions about English meaning. This option is required.
+      // A pronunciation recording is played before answers to questions about English meaning. This option is required.
       "BeforeAnswer": false,
-      // A pronunciation record is played after answers to questions about meaning in your native language. This option
-      // is required.
+      // A pronunciation recording is played after answers to questions about meaning in your native language. This
+      // option is required.
       "AfterAnswer": false
     },
     // Should Lexica save modes logs? These logs are saved in .\Logs\Mode.logs file. This option is required.
@@ -146,16 +145,16 @@ comments about available options:
 
 ### 'Spelling' mode
 
-#### Main goal of 'spelling' mode
+#### The main goal of 'spelling' mode
 
-A main goal of this mode is to learn how to spell words and what is their pronunciation. This is the first phase
+The main goal of this mode is to learn how to spell words and what is their pronunciation. This is the first phase
 of learning new English words.
 
 #### How 'spelling' mode works
 
 - Each entry from given sets has its own counter which at the beginning is equal 0.
 - Entries in given sets are randomized.
-- For each entry an English pronunciation is played and user has to write the particual word.
+- For each entry an English pronunciation is played and user has to write the particular word.
 - After giving a correct answer:
   - A translation is showed.
   - A counter for an entry is icremented by 1. If a counter for the particular entry reaches a number stored in
@@ -172,9 +171,9 @@ option then we go back to the first point.
 
 ### 'Full' mode
 
-#### Main goal of 'full' mode
+#### The main goal of 'full' mode
 
-A main goal of this mode is to learn words meaning and remember them. This is the second phase of learning new English
+The main goal of this mode is to learn words meaning and remember them. This is the second phase of learning new English
 words.
 
 #### How 'full' mode works
@@ -185,7 +184,7 @@ words.
   counter equals 1.
   - A counter for open questions about English meaning. For each entry a user has to reach this counter equals a
   number stored in Learning.NumOfOpenQuestions configuration option.
-  - A counter for closed questions about your native language meaning.For each entry a user has to reach this counter
+  - A counter for closed questions about your native language meaning. For each entry a user has to reach this counter
   equals a number stored in Learning.NumOfOpenQuestions configuration option.
 - Entries in given sets are randomized and 7 first entries are taken. For each of them there is asked a question.
 - For each randomly selected entry the following conditions are checked in order to ask a question to user:
@@ -200,23 +199,24 @@ words.
 - After giving a correct answer:
   - The particular counter is incremented by 1.
 - After giving a wrong answer:
-  - The particual counter is set to 0.
+  - The particual counter is set to 0. If Learning.ResetAfterMistake configuration option equals true then each counter
+  for every entry is set to 0.
   - A correct answer is showed.
-- After analyzing 7 entries, again all entries in sets are randomized and first 8 entries are analyzed.
+- After analyzing 7 entries, again all entries in sets are randomized and first 7 entries are analyzed.
 - In order to end this mode a user has to reached all counters.
 
 ### 'Only open questions' mode
 
-#### Main goal of 'only open questions' mode
+#### The main goal of 'only open questions' mode
 
-The goal of this mode is providing the last phase of learning and memory maintaining.
+The main goal of this mode is providing the last phase of learning and memory maintaining.
 
 #### How 'only open questions' mode works
 
 - Each entry from given sets has 2 counters which at the beginning are equal 0:
   - A counter for open questions about English meaning. For each entry a user has to reach this counter equals a
   number stored in Learning.NumOfOpenQuestions configuration option.
-  - A counter for closed questions about your native language meaning.For each entry a user has to reach this counter
+  - A counter for closed questions about your native language meaning. For each entry a user has to reach this counter
   equals a number stored in Learning.NumOfOpenQuestions configuration option.
 - Entries in given sets are randomized.
 - For each randomly selected entry the following conditions are checked in order to ask a question to user:
@@ -228,16 +228,38 @@ The goal of this mode is providing the last phase of learning and memory maintai
 - After giving a correct answer:
   - The particular counter is incremented by 1.
 - After giving a wrong answer:
-  - The particual counter is set to 0.
+  - The particual counter is set to 0. If Learning.ResetAfterMistake configuration option equals true then each counter
+  for every entry is set to 0.
   - A correct answer is showed.
 - After asking questions for all entries the following condition is checked:
   - If still there are entries with a counter lower than a number stored in Learning.NumOfOpenQuestions configuration
-option then we go back to point 1.
+option then we go back to the first point.
   - Otherwise the mode is over.
 
 ## Technicalities
 
-## Database
+### Getting English pronunciation recordings
+
+Lexica is able to download pronunciation recordings from web dictionaries. It is up to user which dictionary will
+be used. You have to keep in mind that choosing any web dictionary should take into consideration legal restrictions
+connected with copyright.
+
+When in the configuration there are options connected with this functionality then it is possible to play English
+pronunciation recording in application modes. Lexica just tries to find in the code of the following page url address
+to mp3 file:
+
+`PronunciationApi.WebDictionary.Host + UrlPath`, where `{word}` from `PronunciationApi.WebDictionary.UrlPath` is
+replaced by the particul word for which Lexica tries to play recording.
+
+An URL adddress can look like the following example:
+
+`https://some-open-source-english-dictionary/dict/en/{word}`
+
+When mp3 file url address is found then it is downloaded to a folder indicated in the following configuration option:
+
+`PronunciationApi.WebDictionary.DownloadDirectoryPath`
+
+### Database
 
 Lexica save into SQLite database information about each user's answer. Database is stored in lexica.db file which can
 be found in the main application folder.
@@ -248,7 +270,7 @@ Table name: **answer**
 Columns with their description:
 
 - answer_id - Automatically setting answer id.
-- folder_path - Path to folder where a set file was during giving the answer.
+- folder_path - Path to a folder where a set file was during giving the answer.
 - set_file_name - A set file name.
 - mode - Application mode.
 - question - Asked question.
