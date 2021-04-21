@@ -273,7 +273,7 @@ When mp3 file url address is found then it is downloaded to a folder indicated i
 
 ### Database
 
-Lexica save into SQLite database information about each user's answer. Database is stored in lexica.db file which can
+Lexica saves into SQLite database information about each user's answer. Database is stored in lexica.db file which can
 be found in the main application folder.
 
 There is only one table in database:
