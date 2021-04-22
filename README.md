@@ -182,7 +182,7 @@ option, then we go back to the first point.
 The main goal of this mode is to learn and memorize the words meaning. This is the second phase of learning new English
 words.
 
-[Video](https://www.youtube.com/watch?v=EvdRynAAdvc)
+[Video](https://www.youtube.com/watch?v=qCeCIEjyvu8)
 
 #### How 'full' mode works
 
@@ -218,7 +218,7 @@ words.
 
 The main goal of this mode is providing the last phase of learning and preserving the knowledge.
 
-[Video](https://www.youtube.com/watch?v=SMgRTgngvPY)
+[Video](https://www.youtube.com/watch?v=mNQ_kHKaWe4)
 
 #### How 'only open questions' mode works
 
