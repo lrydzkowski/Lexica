@@ -90,11 +90,11 @@ namespace Lexica.Words
                 for (int i = 0; i < Set.Entries.Count; i++)
                 {
                     yield return Set.Entries[i];
-                    if (i == Set.Entries.Count - 1 || i == sequenceMaxSize)
+                    if (IsTheLastElement(index: i, numberOfElements: Set.Entries.Count, sequenceMaxSize))
                     {
                         if (infiniteLoop)
                         {
-                            i = 0;
+                            i = -1;
                         }
                         else if (i == sequenceMaxSize)
                         {
@@ -107,6 +107,15 @@ namespace Lexica.Words
                     }
                 }
             }
+        }
+
+        private bool IsTheLastElement(int index, int numberOfElements, int sequenceMaxSize)
+        {
+            if (index == numberOfElements - 1 || index == sequenceMaxSize)
+            {
+                return true;
+            }
+            return false;
         }
 
         public int GetNumberOfEntries()
