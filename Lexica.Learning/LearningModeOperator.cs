@@ -11,6 +11,8 @@ namespace Lexica.Learning
 {
     public class LearningModeOperator
     {
+        private readonly Random randomGenerator = new();
+
         public LearningModeOperator(WordsSetOperator wordsSetOperator, LearningSettings settings, ModeEnum mode)
         {
             WordsSetOperator = wordsSetOperator;
@@ -102,11 +104,12 @@ namespace Lexica.Learning
                     if (!AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed)) // pytanie zamknięte
                     {
                         questionType = QuestionTypeEnum.Closed;
-                        var rnd = new Random();
                         if (    !AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed, AnswerTypeEnum.Translations)
                             &&  !AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed, AnswerTypeEnum.Words))
                         {
-                            answerType = rnd.Next(2) == 1 ? AnswerTypeEnum.Translations : AnswerTypeEnum.Words;
+                            answerType = randomGenerator.Next(2) == 1 
+                                ? AnswerTypeEnum.Translations 
+                                : AnswerTypeEnum.Words;
                         }
                         else if (!AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed, AnswerTypeEnum.Words))
                         {
@@ -127,7 +130,9 @@ namespace Lexica.Learning
                                 string wordsProperAnswer = string.Join(", ", entry.Words);
                                 if (!possibleAnswers.Contains(wordsProperAnswer))
                                 {
-                                    possibleAnswers[rnd.Next(0, numOfPossibleAnswers)] = string.Join(", ", entry.Words);
+                                    possibleAnswers[randomGenerator.Next(0, numOfPossibleAnswers)] = string.Join(
+                                        ", ", entry.Words
+                                    );
                                 }
                                 break;
                             case AnswerTypeEnum.Translations:
@@ -138,7 +143,7 @@ namespace Lexica.Learning
                                 string translationsProperAnswer = string.Join(", ", entry.Translations);
                                 if (!possibleAnswers.Contains(translationsProperAnswer))
                                 {
-                                    possibleAnswers[rnd.Next(0, numOfPossibleAnswers)] = string.Join(
+                                    possibleAnswers[randomGenerator.Next(0, numOfPossibleAnswers)] = string.Join(
                                         ", ", entry.Translations
                                     );
                                 }
@@ -151,8 +156,9 @@ namespace Lexica.Learning
                         if (    !AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Open, AnswerTypeEnum.Translations)
                             &&  !AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Open, AnswerTypeEnum.Words))
                         {
-                            var rnd = new Random();
-                            answerType = rnd.Next(2) == 1 ? AnswerTypeEnum.Translations : AnswerTypeEnum.Words;
+                            answerType = randomGenerator.Next(2) == 1 
+                                ? AnswerTypeEnum.Translations 
+                                : AnswerTypeEnum.Words;
                         }
                         else if (!AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Open, AnswerTypeEnum.Words))
                         {

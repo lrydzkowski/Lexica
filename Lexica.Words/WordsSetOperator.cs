@@ -10,6 +10,8 @@ namespace Lexica.Words
 {
     public class WordsSetOperator
     {
+        private readonly Random randomGenerator = new();
+
         public WordsSetOperator(ISetService setService, List<ISource> filesSources)
         {
             SetService = setService;
@@ -127,14 +129,13 @@ namespace Lexica.Words
             {
                 return Set.Entries.GetRange(0, Set.Entries.Count);
             }
-            var rnd = new Random();
             List<int> drawnIndexes = new();
             for (int i = 0; i < numOfEntries; i++)
             {
                 int drawnIndex;
                 do
                 {
-                    drawnIndex = rnd.Next(0, Set.Entries.Count - 1);
+                    drawnIndex = randomGenerator.Next(0, Set.Entries.Count - 1);
                 }
                 while (drawnIndexes.Contains(drawnIndex));
                 drawnIndexes.Add(drawnIndex);
