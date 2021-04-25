@@ -7,7 +7,7 @@ namespace Lexica.CLI.Core
     {
         public static void ShowError(Exception ex)
         {
-            Console.ForegroundColor = ConsoleColor.Red;
+            Console.ForegroundColor = ConsoleColor.DarkRed;
             Console.WriteLine("An unexpected error has occured:");
             Console.WriteLine();
             Console.WriteLine(ex.ToString());
@@ -24,7 +24,8 @@ namespace Lexica.CLI.Core
 
         public static void ShowError(string msg)
         {
-            Console.ForegroundColor = ConsoleColor.Red;
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.WriteLine("Error:");
             Console.WriteLine(msg);
             Console.ResetColor();
         }

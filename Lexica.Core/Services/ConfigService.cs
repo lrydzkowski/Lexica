@@ -22,16 +22,16 @@ namespace Lexica.Core.Services
 
         private ISource ConfigSchemaSource { get; set; }
 
-        public T? Config { get; private set; }
+        public T Config { get; private set; }
 
         public ConfigService(ISource configSource, ISource configSchemaSource)
         {
             ConfigSource = configSource;
             ConfigSchemaSource = configSchemaSource;
-            LoadConfig();
+            Config = LoadConfig();
         }
 
-        private OperationResult<IList<string>> Validate(string configContents, string configSchemaContents)
+        private static OperationResult<IList<string>> Validate(string configContents, string configSchemaContents)
         {
             JSchema schema = JSchema.Parse(configSchemaContents);
             JObject confObj = JObject.Parse(configContents);
@@ -46,10 +46,12 @@ namespace Lexica.Core.Services
         {
             string configContents = ConfigSource.GetContents();
             string configSchemaContents = ConfigSchemaSource.GetContents();
-            OperationResult<IList<string>> validationResult = Validate(configContents, configSchemaContents);
+            OperationResult<IList<string>> validationResult = ConfigService<T>.Validate(
+                configContents, configSchemaContents
+            );
             if (!validationResult.Result)
             {
-                var exception = new WrongConfigException("App settings has a wrong structure.");
+                var exception = new WrongConfigException($"File {ConfigSource.Name} has a wrong structure.");
                 for (int i = 0; i < validationResult.Data.Count; i++)
                 {
                     exception.Data.Add(i.ToString(), validationResult.Data[i]);
@@ -68,7 +70,7 @@ namespace Lexica.Core.Services
 
         public T Get(bool reload = false)
         {
-            if (reload || Config == null)
+            if (reload)
             {
                 return LoadConfig();
             }
@@ -77,7 +79,8 @@ namespace Lexica.Core.Services
 
         public static ConfigService<T> Get(string name, Assembly assembly)
         {
-            var configSource = new FileSource($"{name}.json");
+            var configFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"{name}.json");
+            var configSource = new FileSource(configFilePath);
             var configSchemaSource = new EmbeddedSource($"{name}.schema.json", assembly);
             var configService = new ConfigService<T>(configSource, configSchemaSource);
             

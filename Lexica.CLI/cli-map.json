@@ -3,59 +3,47 @@
     {
       "Name": "--help",
       "Shortcut": "-h",
-      "HasValue": false,
       "ExecutorClass": "Lexica.CLI.Executors.General.Help"
     },
     {
       "Name": "--version",
       "Shortcut": "-v",
-      "HasValue": false,
       "ExecutorClass": "Lexica.CLI.Executors.General.Version"
-    },
-    {
-      "Name": "list",
-      "Shortcut": "ls",
-      "HasValue": false,
-      "Commands": [
-        {
-          "Name": "--help",
-          "Shortcut": "-h",
-          "HasValue": false
-        }
-      ]
-    },
-    {
-      "Name": "wlist",
-      "Shortcut": "wls",
-      "HasValue": false,
-      "ExecutorClass": "",
-      "Commands": [
-        {
-          "Name": "--help",
-          "Shortcut": "-h",
-          "HasValue": false
-        },
-        {
-          "Name": "--set",
-          "Shortcut": "-s",
-          "HasValue": true
-        }
-      ]
     },
     {
       "Name": "run",
       "Shortcut": "r",
-      "HasValue": false,
+      "DefaultExecutorClass": "Lexica.CLI.Executors.Modes.ModeHelp",
       "Commands": [
         {
           "Name": "--help",
           "Shortcut": "-h",
-          "HasValue": false
+          "ExecutorClass": "Lexica.CLI.Executors.Modes.ModeHelp"
         },
         {
           "Name": "--mode",
           "Shortcut": "-m",
-          "HasValue": true
+          "DefaultExecutorClass": "Lexica.CLI.Executors.Modes.ModeHelp",
+          "Commands": [
+            {
+              "Name": "spelling",
+              "Shortcut": "s",
+              "ExecutorClass": "Lexica.CLI.Modes.Learning.LearningModeExecutor",
+              "AddNameToArguments":  true
+            },
+            {
+              "Name": "full",
+              "Shortcut": "f",
+              "ExecutorClass": "Lexica.CLI.Modes.Learning.LearningModeExecutor",
+              "AddNameToArguments": true
+            },
+            {
+              "Name": "only-open",
+              "Shortcut": "oo",
+              "ExecutorClass": "Lexica.CLI.Modes.Learning.LearningModeExecutor",
+              "AddNameToArguments": true
+            }
+          ]
         }
       ]
     }

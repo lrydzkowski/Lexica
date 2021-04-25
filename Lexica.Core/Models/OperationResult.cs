@@ -81,7 +81,12 @@ namespace Lexica.Core.Models
 
     public class OperationResult<T> : OperationResult
     {
-        public T Data { get; private set; }
+        public T Data { get; set; }
+
+        public OperationResult(T data) : base(true, error: null)
+        {
+            Data = data;
+        }
 
         public OperationResult(bool result, T data, List<Error>? errors = null) : base(result, errors)
         {

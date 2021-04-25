@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
@@ -28,32 +28,25 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.9">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="3.1.9" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.9" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.9" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="3.1.9" />
-    <PackageReference Include="NLog" Version="4.7.7" />
-    <PackageReference Include="NLog.Extensions.Logging" Version="1.7.0" />
-    <PackageReference Include="NLog.Schema" Version="4.7.7" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.4" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="5.0.5" />
+    <PackageReference Include="NLog" Version="4.7.9" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="1.7.2" /> 
+    <PackageReference Include="NLog.Schema" Version="4.7.9" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.2" />
     <PackageReference Include="ResourceLoader" Version="3.1.20095.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Lexica.Core\Lexica.Core.csproj" />
-    <ProjectReference Include="..\Lexica.EF\Lexica.EF.csproj" />
-    <ProjectReference Include="..\Lexica.MaintainingMode\Lexica.MaintainingMode.csproj" />
-    <ProjectReference Include="..\Lexica.Words\Lexica.Words.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Loco.Tools.Log">
-      <HintPath>..\..\..\LOCO\Loco.Tools\Loco.Tools.Log\bin\Release\netstandard2.0\Loco.Tools.Log.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\Lexica.Database\Lexica.Database.csproj" />
+    <ProjectReference Include="..\Lexica.Learning\Lexica.Learning.csproj" />
+    <ProjectReference Include="..\Lexica.Pronunciation\Lexica.Pronunciation.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -61,6 +54,9 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Examples\set_1.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="build">
@@ -72,7 +68,7 @@
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="pwsh .\Assets\Scripts\update_build.ps1" />
+    <Exec Command="powershell.exe -ExecutionPolicy Bypass -File .\Assets\Scripts\update_build.ps1" />
   </Target>
 
 </Project>

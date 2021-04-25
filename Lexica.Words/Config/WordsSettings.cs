@@ -6,6 +6,6 @@ namespace Lexica.Words.Config
 {
     public class WordsSettings
     {
-        public string? ImportDirectoryPath { get; set; }
+        public string SetsDirectoryPath { get; set; } = "";
     }
 }

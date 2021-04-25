@@ -7,23 +7,15 @@ namespace Lexica.Words.Models
 {
     public class Set
     {
-        public string Id
-        {
-            get
-            {
-                return string.Join("-", SetsInfo.Select(x => x.SetId));
-            }
-        }
-
-        public List<SetInfo> SetsInfo { get; }
+        public List<SetPath> SetsPaths { get; }
 
         public List<Entry> Entries { get; }
 
-        public Set(SetInfo setInfo, List<Entry> entries) : this(new List<SetInfo> { setInfo }, entries) { }
+        public Set(SetPath setPath, List<Entry> entries) : this(new List<SetPath> { setPath }, entries) { }
 
-        public Set(List<SetInfo> setsInfo, List<Entry> entries)
+        public Set(List<SetPath> setsPaths, List<Entry> entries)
         {
-            SetsInfo = setsInfo;
+            SetsPaths = setsPaths;
             Entries = entries;
         }
     }

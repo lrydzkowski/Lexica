@@ -362,6 +362,4 @@ MigrationBackup/
 # Visual Studio Code options directory.
 .vscode
 
-Lexica.EF/database.json
-Lexica.CLI/appsettings.json
-Lexica.CLI/Properties/launchSettings.json
+Lexica.CLI/build

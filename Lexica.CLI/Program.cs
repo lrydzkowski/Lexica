@@ -3,8 +3,11 @@ using Lexica.CLI.Core;
 using Lexica.CLI.Core.Config;
 using Lexica.CLI.Core.Extensions;
 using Lexica.CLI.Executors.Extensions;
+using Lexica.Core.Extensions;
 using Lexica.Core.Services;
-using Lexica.EF;
+using Lexica.Database;
+using Lexica.Database.Extensions;
+using Lexica.Pronunciation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -32,8 +35,7 @@ namespace Lexica.CLI
                 {
                     try
                     {
-                        var argsService = (ArgsService)servicesProvider.GetService(typeof(ArgsService));
-                        await argsService.RunAsync(args, servicesProvider);
+                        await ArgsHandler.RunAsync(args, servicesProvider);
                     }
                     catch (ArgsException ex)
                     {
@@ -52,38 +54,55 @@ namespace Lexica.CLI
                 // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault 
                 // on Linux)
                 LogManager.Shutdown();
+                Console.ReadLine();
+                Console.Clear();
             }
         }
 
         private static IServiceProvider ConfigureServices()
         {
             var services = new ServiceCollection();
+            AddNLogService(services);
+            ConfigService<AppSettings> configService = AddConfigService(services);
+            AddPronunciationService(services, configService);
+            services.AddExecutorServices();
+            services.AddCoreModuleServices();
+            services.AddDatabaseServices();
+            services.AddCoreLibraryServices();
 
-            // NLog
+            IServiceProvider serviceProvider = services.BuildServiceProvider();
+
+            return serviceProvider;
+        }
+
+        private static void AddNLogService(ServiceCollection services)
+        {
             services.AddLogging(loggingBuilder =>
             {
                 loggingBuilder.ClearProviders();
                 loggingBuilder.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
                 loggingBuilder.AddNLog();
             });
+        }
 
-            // Configuration
+        private static ConfigService<AppSettings> AddConfigService(ServiceCollection services)
+        {
             ConfigService<AppSettings> configService = ConfigService<AppSettings>.Get(
                 "appsettings", Assembly.GetExecutingAssembly()
             );
-            services.AddSingleton<ConfigService<AppSettings>>(configService);
+            services.AddSingleton(configService);
+            return configService;
+        }
 
-            // Entity Framework Core
-            services.AddDbContext<LexicaContext>(
-                opts => opts.UseNpgsql(configService.Get().Database?.ConnectionString)
+        private static void AddPronunciationService(
+            ServiceCollection services, 
+            ConfigService<AppSettings> configService)
+        {
+            services.AddSingleton(
+                configService.Get().PronunciationApi?.WebDictionary
+                ?? new Pronunciation.Api.WebDictionary.Config.WebDictionarySettings()
             );
-
-            services.AddExecutorServices();
-            services.AddCoreServices();
-
-            IServiceProvider serviceProvider = services.BuildServiceProvider();
-
-            return serviceProvider;
+            services.AddSingleton<IPronunciation, Pronunciation.Api.WebDictionary.PronunciationService>();
         }
     }
 }

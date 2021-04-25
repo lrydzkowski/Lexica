@@ -28,6 +28,14 @@ namespace Lexica.Core.IO
             }
         }
 
+        public string Namespace
+        {
+            get
+            {
+                return System.IO.Path.GetDirectoryName(Path)?.Replace("\\", "/") + "/" ?? Path;
+            }
+        }
+
         public string? Contents { get; private set; }
 
         public FileSource(string filePath)

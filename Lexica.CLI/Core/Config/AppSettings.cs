@@ -1,18 +1,15 @@
-﻿using Lexica.EF.Config;
-using Lexica.MaintainingMode.Config;
+﻿using Lexica.Learning.Config;
+using Lexica.Pronunciation.Config;
 using Lexica.Words.Config;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Lexica.CLI.Core.Config
 {
     public class AppSettings
     {
-        public DatabaseSettings? Database { get; set; }
+        public WordsSettings? Words { get; set; } = null;
 
-        public WordsSettings? Words { get; set; }
+        public LearningSettings Learning { get; set; } = new LearningSettings();
 
-        public MaintainingSettings? Maintaining { get; set; }
+        public PronunciationApiSettings? PronunciationApi { get; set; } = null;
     }
 }
