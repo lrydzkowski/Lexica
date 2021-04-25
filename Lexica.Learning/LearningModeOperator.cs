@@ -76,122 +76,117 @@ namespace Lexica.Learning
             return closedResult + openResult;
         }
 
-        public IEnumerable<Question?> GetQuestions(bool randomizeEachIteration = true, int pieceSize = 8)
+        public IEnumerable<Question?> GetQuestions(bool randomizeEachIteration = true, int pieceSize = 7)
         {
             foreach (Entry? entry in WordsSetOperator.GetEntries(true, randomizeEachIteration, pieceSize))
             {
                 if (entry == null)
                 {
                     yield return null;
+                    continue;
                 }
-                else if (AreEntryQuestionsCompleted(entry))
+                if (AreEntryQuestionsCompleted(entry))
                 {
                     if (AreAllQuestionsCompleted())
                     {
                         break;
                     }
-                    else
-                    {
-                        continue;
-                    }
+                    continue;
                 }
-                else
+                QuestionTypeEnum questionType = QuestionTypeEnum.Closed;
+                List<string> questionWords = new();
+                AnswerTypeEnum answerType = AnswerTypeEnum.Translations;
+                List<string>? possibleAnswers = null;
+                if (!AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed)) // close question
                 {
-                    QuestionTypeEnum questionType = QuestionTypeEnum.Closed;
-                    List<string> questionWords = new();
-                    AnswerTypeEnum answerType = AnswerTypeEnum.Translations;
-                    List<string>? possibleAnswers = null;
-                    if (!AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed)) // pytanie zamknięte
+                    questionType = QuestionTypeEnum.Closed;
+                    if (    !AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed, AnswerTypeEnum.Translations)
+                        &&  !AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed, AnswerTypeEnum.Words))
                     {
-                        questionType = QuestionTypeEnum.Closed;
-                        if (    !AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed, AnswerTypeEnum.Translations)
-                            &&  !AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed, AnswerTypeEnum.Words))
-                        {
-                            answerType = randomGenerator.Next(2) == 1 
-                                ? AnswerTypeEnum.Translations 
-                                : AnswerTypeEnum.Words;
-                        }
-                        else if (!AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed, AnswerTypeEnum.Words))
-                        {
-                            answerType = AnswerTypeEnum.Words;
-                        }
-                        else if (!AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed, AnswerTypeEnum.Translations))
-                        {
-                            answerType = AnswerTypeEnum.Translations;
-                        }
-                        int numOfPossibleAnswers = 4;
-                        switch (answerType)
-                        {
-                            case AnswerTypeEnum.Words:
-                                questionWords = entry.Translations;
-                                possibleAnswers = WordsSetOperator.GetRandomEntries(numOfPossibleAnswers)
-                                    .Select(x => string.Join(", ", x.Words))
-                                    .ToList();
-                                string wordsProperAnswer = string.Join(", ", entry.Words);
-                                if (!possibleAnswers.Contains(wordsProperAnswer))
-                                {
-                                    possibleAnswers[randomGenerator.Next(0, numOfPossibleAnswers)] = string.Join(
-                                        ", ", entry.Words
-                                    );
-                                }
-                                break;
-                            case AnswerTypeEnum.Translations:
-                                questionWords = entry.Words;
-                                possibleAnswers = WordsSetOperator.GetRandomEntries(4)
-                                    .Select(x => string.Join(", ", x.Translations))
-                                    .ToList();
-                                string translationsProperAnswer = string.Join(", ", entry.Translations);
-                                if (!possibleAnswers.Contains(translationsProperAnswer))
-                                {
-                                    possibleAnswers[randomGenerator.Next(0, numOfPossibleAnswers)] = string.Join(
-                                        ", ", entry.Translations
-                                    );
-                                }
-                                break;
-                        }
+                        answerType = randomGenerator.Next(2) == 1 
+                            ? AnswerTypeEnum.Translations 
+                            : AnswerTypeEnum.Words;
                     }
-                    else if (!AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Open)) // pytanie otwarte
+                    else if (!AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed, AnswerTypeEnum.Words))
                     {
-                        questionType = QuestionTypeEnum.Open;
-                        if (    !AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Open, AnswerTypeEnum.Translations)
-                            &&  !AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Open, AnswerTypeEnum.Words))
-                        {
-                            answerType = randomGenerator.Next(2) == 1 
-                                ? AnswerTypeEnum.Translations 
-                                : AnswerTypeEnum.Words;
-                        }
-                        else if (!AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Open, AnswerTypeEnum.Words))
-                        {
-                            answerType = AnswerTypeEnum.Words;
-                        }
-                        else if (!AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Open, AnswerTypeEnum.Translations))
-                        {
-                            answerType = AnswerTypeEnum.Translations;
-                        }
-                        switch (answerType)
-                        {
-                            case AnswerTypeEnum.Words:
-                                questionWords = entry.Translations;
-                                break;
-                            case AnswerTypeEnum.Translations:
-                                questionWords = entry.Words;
-                                if (Mode == ModeEnum.Spelling)
-                                {
-                                    answerType = AnswerTypeEnum.Words;
-                                }
-                                break;
-                        }
+                        answerType = AnswerTypeEnum.Words;
                     }
-
-                    var nextQuestionInfo = new QuestionInfo(entry, questionType, answerType, possibleAnswers);
-                    if (!IsCurrentQuestionTheLastOne() && IsQuestionRepeated(nextQuestionInfo))
+                    else if (!AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Closed, AnswerTypeEnum.Translations))
                     {
-                        continue;
+                        answerType = AnswerTypeEnum.Translations;
                     }
-                    CurrentQuestionInfo = nextQuestionInfo;
-
-                    yield return new Question(string.Join(", ", questionWords), questionType, possibleAnswers);
+                    int numOfPossibleAnswers = 4;
+                    switch (answerType)
+                    {
+                        case AnswerTypeEnum.Words:
+                            questionWords = entry.Translations;
+                            possibleAnswers = WordsSetOperator.GetRandomEntries(numOfPossibleAnswers)
+                                .Select(x => string.Join(", ", x.Words))
+                                .ToList();
+                            string wordsProperAnswer = string.Join(", ", entry.Words);
+                            if (!possibleAnswers.Contains(wordsProperAnswer))
+                            {
+                                possibleAnswers[randomGenerator.Next(0, numOfPossibleAnswers)] = string.Join(
+                                    ", ", entry.Words
+                                );
+                            }
+                            break;
+                        case AnswerTypeEnum.Translations:
+                            questionWords = entry.Words;
+                            possibleAnswers = WordsSetOperator.GetRandomEntries(numOfPossibleAnswers)
+                                .Select(x => string.Join(", ", x.Translations))
+                                .ToList();
+                            string translationsProperAnswer = string.Join(", ", entry.Translations);
+                            if (!possibleAnswers.Contains(translationsProperAnswer))
+                            {
+                                possibleAnswers[randomGenerator.Next(0, numOfPossibleAnswers)] = string.Join(
+                                    ", ", entry.Translations
+                                );
+                            }
+                            break;
+                    }
                 }
+                else if (!AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Open)) // open question
+                {
+                    questionType = QuestionTypeEnum.Open;
+                    if (    !AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Open, AnswerTypeEnum.Translations)
+                        &&  !AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Open, AnswerTypeEnum.Words))
+                    {
+                        answerType = randomGenerator.Next(2) == 1 
+                            ? AnswerTypeEnum.Translations 
+                            : AnswerTypeEnum.Words;
+                    }
+                    else if (!AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Open, AnswerTypeEnum.Words))
+                    {
+                        answerType = AnswerTypeEnum.Words;
+                    }
+                    else if (!AreEntryQuestionsCompleted(entry, QuestionTypeEnum.Open, AnswerTypeEnum.Translations))
+                    {
+                        answerType = AnswerTypeEnum.Translations;
+                    }
+                    switch (answerType)
+                    {
+                        case AnswerTypeEnum.Words:
+                            questionWords = entry.Translations;
+                            break;
+                        case AnswerTypeEnum.Translations:
+                            questionWords = entry.Words;
+                            if (Mode == ModeEnum.Spelling)
+                            {
+                                answerType = AnswerTypeEnum.Words;
+                            }
+                            break;
+                    }
+                }
+
+                var nextQuestionInfo = new QuestionInfo(entry, questionType, answerType, possibleAnswers);
+                if (!IsCurrentQuestionTheLastOne() && IsQuestionRepeated(nextQuestionInfo))
+                {
+                    continue;
+                }
+                CurrentQuestionInfo = nextQuestionInfo;
+
+                yield return new Question(string.Join(", ", questionWords), questionType, possibleAnswers);
             }
         }
 
