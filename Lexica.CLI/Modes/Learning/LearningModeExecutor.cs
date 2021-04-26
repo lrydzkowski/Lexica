@@ -186,6 +186,11 @@ namespace Lexica.CLI.Modes.Learning
                     ),
                     modeOperator.AnswersRegister
                 );
+                if (ShouldResetMode(isAnswerCorrect))
+                {
+                    await ExecuteAsync(args);
+                    return;
+                }
             }
 
             ConsoleService.ShowSummary();
@@ -339,6 +344,12 @@ namespace Lexica.CLI.Modes.Learning
                 );
                 Logger.LogDebug(logData);
             }
+        }
+
+        private bool ShouldResetMode(bool isAnswerCorrect)
+        {
+            bool resetAfterMistake = AppSettings.Learning?.ResetAfterMistake ?? false;
+            return resetAfterMistake && !isAnswerCorrect;
         }
     }
 }
