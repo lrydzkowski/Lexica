@@ -186,7 +186,7 @@ namespace Lexica.CLI.Modes.Learning
                     ),
                     modeOperator.AnswersRegister
                 );
-                if (ShouldResetMode(isAnswerCorrect))
+                if (ShouldResetMode(isAnswerCorrect, command))
                 {
                     await ExecuteAsync(args);
                     return;
@@ -346,10 +346,10 @@ namespace Lexica.CLI.Modes.Learning
             }
         }
 
-        private bool ShouldResetMode(bool isAnswerCorrect)
+        private bool ShouldResetMode(bool isAnswerCorrect, CommandEnum command)
         {
             bool resetAfterMistake = AppSettings.Learning?.ResetAfterMistake ?? false;
-            return resetAfterMistake && !isAnswerCorrect;
+            return resetAfterMistake && !isAnswerCorrect && command != CommandEnum.Override;
         }
     }
 }
