@@ -331,7 +331,8 @@ namespace Lexica.Learning
             else
             {
                 result = false;
-                UpdateAnswersRegister(0, UpdateAnswersRegisterOperationTypeEnum.Set);
+                UpdateAnswersRegister(0, UpdateAnswersRegisterOperationTypeEnum.Set, AnswerTypeEnum.Translations);
+                UpdateAnswersRegister(0, UpdateAnswersRegisterOperationTypeEnum.Set, AnswerTypeEnum.Words);
             }
 
             return new AnswerResult(result, answerWords, correctAnswers);
@@ -339,21 +340,27 @@ namespace Lexica.Learning
 
         public void UpdateAnswersRegister(
             int value, 
-            UpdateAnswersRegisterOperationTypeEnum operationType = UpdateAnswersRegisterOperationTypeEnum.Add)
+            UpdateAnswersRegisterOperationTypeEnum operationType = UpdateAnswersRegisterOperationTypeEnum.Add,
+            AnswerTypeEnum? answerType = null)
         {
             if (CurrentQuestionInfo == null)
             {
                 return;
             }
-            UpdateAnswersRegister(CurrentQuestionInfo, value, operationType);
+            UpdateAnswersRegister(CurrentQuestionInfo, value, operationType, answerType);
         }
 
         private void UpdateAnswersRegister(
             QuestionInfo questionInfo, 
             int value,
-            UpdateAnswersRegisterOperationTypeEnum operationType = UpdateAnswersRegisterOperationTypeEnum.Add)
+            UpdateAnswersRegisterOperationTypeEnum operationType = UpdateAnswersRegisterOperationTypeEnum.Add,
+            AnswerTypeEnum? answerType = null)
         {
             string answerTypeKey = questionInfo.AnswerType.ToString("g");
+            if (answerType != null)
+            {
+                answerTypeKey = answerType?.ToString("g") ?? "";
+            }
             if (!AnswersRegister[questionInfo.QuestionType].ContainsKey(questionInfo.Entry.Id))
             {
                 AnswersRegister[questionInfo.QuestionType][questionInfo.Entry.Id] = new AnswerRegister();
