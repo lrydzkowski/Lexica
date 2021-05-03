@@ -180,7 +180,7 @@ namespace Lexica.Learning
                 }
 
                 var nextQuestionInfo = new QuestionInfo(entry, questionType, answerType, possibleAnswers);
-                if (!IsCurrentQuestionTheLastOne() && IsQuestionRepeated(nextQuestionInfo))
+                if (!CanCurrentQuestionBeTheLastOne() && IsQuestionRepeated(nextQuestionInfo))
                 {
                     continue;
                 }
@@ -197,8 +197,12 @@ namespace Lexica.Learning
 
         public int GetNumberOfQuestions(QuestionTypeEnum questionType)
         {
-            return WordsSetOperator.GetNumberOfEntries() 
-                * (GetNumOfRequiredAnswers(questionType) * GetNumOfRequiredAnswersMultiplier());
+            return WordsSetOperator.GetNumberOfEntries() * GetEntryNumberOfQuestions(questionType);
+        }
+
+        public int GetEntryNumberOfQuestions(QuestionTypeEnum questionType)
+        {
+            return GetNumOfRequiredAnswers(questionType) * GetNumOfRequiredAnswersMultiplier();
         }
 
         public int GetNumberOfCurrentQuestions()
@@ -220,9 +224,11 @@ namespace Lexica.Learning
             return multiplier;
         }
 
-        private bool IsCurrentQuestionTheLastOne()
+        private bool CanCurrentQuestionBeTheLastOne()
         {
-            return GetNumberOfQuestions() - GetSumResult() == 1;
+            int numOfEntryRequiredAnswers = GetEntryNumberOfQuestions(QuestionTypeEnum.Closed) 
+                + GetEntryNumberOfQuestions(QuestionTypeEnum.Open);
+            return GetNumberOfQuestions() - GetSumResult() <= numOfEntryRequiredAnswers;
         }
 
         private bool AreAllQuestionsCompleted()
