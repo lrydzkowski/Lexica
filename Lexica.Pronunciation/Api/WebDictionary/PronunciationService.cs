@@ -110,6 +110,10 @@ namespace Lexica.Pronunciation.Api.WebDictionary
             HttpResponseMessage responseMsg = await client.GetAsync(dictionaryPageUrl);
             HttpStatusCode statusCode = responseMsg.StatusCode;
             string content = await responseMsg.Content.ReadAsStringAsync();
+            if (IsUrlRedirected(word, responseMsg))
+            {
+                return null;
+            }
             if (statusCode != HttpStatusCode.OK)
             {
                 Logger.LogError(content);
@@ -133,8 +137,18 @@ namespace Lexica.Pronunciation.Api.WebDictionary
 
         private string GetPageUrl(string word)
         {
+            return UrlService.Combine(Settings.Host, GetPageUrlPath(word));
+        }
+
+        private bool IsUrlRedirected(string word, HttpResponseMessage responseMsg)
+        {
+            return GetPageUrlPath(word) != responseMsg.RequestMessage?.RequestUri?.AbsolutePath;
+        }
+
+        private string GetPageUrlPath(string word)
+        {
             string escapedWord = word.Replace(" ", "-");
-            return UrlService.Combine(Settings.Host, Settings.UrlPath.Replace("{word}", escapedWord));
+            return Settings.UrlPath.Replace("{word}", escapedWord);
         }
     }
 }
