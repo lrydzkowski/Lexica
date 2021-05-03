@@ -96,7 +96,7 @@ namespace Lexica.CLI.Modes.Learning.Services
             }
             if (question.PossibleAnswers != null && question.PossibleAnswers.Count > 0)
             {
-                lineAfterRendering = 12;
+                lineAfterRendering += question.PossibleAnswers.Count;
                 for (int i = 0; i < question.PossibleAnswers.Count; i++)
                 {
                     Console.WriteLine($"  {i + 1}. {question.PossibleAnswers[i]}".PadRight(80));
