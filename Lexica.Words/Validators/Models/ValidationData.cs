@@ -12,7 +12,7 @@ namespace Lexica.Words.Validators.Models
         );
 
         public StringValidationData EntryTranslation { get; set; } = new StringValidationData(
-            minLength: 1, maxLength: 50, mandatory: true, name: "Translation"
+            minLength: 1, maxLength: 200, mandatory: true, name: "Translation"
         );
     }
 }
