@@ -51,7 +51,7 @@ namespace Lexica.CLI.Modes.Learning.Services
             switch (mode)
             {
                 case ModeEnum.Spelling:
-                    lineAfterRendering = 5;
+                    lineAfterRendering = 6;
                     break;
                 case ModeEnum.OnlyOpen:
                     lineAfterRendering = 6;
@@ -255,7 +255,12 @@ namespace Lexica.CLI.Modes.Learning.Services
                 Console.ForegroundColor = standardForegroundColor;
                 Console.Write($"  Translations: ");
                 Console.ForegroundColor = ConsoleColor.Blue;
-                Console.WriteLine(translationsInfo);
+                ShowMultilineText(
+                    translationsInfo,
+                    firstLineLeftIndendation: 0,
+                    nextLinesLeftIndendation: 16,
+                    maxNumOfChars: 64
+                );
             }
             Console.WriteLine();
             Console.Write("  ");
