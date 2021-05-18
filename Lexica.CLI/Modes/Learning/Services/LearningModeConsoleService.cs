@@ -133,15 +133,16 @@ namespace Lexica.CLI.Modes.Learning.Services
         public string ReadAnswer()
         {
             var sb = new StringBuilder();
-            ConsoleKeyInfo keyInfo = ReadCharacter(sb);
-            while (CanGetNextChar(keyInfo))
+            ConsoleKeyInfo keyInfo;
+            do
             {
                 keyInfo = ReadCharacter(sb);
                 if (sb.Length == 76)
                 {
                     break;
                 }
-            }
+            } while (CanGetNextChar(keyInfo));
+
             return sb.ToString();
         }
 
