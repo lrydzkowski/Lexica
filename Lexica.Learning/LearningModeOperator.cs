@@ -324,7 +324,7 @@ namespace Lexica.Learning
             correctAnswers.Sort();
 
             bool result = true;
-            if (string.Join(',', answerWords) == string.Join(',', correctAnswers))
+            if (string.Join(',', answerWords).ToLower() == string.Join(',', correctAnswers).ToLower())
             {
                 UpdateAnswersRegister(1);
             }
