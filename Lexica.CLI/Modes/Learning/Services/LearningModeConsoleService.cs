@@ -149,24 +149,52 @@ namespace Lexica.CLI.Modes.Learning.Services
         private ConsoleKeyInfo ReadCharacter(StringBuilder stringBuilder)
         {
             ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-            Console.Write(keyInfo.KeyChar);
             if (keyInfo.Key == ConsoleKey.Backspace)
             {
                 if (stringBuilder.Length > 0)
                 {
-                    Console.Write(" \b");
+                    Console.Write("\b \b");
                     stringBuilder.Length -= 1;
                 }
-                else
-                {
-                    Console.Write(" ");
-                }
+                return keyInfo;
             }
-            else
+            if (IsKeyHandled(keyInfo))
             {
+                Console.Write(keyInfo.KeyChar);
                 stringBuilder.Append(keyInfo.KeyChar);
             }
+
             return keyInfo;
+        }
+
+        private bool IsKeyAChar(ConsoleKeyInfo keyInfo)
+        {
+            return keyInfo.Key >= ConsoleKey.A && keyInfo.Key <= ConsoleKey.Z;
+        }
+
+        private bool IsKeyADigit(ConsoleKeyInfo keyInfo)
+        {
+            bool isDigit = keyInfo.Key >= ConsoleKey.D0 && keyInfo.Key <= ConsoleKey.D9;
+            bool isNumPadDigit = keyInfo.Key >= ConsoleKey.NumPad0 && keyInfo.Key <= ConsoleKey.NumPad9;
+            return isDigit || isNumPadDigit;
+        }
+
+        private bool IsKeyHandled(ConsoleKeyInfo keyInfo)
+        {
+            if (IsKeyAChar(keyInfo))
+            {
+                return true;
+            }
+            if (IsKeyADigit(keyInfo))
+            {
+                return true;
+            }
+            var additionalChars = new List<char> { '.', ',', '-', ';', '\'', ' ' };
+            if (additionalChars.Contains(keyInfo.KeyChar))
+            {
+                return true;
+            }
+            return false;
         }
 
         private bool CanGetNextChar(ConsoleKeyInfo keyInfo)
