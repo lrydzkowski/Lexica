@@ -81,7 +81,8 @@ namespace Lexica.CLI.Modes.Learning
             ConsoleService.ClearConsole();
             LearningModeOperator modeOperator = GetLearningModeOperator();
             IEnumerable<Question?> questionsEnumerable = modeOperator.GetQuestions(
-                randomizeEachIteration: true, pieceSize: GetPieceSize()
+                randomizeEachIteration: true, 
+                pieceSize: Mode == ModeEnum.Full ? GetPieceSize() : -1
             );
             foreach (Question? question in questionsEnumerable)
             {
