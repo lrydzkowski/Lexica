@@ -30,15 +30,15 @@ In every line there is an entry with English meaning + semicolon + meaning in yo
 
 Application offers three modes of learning:
 
-- [Spelling](#spelling) - Application plays English pronunciation recording of every word in set and a user has to write
-what he or she has just heard.
-- [Only open questions](#only-open-questions) - Application asks open questions about every entry in a set. For each entry,
-there are at least two questions (the number of questions depends on configuration):
+- [Spelling](#spelling) - Application plays English pronunciation recording of every word in set and a user has to
+write what he or she has just heard.
+- [Only open questions](#only-open-questions) - Application asks open questions about every entry in a set. For each
+entry, there are at least two questions (the number of questions depends on configuration):
   - at least one question about English meaning,
   - at least one question about meaning in your native language.
 - [Full](#full) - Application asks close and open questions about every entry in a set. When a close question is asked,
-then four possible answers are presented, and a user has to choose one of them. Open questions work in the same way
-as in the previous mode. For each entry, there are at least four questions, two close questions and two open questions
+then four possible answers are presented, and a user has to choose one of them. Open questions work in the same way as
+in the previous mode. For each entry, there are at least four questions, two close questions and two open questions
 (the number of questions depends on configuration):
   - one close question about English meaning,
   - one close question about meaning in your native language,
@@ -131,9 +131,9 @@ Lexica uses configuration stored in appsettings.json file. Sample configuration 
     // Should Lexica save modes logs? These logs are saved in .\Logs\Mode.logs file. This option is required.
     "SaveDebugLogs": false
   },
-  // Configuration connected with getting a pronunciation from a web dictionary (it is up to a user which dictionary will
-  // be used). You have to keep in mind that while choosing any web dictionary you should take into consideration legal restrictions
-  // connected with copyright. This part is optional.
+  // Configuration connected with getting a pronunciation from a web dictionary (it is up to a user which dictionary 
+  // will be used). You have to keep in mind that while choosing any web dictionary you should take into consideration 
+  // legal restrictions connected with copyright. This part is optional.
   "PronunciationApi": {
     "WebDictionary": {
       // A web dictionary host.
@@ -159,21 +159,22 @@ of learning new English words.
 
 #### How 'spelling' mode works
 
-- Each entry from given sets has its own counter which at the beginning is equal 0.
-- Entries in given sets are randomized.
-- For each entry, an English pronunciation is played, and a user has to write the particular word.
-- After giving a correct answer:
-  - A translation is showed.
-  - A counter for an entry is icremented by 1. If a counter for the particular entry reaches a number stored in
+1. Each entry from given sets has its own counter which at the beginning is equal 0.
+2. Entries in given sets are randomized.
+3. For each entry, an English pronunciation is played, and a user has to write the particular word.
+4. After giving a correct answer:
+  4.1. A translation is showed.
+  4.2. A counter for an entry is incremented by 1. If a counter for the particular entry reaches a number stored in
   Learning.NumOfOpenQuestions configuration option, then a question about this entry is not asked again.
-- After giving an incorrect answer:
-  - A correct answer is showed.
-  - A translation is showed.
-  - A counter for an entry is set to 0. If Learning.ResetAfterMistake configuration option equals true, then all counters are set to 0.
-- After playing English pronunciation for all entries the following condition is checked:
-  - If there are still entries with a counter lower than a number stored in Learning.NumOfOpenQuestions configuration
-option, then we go back to the first point.
-  - Otherwise, the mode is over.
+5. After giving an incorrect answer:
+  5.1. A correct answer is showed.
+  5.2. A translation is showed.
+  5.3. A counter for an entry is set to 0. If Learning.ResetAfterMistake configuration option equals true, then all
+  counters are set to 0.
+6. After playing English pronunciation for all entries the following condition is checked:
+  6.1. If there are still entries with a counter lower than a number stored in Learning.NumOfOpenQuestions configuration
+  option, then we go back to the point number 2.
+  6.2. Otherwise, the mode is over.
 
 ### 'Full' mode
 
@@ -186,31 +187,33 @@ words.
 
 #### How 'full' mode works
 
-- Each entry from given sets has 4 counters which at the beginning are equal 0:
-  - A counter for close questions about English meaning. For each entry, a user has to reach this counter value equals 1.
-  - A counter for close questions about your native language meaning. For each entry, a user has to reach this
+1. Each entry from given sets has 4 counters which at the beginning are equal 0:
+  1.1. A counter for close questions about English meaning. For each entry, a user has to reach this counter value 
+  equals 1.
+  1.2. A counter for close questions about your native language meaning. For each entry, a user has to reach this 
   counter value equals 1.
-  - A counter for open questions about English meaning. For each entry, a user has to reach this counter value equals a
-  number stored in Learning.NumOfOpenQuestions configuration option.
-  - A counter for close questions about your native language meaning. For each entry, a user has to reach this counter value
+  1.3. A counter for open questions about English meaning. For each entry, a user has to reach this counter value 
   equals a number stored in Learning.NumOfOpenQuestions configuration option.
-- Entries in given sets are randomized and 7 first entries are taken. For each of them a question is asked.
-- For each randomly selected entry the following conditions are checked in order to ask a question to a user:
-  - If there is at least one not reached close question counter, then a close question is asked. If both counters
-  aren't reached, then the type of close question is randomly selected (question about English meaning or question about
-  your native language meaning). If one counter isn't reached, then the question type of this counter is asked.
-  - Otherwise, if there is at least one not reached open question counter, then an open question is asked. If both
-  counters aren't reached, then the type of open question is randomly selected (question about English meaning or
-  question about your native language meaning). If one counter isn't reached, then the question type of this counter is
+  1.4. A counter for close questions about your native language meaning. For each entry, a user has to reach this 
+  counter value equals a number stored in Learning.NumOfOpenQuestions configuration option.
+2. Entries in given sets are randomized and 7 first entries are taken. For each of them a question is asked.
+3. For each randomly selected entry the following conditions are checked in order to ask a question to a user:
+  3.1 If there is at least one not reached close question counter, then a close question is asked. If both counters 
+  aren't reached, then the type of close question is randomly selected (question about English meaning or question 
+  about your native language meaning). If one counter isn't reached, then the question type of this counter is asked.
+  3.2. Otherwise, if there is at least one not reached open question counter, then an open question is asked. If both 
+  counters aren't reached, then the type of open question is randomly selected (question about English meaning or 
+  question about your native language meaning). If one counter isn't reached, then the question type of this counter is 
   asked.
-  - Otherwise, an entry is omitted and conditions for the next entry are analyzed.
-- After giving a correct answer:
-  - The particular counter value is incremented by 1.
-- After giving a wrong answer:
-  - The particular counter value is set to 0. If Learning.ResetAfterMistake configuration option equals true, then all counters all set to 0.
-  - A correct answer is showed.
-- After analyzing 7 entries, again all entries in sets are randomized and the first 7 entries are analyzed.
-- In order to end this mode a user has to reach all counters.
+  3.3. Otherwise, an entry is omitted and conditions for the next entry are analyzed.
+4. After giving a correct answer:
+  4.1. The particular counter value is incremented by 1.
+5. After giving a wrong answer:
+  5.1. The particular counter value is set to 0. If Learning.ResetAfterMistake configuration option equals true, then 
+  all counters all set to 0.
+  5.2. A correct answer is showed.
+6. After analyzing 7 entries, again all entries in sets are randomized and the first 7 entries are analyzed.
+7. In order to end this mode a user has to reach all counters.
 
 ### 'Only open questions' mode
 
@@ -222,38 +225,39 @@ The main goal of this mode is providing the last phase of learning and preservin
 
 #### How 'only open questions' mode works
 
-- Each entry from given sets has 2 counters which at the beginning are equal 0:
-  - A counter for open questions about English meaning. For each entry, a user has to reach this counter value equals a
-  number stored in Learning.NumOfOpenQuestions configuration option.
-  - A counter for open questions about your native language meaning. For each entry, a user has to reach this counter value
+1. Each entry from given sets has 2 counters which at the beginning are equal 0:
+  1.1. A counter for open questions about English meaning. For each entry, a user has to reach this counter value 
   equals a number stored in Learning.NumOfOpenQuestions configuration option.
-- Entries in given sets are randomized.
-- For each randomly selected entry the following conditions are checked in order to ask a question to a user:
-  - If there is at least one not reached open question counter, then an open question is asked. If both
-  counters aren't reached, then the type of open question is randomly selected (question about English meaning or
-  question about your native language meaning). If one counter isn't reached, then the question type of this counter is
-  asked.
-  - Otherwise, an entry is omitted and conditions for the next entry are analyzed.
-- After giving a correct answer:
-  - The particular counter is incremented by 1.
-- After giving a wrong answer:
-  - The particual counter is set to 0. If Learning.ResetAfterMistake configuration option equals true, then all counters are set to 0.
-  - A correct answer is showed.
-- After asking questions for all entries the following condition is checked:
-  - If there are still entries with a counter lower than a number stored in Learning.NumOfOpenQuestions configuration
-option, then we go back to the first point.
-  - Otherwise, the mode is over.
+  1.2. A counter for open questions about your native language meaning. For each entry, a user has to reach this 
+  counter value equals a number stored in Learning.NumOfOpenQuestions configuration option.
+2. Entries in given sets are randomized.
+3. For each randomly selected entry the following conditions are checked in order to ask a question to a user:
+  3.1. If there is at least one not reached open question counter, then an open question is asked. If both counters 
+  aren't reached, then the type of open question is randomly selected (question about English meaning or question about 
+  your native language meaning). If one counter isn't reached, then the question type of this counter is asked.
+  3.2. Otherwise, an entry is omitted and conditions for the next entry are analyzed.
+4. After giving a correct answer:
+  4.1. The particular counter is incremented by 1.
+5. After giving a wrong answer:
+  5.1. The particular counter is set to 0. If Learning.ResetAfterMistake configuration option equals true, then all 
+  counters are set to 0.
+  5.2. A correct answer is showed.
+6. After asking questions for all entries the following condition is checked:
+  6.1. If there are still entries with a counter lower than a number stored in Learning.NumOfOpenQuestions 
+  configuration option, then we go back to the point number 2.
+  6.2. Otherwise, the mode is over.
 
 ## Technicalities
 
 ### Getting English pronunciation recordings
 
 Lexica is able to download pronunciation recordings from web dictionaries. It is up to a user which dictionary will
-be used. You have to keep in mind that while choosing any web dictionary you should take into consideration legal restrictions
-connected with copyright.
+be used. You have to keep in mind that while choosing any web dictionary you should take into consideration legal 
+restrictions connected with copyright.
 
 When in the configuration there are options connected with this functionality, then it is possible to play English
-pronunciation recording in application modes. Lexica just tries to find an url address to mp3 file in the code of the following page:
+pronunciation recording in application modes. Lexica just tries to find an url address to mp3 file in the code of the 
+following page:
 
 `PronunciationApi.WebDictionary.Host + UrlPath`, where `{word}` from `PronunciationApi.WebDictionary.UrlPath` is
 replaced by the particular word for which Lexica tries to play recording.
