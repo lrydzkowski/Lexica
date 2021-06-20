@@ -163,18 +163,18 @@ of learning new English words.
 2. Entries in given sets are randomized.
 3. For each entry, an English pronunciation is played, and a user has to write the particular word.
 4. After giving a correct answer:
-  4.1. A translation is showed.
-  4.2. A counter for an entry is incremented by 1. If a counter for the particular entry reaches a number stored in
-  Learning.NumOfOpenQuestions configuration option, then a question about this entry is not asked again.
+   - A translation is showed.
+   - A counter for an entry is incremented by 1. If a counter for the particular entry reaches a number stored in
+     Learning.NumOfOpenQuestions configuration option, then a question about this entry is not asked again.
 5. After giving an incorrect answer:
-  5.1. A correct answer is showed.
-  5.2. A translation is showed.
-  5.3. A counter for an entry is set to 0. If Learning.ResetAfterMistake configuration option equals true, then all
-  counters are set to 0.
+   - A correct answer is showed.
+   - A translation is showed.
+   - A counter for an entry is set to 0. If Learning.ResetAfterMistake configuration option equals true, then all
+     counters are set to 0.
 6. After playing English pronunciation for all entries the following condition is checked:
-  6.1. If there are still entries with a counter lower than a number stored in Learning.NumOfOpenQuestions configuration
-  option, then we go back to the point number 2.
-  6.2. Otherwise, the mode is over.
+   - If there are still entries with a counter lower than a number stored in Learning.NumOfOpenQuestions configuration
+     option, then we go back to the point number 2.
+   - Otherwise, the mode is over.
 
 ### 'Full' mode
 
@@ -188,30 +188,30 @@ words.
 #### How 'full' mode works
 
 1. Each entry from given sets has 4 counters which at the beginning are equal 0:
-  1.1. A counter for close questions about English meaning. For each entry, a user has to reach this counter value 
-  equals 1.
-  1.2. A counter for close questions about your native language meaning. For each entry, a user has to reach this 
-  counter value equals 1.
-  1.3. A counter for open questions about English meaning. For each entry, a user has to reach this counter value 
-  equals a number stored in Learning.NumOfOpenQuestions configuration option.
-  1.4. A counter for close questions about your native language meaning. For each entry, a user has to reach this 
-  counter value equals a number stored in Learning.NumOfOpenQuestions configuration option.
+   - A counter for close questions about English meaning. For each entry, a user has to reach this counter value 
+     equals 1.
+   - A counter for close questions about your native language meaning. For each entry, a user has to reach this 
+     counter value equals 1.
+   - A counter for open questions about English meaning. For each entry, a user has to reach this counter value 
+     equals a number stored in Learning.NumOfOpenQuestions configuration option.
+   - A counter for close questions about your native language meaning. For each entry, a user has to reach this 
+     counter value equals a number stored in Learning.NumOfOpenQuestions configuration option.
 2. Entries in given sets are randomized and 7 first entries are taken. For each of them a question is asked.
 3. For each randomly selected entry the following conditions are checked in order to ask a question to a user:
-  3.1 If there is at least one not reached close question counter, then a close question is asked. If both counters 
-  aren't reached, then the type of close question is randomly selected (question about English meaning or question 
-  about your native language meaning). If one counter isn't reached, then the question type of this counter is asked.
-  3.2. Otherwise, if there is at least one not reached open question counter, then an open question is asked. If both 
-  counters aren't reached, then the type of open question is randomly selected (question about English meaning or 
-  question about your native language meaning). If one counter isn't reached, then the question type of this counter is 
-  asked.
-  3.3. Otherwise, an entry is omitted and conditions for the next entry are analyzed.
+   - If there is at least one not reached close question counter, then a close question is asked. If both counters 
+     aren't reached, then the type of close question is randomly selected (question about English meaning or question 
+     about your native language meaning). If one counter isn't reached, then the question type of this counter is asked.
+   - Otherwise, if there is at least one not reached open question counter, then an open question is asked. If both 
+     counters aren't reached, then the type of open question is randomly selected (question about English meaning or 
+     question about your native language meaning). If one counter isn't reached, then the question type of this counter is 
+     asked.
+   - Otherwise, an entry is omitted and conditions for the next entry are analyzed.
 4. After giving a correct answer:
-  4.1. The particular counter value is incremented by 1.
+   - The particular counter value is incremented by 1.
 5. After giving a wrong answer:
-  5.1. The particular counter value is set to 0. If Learning.ResetAfterMistake configuration option equals true, then 
-  all counters all set to 0.
-  5.2. A correct answer is showed.
+   - The particular counter value is set to 0. If Learning.ResetAfterMistake configuration option equals true, then 
+     all counters all set to 0.
+   - A correct answer is showed.
 6. After analyzing 7 entries, again all entries in sets are randomized and the first 7 entries are analyzed.
 7. In order to end this mode a user has to reach all counters.
 
@@ -226,26 +226,26 @@ The main goal of this mode is providing the last phase of learning and preservin
 #### How 'only open questions' mode works
 
 1. Each entry from given sets has 2 counters which at the beginning are equal 0:
-  1.1. A counter for open questions about English meaning. For each entry, a user has to reach this counter value 
-  equals a number stored in Learning.NumOfOpenQuestions configuration option.
-  1.2. A counter for open questions about your native language meaning. For each entry, a user has to reach this 
-  counter value equals a number stored in Learning.NumOfOpenQuestions configuration option.
+   - A counter for open questions about English meaning. For each entry, a user has to reach this counter value 
+     equals a number stored in Learning.NumOfOpenQuestions configuration option.
+   - A counter for open questions about your native language meaning. For each entry, a user has to reach this 
+     counter value equals a number stored in Learning.NumOfOpenQuestions configuration option.
 2. Entries in given sets are randomized.
 3. For each randomly selected entry the following conditions are checked in order to ask a question to a user:
-  3.1. If there is at least one not reached open question counter, then an open question is asked. If both counters 
-  aren't reached, then the type of open question is randomly selected (question about English meaning or question about 
-  your native language meaning). If one counter isn't reached, then the question type of this counter is asked.
-  3.2. Otherwise, an entry is omitted and conditions for the next entry are analyzed.
+   - If there is at least one not reached open question counter, then an open question is asked. If both counters 
+     aren't reached, then the type of open question is randomly selected (question about English meaning or question about 
+     your native language meaning). If one counter isn't reached, then the question type of this counter is asked.
+   - Otherwise, an entry is omitted and conditions for the next entry are analyzed.
 4. After giving a correct answer:
-  4.1. The particular counter is incremented by 1.
+   - The particular counter is incremented by 1.
 5. After giving a wrong answer:
-  5.1. The particular counter is set to 0. If Learning.ResetAfterMistake configuration option equals true, then all 
-  counters are set to 0.
-  5.2. A correct answer is showed.
+   - The particular counter is set to 0. If Learning.ResetAfterMistake configuration option equals true, then all 
+     counters are set to 0.
+   - A correct answer is showed.
 6. After asking questions for all entries the following condition is checked:
-  6.1. If there are still entries with a counter lower than a number stored in Learning.NumOfOpenQuestions 
-  configuration option, then we go back to the point number 2.
-  6.2. Otherwise, the mode is over.
+   - If there are still entries with a counter lower than a number stored in Learning.NumOfOpenQuestions 
+     configuration option, then we go back to the point number 2.
+   - Otherwise, the mode is over.
 
 ## Technicalities
 
