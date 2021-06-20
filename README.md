@@ -1,4 +1,4 @@
-# Lexica (RC1)
+# Lexica (RC2)
 
 English vocabulary learning software written in .NET Core 5 (C# console application). Application works only on
 Windows 10.
