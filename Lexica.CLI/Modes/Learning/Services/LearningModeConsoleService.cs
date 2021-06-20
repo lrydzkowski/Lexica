@@ -1,7 +1,10 @@
 ﻿using Lexica.CLI.Core.Services;
 using Lexica.CLI.Modes.Learning.Models;
+using Lexica.Core.Extensions;
 using Lexica.Learning.Models;
 using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Lexica.CLI.Modes.Learning.Services
 {
@@ -51,10 +54,10 @@ namespace Lexica.CLI.Modes.Learning.Services
                     lineAfterRendering = 6;
                     break;
                 case ModeEnum.OnlyOpen:
-                    lineAfterRendering = 7;
+                    lineAfterRendering = 6;
                     break;
                 case ModeEnum.Full:
-                    lineAfterRendering = 8;
+                    lineAfterRendering = 7;
                     break;
             }
             Console.SetCursorPosition(0, 0);
@@ -65,9 +68,9 @@ namespace Lexica.CLI.Modes.Learning.Services
             else
             {
                 Console.Write(" (Enter) Next question;");
-                Console.Write(" \\o Override;");
-                Console.Write(" \\r Restart;");
-                Console.Write(" \\c Close;");
+                Console.Write(" o Override;");
+                Console.Write(" r Restart;");
+                Console.Write(" c Close;");
             }
             Console.WriteLine();
             Console.WriteLine();
@@ -91,15 +94,25 @@ namespace Lexica.CLI.Modes.Learning.Services
             {
                 var previousForegroundColor = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.Blue;
-                Console.WriteLine($"  {question.Content}".PadRight(80));
+                lineAfterRendering += ShowMultilineText(
+                    question.Content, 
+                    firstLineLeftIndendation: 2, 
+                    nextLinesLeftIndendation: 2, 
+                    maxNumOfChars: 78
+                );
                 Console.ForegroundColor = previousForegroundColor;
             }
             if (question.PossibleAnswers != null && question.PossibleAnswers.Count > 0)
             {
-                lineAfterRendering = 12;
                 for (int i = 0; i < question.PossibleAnswers.Count; i++)
                 {
-                    Console.WriteLine($"  {i + 1}. {question.PossibleAnswers[i]}".PadRight(80));
+                    Console.Write($"  {i + 1}. ");
+                    lineAfterRendering += ShowMultilineText(
+                        question.PossibleAnswers[i], 
+                        firstLineLeftIndendation: 0, 
+                        nextLinesLeftIndendation: 5, 
+                        maxNumOfChars: 75
+                    );
                 }
             }
             Console.WriteLine("  ".PadRight(80, '-'));
@@ -110,38 +123,112 @@ namespace Lexica.CLI.Modes.Learning.Services
                 Console.Write(answer);
             }
             Console.WriteLine();
-            Console.WriteLine(" ".PadRight(80));
-            Console.WriteLine(" ".PadRight(80));
-            Console.WriteLine(" ".PadRight(80));
-            Console.WriteLine(" ".PadRight(80));
-            Console.WriteLine(" ".PadRight(80));
-            Console.WriteLine(" ".PadRight(80));
-            Console.WriteLine(" ".PadRight(80));
-            Console.WriteLine(" ".PadRight(80));
+            for (int i = 0; i < 12; i++)
+            {
+                Console.WriteLine(" ".PadRight(80));
+            }
             Console.SetCursorPosition(4, lineAfterRendering);
         }
 
         public string ReadAnswer()
         {
-            string answer = Console.ReadLine() ?? "";
-            return answer;
+            var sb = new StringBuilder();
+            ConsoleKeyInfo keyInfo;
+            do
+            {
+                keyInfo = ReadCharacter(sb);
+                if (sb.Length == 76)
+                {
+                    break;
+                }
+            } while (CanGetNextChar(keyInfo));
+
+            return sb.ToString();
+        }
+
+        private ConsoleKeyInfo ReadCharacter(StringBuilder stringBuilder)
+        {
+            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+            if (keyInfo.Key == ConsoleKey.Backspace)
+            {
+                if (stringBuilder.Length > 0)
+                {
+                    Console.Write("\b \b");
+                    stringBuilder.Length -= 1;
+                }
+                return keyInfo;
+            }
+            if (IsKeyHandled(keyInfo))
+            {
+                Console.Write(keyInfo.KeyChar);
+                stringBuilder.Append(keyInfo.KeyChar);
+            }
+
+            return keyInfo;
+        }
+
+        private bool IsKeyAChar(ConsoleKeyInfo keyInfo)
+        {
+            return keyInfo.Key >= ConsoleKey.A && keyInfo.Key <= ConsoleKey.Z;
+        }
+
+        private bool IsKeyADigit(ConsoleKeyInfo keyInfo)
+        {
+            bool isDigit = keyInfo.Key >= ConsoleKey.D0 && keyInfo.Key <= ConsoleKey.D9;
+            bool isNumPadDigit = keyInfo.Key >= ConsoleKey.NumPad0 && keyInfo.Key <= ConsoleKey.NumPad9;
+            return isDigit || isNumPadDigit;
+        }
+
+        private bool IsKeyHandled(ConsoleKeyInfo keyInfo)
+        {
+            if (IsKeyAChar(keyInfo))
+            {
+                return true;
+            }
+            if (IsKeyADigit(keyInfo))
+            {
+                return true;
+            }
+            var additionalChars = new List<char> { '.', ',', '-', ';', '\'', ' ' };
+            if (additionalChars.Contains(keyInfo.KeyChar))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private bool CanGetNextChar(ConsoleKeyInfo keyInfo)
+        {
+            if (keyInfo.KeyChar == -1)
+            {
+                return false;
+            }
+            if (keyInfo.KeyChar == '\n' || keyInfo.KeyChar == '\r')
+            {
+                return false;
+            }
+            return true;
         }
 
         public CommandEnum HandleCommand()
         {
-            string? input = Console.ReadLine();
-            switch (input)
+            do
             {
-                case "\\o":
-                    return CommandEnum.Override;
-                case "\\r":
-                    return CommandEnum.Restart;
-                case "\\c":
-                    return CommandEnum.Close;
-                default:
-                    break;
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+                switch (keyInfo.KeyChar)
+                {
+                    case 'o':
+                        return CommandEnum.Override;
+                    case 'r':
+                        return CommandEnum.Restart;
+                    case 'c':
+                        return CommandEnum.Close;
+                    case '\n':
+                    case '\r':
+                        return CommandEnum.None;
+                }
             }
-            return CommandEnum.None;
+            while (true);
         }
 
         public void PresentResult(
@@ -170,7 +257,7 @@ namespace Lexica.CLI.Modes.Learning.Services
             {
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
                 Console.WriteLine();
-                Console.Write("  Correct answer");
+                Console.WriteLine("  Correct answer");
             }
             else
             {
@@ -182,7 +269,12 @@ namespace Lexica.CLI.Modes.Learning.Services
                     Console.WriteLine();
                     Console.Write("  Correct answer is: ");
                     Console.ForegroundColor = ConsoleColor.Blue;
-                    Console.Write(correctAnswer);
+                    ShowMultilineText(
+                        correctAnswer, 
+                        firstLineLeftIndendation: 0, 
+                        nextLinesLeftIndendation: 21, 
+                        maxNumOfChars: 59
+                    );
                 }
             }
             if (mode == ModeEnum.Spelling)
@@ -191,12 +283,30 @@ namespace Lexica.CLI.Modes.Learning.Services
                 Console.ForegroundColor = standardForegroundColor;
                 Console.Write($"  Translations: ");
                 Console.ForegroundColor = ConsoleColor.Blue;
-                Console.Write(translationsInfo);
+                ShowMultilineText(
+                    translationsInfo,
+                    firstLineLeftIndendation: 0,
+                    nextLinesLeftIndendation: 16,
+                    maxNumOfChars: 64
+                );
             }
-            Console.WriteLine();
             Console.WriteLine();
             Console.Write("  ");
             Console.ForegroundColor = standardForegroundColor;
+        }
+
+        private int ShowMultilineText(
+            string txt, int firstLineLeftIndendation, int nextLinesLeftIndendation, int maxNumOfChars)
+        {
+            List<string> lines = txt.Split(maxNumOfChars);
+            Console.Write("".PadRight(firstLineLeftIndendation));
+            Console.WriteLine(lines[0].PadRight(maxNumOfChars));
+            for (int i = 1; i < lines.Count; i++)
+            {
+                Console.Write("".PadRight(nextLinesLeftIndendation));
+                Console.WriteLine(lines[i].PadRight(maxNumOfChars));
+            }
+            return lines.Count;
         }
 
         public void ShowSummary()

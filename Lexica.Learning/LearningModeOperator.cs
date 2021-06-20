@@ -180,7 +180,7 @@ namespace Lexica.Learning
                 }
 
                 var nextQuestionInfo = new QuestionInfo(entry, questionType, answerType, possibleAnswers);
-                if (!IsCurrentQuestionTheLastOne() && IsQuestionRepeated(nextQuestionInfo))
+                if (!CanCurrentQuestionBeTheLastOne() && IsQuestionRepeated(nextQuestionInfo))
                 {
                     continue;
                 }
@@ -197,8 +197,12 @@ namespace Lexica.Learning
 
         public int GetNumberOfQuestions(QuestionTypeEnum questionType)
         {
-            return WordsSetOperator.GetNumberOfEntries() 
-                * (GetNumOfRequiredAnswers(questionType) * GetNumOfRequiredAnswersMultiplier());
+            return WordsSetOperator.GetNumberOfEntries() * GetEntryNumberOfQuestions(questionType);
+        }
+
+        public int GetEntryNumberOfQuestions(QuestionTypeEnum questionType)
+        {
+            return GetNumOfRequiredAnswers(questionType) * GetNumOfRequiredAnswersMultiplier();
         }
 
         public int GetNumberOfCurrentQuestions()
@@ -220,9 +224,11 @@ namespace Lexica.Learning
             return multiplier;
         }
 
-        private bool IsCurrentQuestionTheLastOne()
+        private bool CanCurrentQuestionBeTheLastOne()
         {
-            return GetNumberOfQuestions() - GetSumResult() == 1;
+            int numOfEntryRequiredAnswers = GetEntryNumberOfQuestions(QuestionTypeEnum.Closed) 
+                + GetEntryNumberOfQuestions(QuestionTypeEnum.Open);
+            return GetNumberOfQuestions() - GetSumResult() <= numOfEntryRequiredAnswers;
         }
 
         private bool AreAllQuestionsCompleted()
@@ -318,14 +324,15 @@ namespace Lexica.Learning
             correctAnswers.Sort();
 
             bool result = true;
-            if (string.Join(',', answerWords) == string.Join(',', correctAnswers))
+            if (string.Join(',', answerWords).ToLower() == string.Join(',', correctAnswers).ToLower())
             {
                 UpdateAnswersRegister(1);
             }
             else
             {
                 result = false;
-                UpdateAnswersRegister(0, UpdateAnswersRegisterOperationTypeEnum.Set);
+                UpdateAnswersRegister(0, UpdateAnswersRegisterOperationTypeEnum.Set, AnswerTypeEnum.Translations);
+                UpdateAnswersRegister(0, UpdateAnswersRegisterOperationTypeEnum.Set, AnswerTypeEnum.Words);
             }
 
             return new AnswerResult(result, answerWords, correctAnswers);
@@ -333,21 +340,27 @@ namespace Lexica.Learning
 
         public void UpdateAnswersRegister(
             int value, 
-            UpdateAnswersRegisterOperationTypeEnum operationType = UpdateAnswersRegisterOperationTypeEnum.Add)
+            UpdateAnswersRegisterOperationTypeEnum operationType = UpdateAnswersRegisterOperationTypeEnum.Add,
+            AnswerTypeEnum? answerType = null)
         {
             if (CurrentQuestionInfo == null)
             {
                 return;
             }
-            UpdateAnswersRegister(CurrentQuestionInfo, value, operationType);
+            UpdateAnswersRegister(CurrentQuestionInfo, value, operationType, answerType);
         }
 
         private void UpdateAnswersRegister(
             QuestionInfo questionInfo, 
             int value,
-            UpdateAnswersRegisterOperationTypeEnum operationType = UpdateAnswersRegisterOperationTypeEnum.Add)
+            UpdateAnswersRegisterOperationTypeEnum operationType = UpdateAnswersRegisterOperationTypeEnum.Add,
+            AnswerTypeEnum? answerType = null)
         {
             string answerTypeKey = questionInfo.AnswerType.ToString("g");
+            if (answerType != null)
+            {
+                answerTypeKey = answerType?.ToString("g") ?? "";
+            }
             if (!AnswersRegister[questionInfo.QuestionType].ContainsKey(questionInfo.Entry.Id))
             {
                 AnswersRegister[questionInfo.QuestionType][questionInfo.Entry.Id] = new AnswerRegister();

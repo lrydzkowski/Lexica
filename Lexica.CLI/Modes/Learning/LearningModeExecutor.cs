@@ -81,7 +81,8 @@ namespace Lexica.CLI.Modes.Learning
             ConsoleService.ClearConsole();
             LearningModeOperator modeOperator = GetLearningModeOperator();
             IEnumerable<Question?> questionsEnumerable = modeOperator.GetQuestions(
-                randomizeEachIteration: true, pieceSize: GetPieceSize()
+                randomizeEachIteration: true, 
+                pieceSize: Mode == ModeEnum.Full ? GetPieceSize() : -1
             );
             foreach (Question? question in questionsEnumerable)
             {
@@ -186,6 +187,11 @@ namespace Lexica.CLI.Modes.Learning
                     ),
                     modeOperator.AnswersRegister
                 );
+                if (ShouldResetMode(isAnswerCorrect, command))
+                {
+                    await ExecuteAsync(args);
+                    return;
+                }
             }
 
             ConsoleService.ShowSummary();
@@ -339,6 +345,12 @@ namespace Lexica.CLI.Modes.Learning
                 );
                 Logger.LogDebug(logData);
             }
+        }
+
+        private bool ShouldResetMode(bool isAnswerCorrect, CommandEnum command)
+        {
+            bool resetAfterMistake = AppSettings.Learning?.ResetAfterMistake ?? false;
+            return resetAfterMistake && !isAnswerCorrect && command != CommandEnum.Override;
         }
     }
 }
