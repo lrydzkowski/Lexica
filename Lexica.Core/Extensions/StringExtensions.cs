@@ -53,25 +53,25 @@ namespace Lexica.Core.Extensions
         {
             if (string.IsNullOrEmpty(str))
             {
-                throw new ArgumentException();
+                throw new ArgumentException("String cannot be null or empty.");
             }
             if (chunkLength < 1)
             {
-                throw new ArgumentException();
+                throw new ArgumentException("Chunk length cannot be shorter than 1.");
             }
-            List<string> result = new List<string>();
+            List<string> result = new();
 
             if (wholeWords)
             {
                 if (str.Length > chunkLength)
                 {
-                    StringBuilder sb = new StringBuilder();
+                    StringBuilder sb = new();
                     string[] words = str.Split(' ');
                     foreach (string word in words)
                     {
                         if (sb.Length != 0)
                         {
-                            sb.Append(" ");
+                            sb.Append(' ');
                         }
                         if (word.Length > chunkLength)
                         {
