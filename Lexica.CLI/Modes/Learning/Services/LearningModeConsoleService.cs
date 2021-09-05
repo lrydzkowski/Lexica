@@ -169,7 +169,7 @@ namespace Lexica.CLI.Modes.Learning.Services
 
         private bool IsKeyAChar(ConsoleKeyInfo keyInfo)
         {
-            return keyInfo.Key >= ConsoleKey.A && keyInfo.Key <= ConsoleKey.Z;
+            return keyInfo.Key >= ConsoleKey.A && keyInfo.Key <= ConsoleKey.Z && keyInfo.KeyChar != '\0';
         }
 
         private bool IsKeyADigit(ConsoleKeyInfo keyInfo)
