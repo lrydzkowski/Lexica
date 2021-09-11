@@ -51,7 +51,7 @@ namespace Lexica.Words.Validators
         private OperationResult LineContainsSemicolon(string line, string fileName, int lineNumber)
         {
             OperationResult result = new();
-            if (!line.Contains(";", StringComparison.CurrentCulture))
+            if (!line.Contains(';', StringComparison.CurrentCulture))
             {
                 result.AddError(
                     new Error<Dictionary<string, string>>(
