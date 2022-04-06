@@ -1,5 +1,4 @@
 ﻿using Lexica.CLI.Args.Models;
-using Lexica.CLI.Core.Services;
 using Lexica.CLI.Executors;
 using Lexica.Core.IO;
 using Lexica.Core.Services;
@@ -11,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Lexica.CLI.Args
 {
-    static class ArgsHandler
+    internal static class ArgsHandler
     {
         public static async Task RunAsync(string[] args, IServiceProvider servicesProvider)
         {

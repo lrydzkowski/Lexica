@@ -16,7 +16,7 @@ namespace Lexica.Pronunciation.Api.WebDictionary
     public class PronunciationService : IPronunciation
     {
         public PronunciationService(
-            WebDictionarySettings settings, 
+            WebDictionarySettings settings,
             ILogger<IPronunciation> logger,
             UrlService urlService)
         {

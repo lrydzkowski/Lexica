@@ -19,7 +19,7 @@ namespace Lexica.Words
             LoadSet();
         }
 
-        public WordsSetOperator(ISetService setService, ISource fileSource) 
+        public WordsSetOperator(ISetService setService, ISource fileSource)
             : this(setService, new List<ISource>() { fileSource }) { }
 
         private ISetService SetService { get; set; }
@@ -61,9 +61,9 @@ namespace Lexica.Words
                 for (int i = 0; i < Set.Entries.Count; i++)
                 {
                     Entry entry = Set.Entries[i];
-                    if (    entry.SetPath.Namespace == setNamespace
-                        &&  entry.SetPath.Name == setName
-                        &&  entry.LineNum == lineNum)
+                    if (entry.SetPath.Namespace == setNamespace
+                        && entry.SetPath.Name == setName
+                        && entry.LineNum == lineNum)
                     {
                         return entry;
                     }
@@ -73,7 +73,7 @@ namespace Lexica.Words
         }
 
         public IEnumerable<Entry?> GetEntries(
-            bool infiniteLoop = false, 
+            bool infiniteLoop = false,
             bool randomizeEachIteration = true,
             int sequenceMaxSize = -1)
         {

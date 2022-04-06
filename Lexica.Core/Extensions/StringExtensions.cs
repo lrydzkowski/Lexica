@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Text.Json;
-using System.Text.RegularExpressions;
 
 namespace Lexica.Core.Extensions
 {
@@ -39,13 +37,13 @@ namespace Lexica.Core.Extensions
 
         public static bool OrdinalStartsWith(this string str, string value, bool ignoreCase = false)
         {
-            return str != null 
+            return str != null
                 && str.StartsWith(value, ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
         }
 
         public static bool OrdinalEndsWith(this string str, string value, bool ignoreCase = false)
         {
-            return str != null 
+            return str != null
                 && str.EndsWith(value, ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
         }
 

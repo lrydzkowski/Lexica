@@ -2,10 +2,8 @@
 using Lexica.Core.IO;
 using Lexica.Core.Services;
 using Lexica.CoreTests.Config.Models;
-using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using System.Text.Json;
 using Xunit;
 

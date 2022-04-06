@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Exceptions;
-using System.Text;
 using Xunit;
 
 namespace CoreTests
@@ -62,7 +61,7 @@ namespace CoreTests
         {
             // Arrange
             var filesSource = new MultipleFilesSource(dirPath);
-            
+
             // Act
             List<string> list = filesSource.GetContents().Select(x => x.GetContents()).ToList<string>();
 
@@ -123,12 +122,12 @@ namespace CoreTests
         [Theory]
         [MemberData(nameof(GetMultipleEmbeddedFilesCorrectPathParameters))]
         public void GetMultipleEmbeddedFiles_CorrectPath_ReturnsProperContents(
-            string dirPath, 
+            string dirPath,
             List<string> expectedContents)
         {
             // Arrange
             var embeddedSource = new MultipleEmbeddedSource(
-                dirPath, 
+                dirPath,
                 Assembly.GetExecutingAssembly()
             );
 
@@ -160,7 +159,7 @@ namespace CoreTests
         [Theory]
         [MemberData(nameof(GetMultipleEmbeddedFilesCorrectNames))]
         public void GetMultipleEmbeddedFiles_CorrectPath_ReturnsProperNames(
-            string dirPath, 
+            string dirPath,
             List<string> expectedNames)
         {
             // Arrange

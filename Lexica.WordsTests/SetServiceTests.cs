@@ -27,7 +27,6 @@ namespace Lexica.WordsTests
 
             // Assert
             ResourceNotFoundException ex = Assert.Throws<ResourceNotFoundException>(action);
-
         }
 
         public static IEnumerable<object[]> LoadSetValidationErrorsParameters()
@@ -91,9 +90,9 @@ namespace Lexica.WordsTests
                     },
                     new List<Dictionary<string, string>>()
                     {
-                        new Dictionary<string, string>() { 
-                            { "Line", "30" }, { "FileName", "too_long_word_1.txt" }, { "Name", "Word" }, 
-                            { "Value", "505050505050505050505050505050505050505050505050505050" } 
+                        new Dictionary<string, string>() {
+                            { "Line", "30" }, { "FileName", "too_long_word_1.txt" }, { "Name", "Word" },
+                            { "Value", "505050505050505050505050505050505050505050505050505050" }
                         }
                     }
                 },
@@ -210,8 +209,8 @@ namespace Lexica.WordsTests
         [Theory]
         [MemberData(nameof(LoadSetValidationErrorsParameters))]
         public void LoadSet_ValidationErrors_ReturnsFalseResult(
-            List<string> filesPaths, 
-            List<Enum> errorCodes, 
+            List<string> filesPaths,
+            List<Enum> errorCodes,
             List<Dictionary<string, string>> errorDetails)
         {
             // Arrange

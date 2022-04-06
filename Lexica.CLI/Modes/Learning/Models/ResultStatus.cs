@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Lexica.CLI.Modes.Learning.Models
+﻿namespace Lexica.CLI.Modes.Learning.Models
 {
-    class ResultStatus
+    internal class ResultStatus
     {
         public ResultStatus(int numOfCorrectAnswers, int numOfQuestions)
         {

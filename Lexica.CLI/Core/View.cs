@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace Lexica.CLI.Core
 {
-    static class View
+    internal static class View
     {
         public static void ShowError(Exception ex)
         {

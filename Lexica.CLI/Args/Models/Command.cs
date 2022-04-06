@@ -2,7 +2,7 @@
 
 namespace Lexica.CLI.Args.Models
 {
-    class Command
+    internal class Command
     {
         public string Name { get; set; } = "";
 

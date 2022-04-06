@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Lexica.Learning.Services
 {
@@ -14,8 +10,8 @@ namespace Lexica.Learning.Services
             string mode,
             string question,
             string questionType,
-            string answer, 
-            string properAnswer, 
+            string answer,
+            string properAnswer,
             bool isCorrect
         );
     }

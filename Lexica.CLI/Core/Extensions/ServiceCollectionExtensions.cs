@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Lexica.CLI.Core.Extensions
 {
-    static class ServiceCollectionExtensions
+    internal static class ServiceCollectionExtensions
     {
         public static void AddCoreModuleServices(this IServiceCollection services)
         {

@@ -1,14 +1,9 @@
 ﻿using Lexica.Core.IO;
-using Microsoft.Extensions.Configuration;
 using System.Text.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 
 namespace Lexica.Core.Data
 {
-    class JsonSource<T> : IDataSource<T> where T : class
+    internal class JsonSource<T> : IDataSource<T> where T : class
     {
         private ISource Source { get; set; }
 

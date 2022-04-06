@@ -8,12 +8,10 @@ using Lexica.Core.Extensions;
 using Lexica.Core.IO;
 using Lexica.Core.Services;
 using Lexica.Learning;
-using Lexica.Learning.Config;
 using Lexica.Learning.Models;
 using Lexica.Learning.Services;
 using Lexica.Pronunciation;
 using Lexica.Words;
-using Lexica.Words.Config;
 using Lexica.Words.Services;
 using Lexica.Words.Validators;
 using Lexica.Words.Validators.Models;
@@ -27,7 +25,7 @@ using System.Threading.Tasks;
 
 namespace Lexica.CLI.Modes.Learning
 {
-    class LearningModeExecutor : IAsyncExecutor
+    internal class LearningModeExecutor : IAsyncExecutor
     {
         public LearningModeExecutor(
             ConfigService<AppSettings> configService,
@@ -81,7 +79,7 @@ namespace Lexica.CLI.Modes.Learning
             ConsoleService.ClearConsole();
             LearningModeOperator modeOperator = GetLearningModeOperator();
             IEnumerable<Question?> questionsEnumerable = modeOperator.GetQuestions(
-                randomizeEachIteration: true, 
+                randomizeEachIteration: true,
                 pieceSize: Mode == ModeEnum.Full ? GetPieceSize() : -1
             );
             foreach (Question? question in questionsEnumerable)
@@ -90,7 +88,7 @@ namespace Lexica.CLI.Modes.Learning
                 {
                     break;
                 }
-                if (Mode == ModeEnum.Spelling 
+                if (Mode == ModeEnum.Spelling
                     && !await PronunciationAudioExists(modeOperator.CurrentQuestionInfo.Entry.Words))
                 {
                     modeOperator.UpdateAnswersRegister(AppSettings.Learning?.NumOfOpenQuestions ?? 0);
@@ -98,7 +96,7 @@ namespace Lexica.CLI.Modes.Learning
                 }
                 PlayPronunciationAudio(
                     modeOperator.CurrentQuestionInfo.Entry.Words,
-                    WhenEnum.BeforeAnswer, 
+                    WhenEnum.BeforeAnswer,
                     modeOperator.CurrentQuestionInfo.AnswerType
                 );
                 ConsoleService.PresentQuestion(
@@ -120,15 +118,15 @@ namespace Lexica.CLI.Modes.Learning
                 string answer = ConsoleService.ReadAnswer();
                 AnswerResult? answerResult = modeOperator.VerifyAnswer(answer);
                 bool isAnswerCorrect = answerResult?.Result ?? false;
-                string givenAnswer = answerResult?.GivenAnswers == null 
-                    ? answer 
+                string givenAnswer = answerResult?.GivenAnswers == null
+                    ? answer
                     : string.Join(", ", answerResult.GivenAnswers);
                 string correctAnswer = string.Join(", ", answerResult?.CorrectAnswers ?? new List<string>());
                 ConsoleService.PresentResult(
                     Mode,
                     question,
                     new ResultStatus(
-                        modeOperator.GetResult(QuestionTypeEnum.Closed), 
+                        modeOperator.GetResult(QuestionTypeEnum.Closed),
                         modeOperator.GetNumberOfQuestions(QuestionTypeEnum.Closed)
                     ),
                     new ResultStatus(
@@ -139,8 +137,8 @@ namespace Lexica.CLI.Modes.Learning
                         modeOperator.GetCurrentQuestionResult(),
                         modeOperator.GetNumberOfCurrentQuestions()
                     ),
-                    answer, 
-                    isAnswerCorrect, 
+                    answer,
+                    isAnswerCorrect,
                     correctAnswer,
                     modeOperator.CurrentQuestionInfo.Entry.ToString(Words.Models.EntryPartEnum.Translations)
                 );
@@ -237,8 +235,8 @@ namespace Lexica.CLI.Modes.Learning
             var fileSources = new List<ISource>();
             for (int i = 0; i < FilePaths.Count; i++)
             {
-                string absolutePath = AppSettings.Words != null 
-                    ? AppSettings.Words.SetsDirectoryPath 
+                string absolutePath = AppSettings.Words != null
+                    ? AppSettings.Words.SetsDirectoryPath
                     : AppDomain.CurrentDomain.BaseDirectory;
                 if (FilePaths[i].StartsWith('.'))
                 {
@@ -301,7 +299,7 @@ namespace Lexica.CLI.Modes.Learning
 
         private bool AudioCanBePlayedBeforeAnswer(AnswerTypeEnum answerType)
         {
-            if (Mode == ModeEnum.Spelling 
+            if (Mode == ModeEnum.Spelling
                 || (AppSettings.Learning.PlayPronuncation.BeforeAnswer && answerType == AnswerTypeEnum.Translations))
             {
                 return true;
@@ -311,8 +309,8 @@ namespace Lexica.CLI.Modes.Learning
 
         private bool AudioCanBePlayedAfterAnswer(AnswerTypeEnum answerType)
         {
-            if (Mode != ModeEnum.Spelling 
-                && AppSettings.Learning.PlayPronuncation.AfterAnswer 
+            if (Mode != ModeEnum.Spelling
+                && AppSettings.Learning.PlayPronuncation.AfterAnswer
                 && answerType == AnswerTypeEnum.Words)
             {
                 return true;

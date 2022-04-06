@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Lexica.CoreTests.Config.Models
+﻿namespace Lexica.CoreTests.Config.Models
 {
     public class Settings
     {

@@ -3,7 +3,6 @@ using Lexica.Core.Models;
 using Lexica.Words.Models;
 using Lexica.Words.Validators;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace Lexica.Words.Services

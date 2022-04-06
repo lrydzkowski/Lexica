@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Lexica.Core.Models
+﻿namespace Lexica.Core.Models
 {
     public class Error
     {

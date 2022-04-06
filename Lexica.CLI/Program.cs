@@ -5,10 +5,8 @@ using Lexica.CLI.Core.Extensions;
 using Lexica.CLI.Executors.Extensions;
 using Lexica.Core.Extensions;
 using Lexica.Core.Services;
-using Lexica.Database;
 using Lexica.Database.Extensions;
 using Lexica.Pronunciation;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NLog;
@@ -19,9 +17,9 @@ using System.Threading.Tasks;
 
 namespace Lexica.CLI
 {
-    class Program
+    internal class Program
     {
-        static async Task Main(string[] args)
+        private static async Task Main(string[] args)
         {
             var logger = LogManager.GetCurrentClassLogger();
             try
@@ -51,7 +49,7 @@ namespace Lexica.CLI
             }
             finally
             {
-                // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault 
+                // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault
                 // on Linux)
                 LogManager.Shutdown();
                 Console.ReadLine();
@@ -95,7 +93,7 @@ namespace Lexica.CLI
         }
 
         private static void AddPronunciationService(
-            ServiceCollection services, 
+            ServiceCollection services,
             ConfigService<AppSettings> configService)
         {
             services.AddSingleton(

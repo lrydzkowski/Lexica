@@ -1,9 +1,5 @@
 ﻿using Lexica.Words.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Lexica.WordsTests
@@ -40,10 +36,10 @@ namespace Lexica.WordsTests
         [Theory]
         [MemberData(nameof(GetCompareEntriesEqualObjectsParameters))]
         public void CompareEntries_EqualObjects_ReturnsTrue(
-            string namespaceName, 
-            string fileName, 
-            int lineNum, 
-            List<string> words1, 
+            string namespaceName,
+            string fileName,
+            int lineNum,
+            List<string> words1,
             List<string> words2,
             List<string> translations1,
             List<string> translations2)

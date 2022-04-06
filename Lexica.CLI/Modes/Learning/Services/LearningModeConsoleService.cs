@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Lexica.CLI.Modes.Learning.Services
 {
-    class LearningModeConsoleService : IService
+    internal class LearningModeConsoleService : IService
     {
         public LearningModeConsoleService(BuildService buildService, VersionService versionService)
         {
@@ -53,9 +53,11 @@ namespace Lexica.CLI.Modes.Learning.Services
                 case ModeEnum.Spelling:
                     lineAfterRendering = 6;
                     break;
+
                 case ModeEnum.OnlyOpen:
                     lineAfterRendering = 6;
                     break;
+
                 case ModeEnum.Full:
                     lineAfterRendering = 7;
                     break;
@@ -79,6 +81,7 @@ namespace Lexica.CLI.Modes.Learning.Services
                     Console.Write($"  Open questions result: ".PadRight(27));
                     Console.WriteLine(openQuestionsResultStatus.ToString(leftPad: 4).PadRight(80 - 27));
                     break;
+
                 default:
                     Console.Write($"  Result: ".PadRight(27));
                     Console.WriteLine(openQuestionsResultStatus.ToString(leftPad: 4).PadRight(80 - 27));
@@ -92,9 +95,9 @@ namespace Lexica.CLI.Modes.Learning.Services
                 var previousForegroundColor = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.Blue;
                 lineAfterRendering += ShowMultilineText(
-                    question.Content, 
-                    firstLineLeftIndendation: 2, 
-                    nextLinesLeftIndendation: 2, 
+                    question.Content,
+                    firstLineLeftIndendation: 2,
+                    nextLinesLeftIndendation: 2,
                     maxNumOfChars: 78
                 );
                 Console.ForegroundColor = previousForegroundColor;
@@ -105,9 +108,9 @@ namespace Lexica.CLI.Modes.Learning.Services
                 {
                     Console.Write($"  {i + 1}. ");
                     lineAfterRendering += ShowMultilineText(
-                        question.PossibleAnswers[i], 
-                        firstLineLeftIndendation: 0, 
-                        nextLinesLeftIndendation: 5, 
+                        question.PossibleAnswers[i],
+                        firstLineLeftIndendation: 0,
+                        nextLinesLeftIndendation: 5,
                         maxNumOfChars: 75
                     );
                 }
@@ -216,10 +219,13 @@ namespace Lexica.CLI.Modes.Learning.Services
                 {
                     case 'o':
                         return CommandEnum.Override;
+
                     case 'r':
                         return CommandEnum.Restart;
+
                     case 'c':
                         return CommandEnum.Close;
+
                     case '\n':
                     case '\r':
                         return CommandEnum.None;
@@ -267,9 +273,9 @@ namespace Lexica.CLI.Modes.Learning.Services
                     Console.Write("  Correct answer is: ");
                     Console.ForegroundColor = ConsoleColor.Blue;
                     ShowMultilineText(
-                        correctAnswer, 
-                        firstLineLeftIndendation: 0, 
-                        nextLinesLeftIndendation: 21, 
+                        correctAnswer,
+                        firstLineLeftIndendation: 0,
+                        nextLinesLeftIndendation: 21,
                         maxNumOfChars: 59
                     );
                 }

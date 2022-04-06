@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Lexica.Words.Models
+﻿namespace Lexica.Words.Models
 {
     public class SetPath
     {

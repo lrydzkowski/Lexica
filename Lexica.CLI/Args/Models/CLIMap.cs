@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Lexica.CLI.Args.Models
 {
-    class CLIMap
+    internal class CLIMap
     {
         public List<Command> Commands { get; set; } = new List<Command>();
     }
