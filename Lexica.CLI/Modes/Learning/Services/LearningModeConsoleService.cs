@@ -67,10 +67,7 @@ namespace Lexica.CLI.Modes.Learning.Services
             }
             else
             {
-                Console.Write(" (Enter) Next question;");
-                Console.Write(" o Override;");
-                Console.Write(" r Restart;");
-                Console.Write(" c Close;");
+                Console.Write(" (Enter) Next question; o Override; r Restart; c Close;".PadRight(80));
             }
             Console.WriteLine();
             Console.WriteLine();
@@ -78,17 +75,17 @@ namespace Lexica.CLI.Modes.Learning.Services
             {
                 case ModeEnum.Full:
                     Console.Write($"  Closed questions result: ".PadRight(27));
-                    Console.WriteLine(closedQuestionsResultStatus.ToString(leftPad: 4).PadRight(80));
+                    Console.WriteLine(closedQuestionsResultStatus.ToString(leftPad: 4).PadRight(80 - 27));
                     Console.Write($"  Open questions result: ".PadRight(27));
-                    Console.WriteLine(openQuestionsResultStatus.ToString(leftPad: 4).PadRight(80));
+                    Console.WriteLine(openQuestionsResultStatus.ToString(leftPad: 4).PadRight(80 - 27));
                     break;
                 default:
                     Console.Write($"  Result: ".PadRight(27));
-                    Console.WriteLine(openQuestionsResultStatus.ToString(leftPad: 4).PadRight(80));
+                    Console.WriteLine(openQuestionsResultStatus.ToString(leftPad: 4).PadRight(80 - 27));
                     break;
             }
             Console.Write($"  Current question result: ".PadRight(27));
-            Console.WriteLine(currentQuestionResultStatus.ToString(leftPad: 4).PadRight(80));
+            Console.WriteLine(currentQuestionResultStatus.ToString(leftPad: 4).PadRight(80 - 27));
             Console.WriteLine();
             if (mode != ModeEnum.Spelling)
             {
