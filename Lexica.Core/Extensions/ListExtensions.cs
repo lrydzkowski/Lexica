@@ -8,12 +8,12 @@ namespace Lexica.Core.Extensions
     {
         public static void Shuffle<T>(this IList<T> list)
         {
-            RNGCryptoServiceProvider provider = new();
+            RandomNumberGenerator rng = RandomNumberGenerator.Create();
             int n = list.Count;
             while (n > 1)
             {
                 byte[] box = new byte[1];
-                do provider.GetBytes(box);
+                do rng.GetBytes(box);
                 while (box[0] >= n * (Byte.MaxValue / n));
                 int k = (box[0] % n);
                 n--;

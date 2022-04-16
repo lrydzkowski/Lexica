@@ -1,6 +1,6 @@
-﻿using Lexica.Core.Extensions;
-using System;
+﻿using System;
 using System.Text.RegularExpressions;
+using Lexica.Core.Extensions;
 
 namespace Lexica.Core.Services
 {

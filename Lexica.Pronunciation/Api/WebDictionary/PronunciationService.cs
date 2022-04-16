@@ -88,8 +88,10 @@ namespace Lexica.Pronunciation.Api.WebDictionary
             {
                 return null;
             }
-            using var webClient = new WebClient();
-            await webClient.DownloadFileTaskAsync(new Uri(mp3FileUrl), filePath);
+            using var httpClient = new HttpClient();
+            using var stream = await httpClient.GetStreamAsync(mp3FileUrl);
+            using var fileStream = new FileStream(filePath, FileMode.CreateNew);
+            await stream.CopyToAsync(fileStream);
             if (filePath == null || !File.Exists(filePath))
             {
                 return null;
