@@ -14,9 +14,9 @@ namespace Lexica.Core.Services
 {
     public class ConfigService<T> where T : class
     {
-        private ISource ConfigSource { get; set; }
+        private ISource ConfigSource { get; }
 
-        private ISource ConfigSchemaSource { get; set; }
+        private ISource ConfigSchemaSource { get; }
 
         public T Config { get; private set; }
 

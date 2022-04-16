@@ -2,9 +2,9 @@
 {
     public class Error
     {
-        public int Code { get; private set; }
+        public int Code { get; }
 
-        public string Message { get; private set; }
+        public string Message { get; }
 
         public Error(int code, string message)
         {

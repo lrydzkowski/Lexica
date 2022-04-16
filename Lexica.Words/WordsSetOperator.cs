@@ -1,10 +1,10 @@
-﻿using Lexica.Core.Extensions;
+﻿using System;
+using System.Collections.Generic;
+using Lexica.Core.Extensions;
 using Lexica.Core.IO;
 using Lexica.Core.Models;
 using Lexica.Words.Models;
 using Lexica.Words.Services;
-using System;
-using System.Collections.Generic;
 
 namespace Lexica.Words
 {
@@ -22,9 +22,9 @@ namespace Lexica.Words
         public WordsSetOperator(ISetService setService, ISource fileSource)
             : this(setService, new List<ISource>() { fileSource }) { }
 
-        private ISetService SetService { get; set; }
+        private ISetService SetService { get; }
 
-        private List<ISource> FilesSources { get; set; }
+        private List<ISource> FilesSources { get; }
 
         private OperationResult<Set?>? LastLoadSetOperationResult { get; set; }
 
@@ -111,11 +111,7 @@ namespace Lexica.Words
 
         private bool IsTheLastElement(int index, int numberOfElements, int sequenceMaxSize)
         {
-            if (index == numberOfElements - 1 || index == sequenceMaxSize)
-            {
-                return true;
-            }
-            return false;
+            return index == numberOfElements - 1 || index == sequenceMaxSize;
         }
 
         public int GetNumberOfEntries()

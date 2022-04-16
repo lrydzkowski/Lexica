@@ -6,9 +6,9 @@ namespace Lexica.Core.IO
 {
     public class MultipleEmbeddedSource : IMultipleSource
     {
-        public string Path { get; private set; }
+        public string Path { get; }
 
-        public Assembly Assembly { get; private set; }
+        public Assembly Assembly { get; }
 
         public MultipleEmbeddedSource(string path, Assembly? assembly = null)
         {

@@ -1,6 +1,6 @@
-﻿using Lexica.Words.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Lexica.Words.Models;
 
 namespace Lexica.Learning.Models
 {
@@ -18,13 +18,13 @@ namespace Lexica.Learning.Models
             PossibleAnswers = possibleAnswers;
         }
 
-        public Entry Entry { get; private set; }
+        public Entry Entry { get; }
 
-        public QuestionTypeEnum QuestionType { get; private set; }
+        public QuestionTypeEnum QuestionType { get; }
 
-        public AnswerTypeEnum AnswerType { get; private set; }
+        public AnswerTypeEnum AnswerType { get; }
 
-        public List<string>? PossibleAnswers { get; private set; }
+        public List<string>? PossibleAnswers { get; }
 
         public List<string> GetCorrectAnswers()
         {

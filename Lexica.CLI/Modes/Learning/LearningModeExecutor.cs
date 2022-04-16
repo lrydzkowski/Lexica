@@ -1,4 +1,10 @@
-﻿using Lexica.CLI.Args;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
+using Lexica.CLI.Args;
 using Lexica.CLI.Core.Config;
 using Lexica.CLI.Core.Services;
 using Lexica.CLI.Executors;
@@ -16,12 +22,6 @@ using Lexica.Words.Services;
 using Lexica.Words.Validators;
 using Lexica.Words.Validators.Models;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace Lexica.CLI.Modes.Learning
 {
@@ -45,19 +45,19 @@ namespace Lexica.CLI.Modes.Learning
             ConsoleService = consoleService;
         }
 
-        private ConfigService<AppSettings> ConfigService { get; set; }
+        private ConfigService<AppSettings> ConfigService { get; }
 
-        private ILogger<LearningModeExecutor> Logger { get; set; }
+        private ILogger<LearningModeExecutor> Logger { get; }
 
-        private JsonService JsonService { get; set; }
+        private JsonService JsonService { get; }
 
         public ILearningHistoryService LearningHistoryService { get; set; }
 
-        private IPronunciation PronunciationService { get; set; }
+        private IPronunciation PronunciationService { get; }
 
-        private ILogger<IPronunciation> PronunciationLogger { get; set; }
+        private ILogger<IPronunciation> PronunciationLogger { get; }
 
-        private LearningModeConsoleService ConsoleService { get; set; }
+        private LearningModeConsoleService ConsoleService { get; }
 
         private AppSettings AppSettings { get; set; } = new AppSettings();
 
@@ -210,7 +210,7 @@ namespace Lexica.CLI.Modes.Learning
             {
                 throw new ArgsException("There are no arguments.");
             }
-            string modeArg = string.Join("", args[0].ToLower().Split('-').Select(x => x.UppercaseFirst()));
+            string modeArg = string.Concat(args[0].ToLower().Split('-').Select(x => x.UppercaseFirst()));
             bool modeEnumParsingResult = Enum.TryParse(modeArg, out ModeEnum mode);
             if (!modeEnumParsingResult)
             {
@@ -299,23 +299,15 @@ namespace Lexica.CLI.Modes.Learning
 
         private bool AudioCanBePlayedBeforeAnswer(AnswerTypeEnum answerType)
         {
-            if (Mode == ModeEnum.Spelling
-                || (AppSettings.Learning.PlayPronuncation.BeforeAnswer && answerType == AnswerTypeEnum.Translations))
-            {
-                return true;
-            }
-            return false;
+            return Mode == ModeEnum.Spelling
+                || (AppSettings.Learning.PlayPronuncation.BeforeAnswer && answerType == AnswerTypeEnum.Translations);
         }
 
         private bool AudioCanBePlayedAfterAnswer(AnswerTypeEnum answerType)
         {
-            if (Mode != ModeEnum.Spelling
+            return Mode != ModeEnum.Spelling
                 && AppSettings.Learning.PlayPronuncation.AfterAnswer
-                && answerType == AnswerTypeEnum.Words)
-            {
-                return true;
-            }
-            return false;
+                && answerType == AnswerTypeEnum.Words;
         }
 
         private void WriteLog(

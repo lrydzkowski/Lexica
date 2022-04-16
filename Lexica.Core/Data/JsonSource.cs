@@ -5,7 +5,7 @@ namespace Lexica.Core.Data
 {
     internal class JsonSource<T> : IDataSource<T> where T : class
     {
-        private ISource Source { get; set; }
+        private ISource Source { get; }
 
         private T? Data { get; set; }
 
@@ -25,11 +25,7 @@ namespace Lexica.Core.Data
 
         public T? Get()
         {
-            if (Data == null)
-            {
-                return Load();
-            }
-            return Data;
+            return Data ?? Load();
         }
     }
 }

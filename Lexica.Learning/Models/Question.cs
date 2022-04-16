@@ -4,11 +4,11 @@ namespace Lexica.Learning.Models
 {
     public class Question
     {
-        public string Content { get; private set; }
+        public string Content { get; }
 
-        public QuestionTypeEnum Type { get; private set; }
+        public QuestionTypeEnum Type { get; }
 
-        public List<string>? PossibleAnswers { get; private set; }
+        public List<string>? PossibleAnswers { get; }
 
         public Question(string content, QuestionTypeEnum type, List<string>? possibleAnswers = null)
         {

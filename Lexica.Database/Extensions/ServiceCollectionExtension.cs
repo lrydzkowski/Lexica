@@ -10,7 +10,7 @@ namespace Lexica.Database.Extensions
     {
         public static void AddDatabaseServices(this IServiceCollection services)
         {
-            services.AddTransient<IDbConnection>(db => new SQLiteConnection(@"Data Source=.\\lexica.db"));
+            services.AddTransient<IDbConnection>(_ => new SQLiteConnection(@"Data Source=.\\lexica.db"));
             services.AddTransient<ILearningHistoryService, LearningHistoryService>();
         }
     }

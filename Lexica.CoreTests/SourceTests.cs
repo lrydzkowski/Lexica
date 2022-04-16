@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Reflection.Exceptions;
 using Xunit;
@@ -63,7 +62,7 @@ namespace CoreTests
             var filesSource = new MultipleFilesSource(dirPath);
 
             // Act
-            List<string> list = filesSource.GetContents().Select(x => x.GetContents()).ToList<string>();
+            List<string> list = filesSource.GetContents().ConvertAll(x => x.GetContents());
 
             // Assert
             Assert.Equal(expectedContents.Count, list.Count);
@@ -95,7 +94,7 @@ namespace CoreTests
             var filesSource = new MultipleFilesSource(dirPath);
 
             // Act
-            List<string> list = filesSource.GetContents().Select(x => x.Name).ToList<string>();
+            List<string> list = filesSource.GetContents().ConvertAll(x => x.Name);
 
             // Assert
             Assert.Equal(expectedNames.Count, list.Count);
@@ -132,7 +131,7 @@ namespace CoreTests
             );
 
             // Act
-            List<string> list = embeddedSource.GetContents().Select(x => x.GetContents()).ToList<string>();
+            List<string> list = embeddedSource.GetContents().ConvertAll(x => x.GetContents());
 
             // Assert
             Assert.Equal(expectedContents.Count, list.Count);
@@ -169,7 +168,7 @@ namespace CoreTests
             );
 
             // Act
-            List<string> list = embeddedSource.GetContents().Select(x => x.Name).ToList<string>();
+            List<string> list = embeddedSource.GetContents().ConvertAll(x => x.Name);
 
             // Assert
             Assert.Equal(expectedNames.Count, list.Count);

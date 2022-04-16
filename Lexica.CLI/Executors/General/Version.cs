@@ -12,9 +12,9 @@ namespace Lexica.CLI.Executors.General
             VersionService = versionService;
         }
 
-        public BuildService BuildService { get; private set; }
+        public BuildService BuildService { get; }
 
-        public VersionService VersionService { get; private set; }
+        public VersionService VersionService { get; }
 
         public void Execute(List<string>? args = null)
         {

@@ -4,7 +4,7 @@ namespace Lexica.Core.IO
 {
     public class FileSource : ISource
     {
-        public string Name { get; private set; }
+        public string Name { get; }
 
         private string _path = "";
 

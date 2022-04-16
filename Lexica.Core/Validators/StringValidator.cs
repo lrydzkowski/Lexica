@@ -7,7 +7,7 @@ namespace Lexica.Core.Validators
 {
     public class StringValidator : IValidator<string?>
     {
-        public StringValidationData ValidationData { get; private set; }
+        public StringValidationData ValidationData { get; }
 
         public StringValidator(StringValidationData validationData)
         {

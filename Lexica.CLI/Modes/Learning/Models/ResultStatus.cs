@@ -8,9 +8,9 @@
             NumOfQuestions = numOfQuestions;
         }
 
-        public int NumOfCorrectAnswers { get; private set; }
+        public int NumOfCorrectAnswers { get; }
 
-        public int NumOfQuestions { get; private set; }
+        public int NumOfQuestions { get; }
 
         public override string ToString()
         {

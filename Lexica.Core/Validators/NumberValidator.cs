@@ -6,7 +6,7 @@ namespace Lexica.Core.Validators
 {
     public class NumberValidator : IValidator<double?>
     {
-        public NumberValidationData ValidationData { get; private set; }
+        public NumberValidationData ValidationData { get; }
 
         public NumberValidator(NumberValidationData validationData)
         {

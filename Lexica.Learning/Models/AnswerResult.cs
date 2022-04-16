@@ -4,11 +4,11 @@ namespace Lexica.Learning.Models
 {
     public class AnswerResult
     {
-        public bool Result { get; private set; }
+        public bool Result { get; }
 
-        public List<string> GivenAnswers { get; private set; }
+        public List<string> GivenAnswers { get; }
 
-        public List<string> CorrectAnswers { get; private set; }
+        public List<string> CorrectAnswers { get; }
 
         public AnswerResult(bool result, List<string> givenAnswers, List<string> correctAnswers)
         {

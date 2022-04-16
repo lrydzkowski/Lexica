@@ -1,10 +1,10 @@
-﻿using Lexica.Learning.Config;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Lexica.Learning.Config;
 using Lexica.Learning.Models;
 using Lexica.Words;
 using Lexica.Words.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Lexica.Learning
 {
@@ -20,15 +20,15 @@ namespace Lexica.Learning
             Reset();
         }
 
-        private WordsSetOperator WordsSetOperator { get; set; }
+        private WordsSetOperator WordsSetOperator { get; }
 
-        private LearningSettings Settings { get; set; }
+        private LearningSettings Settings { get; }
 
-        private ModeEnum Mode { get; set; }
+        private ModeEnum Mode { get; }
 
         public QuestionInfo? CurrentQuestionInfo { get; private set; } = null;
 
-        public Dictionary<QuestionTypeEnum, Dictionary<string, AnswerRegister>> AnswersRegister { get; private set; }
+        public Dictionary<QuestionTypeEnum, Dictionary<string, AnswerRegister>> AnswersRegister { get; }
             = new Dictionary<QuestionTypeEnum, Dictionary<string, AnswerRegister>>();
 
         public void Reset()
@@ -120,8 +120,7 @@ namespace Lexica.Learning
                         case AnswerTypeEnum.Words:
                             questionWords = entry.Translations;
                             possibleAnswers = WordsSetOperator.GetRandomEntries(numOfPossibleAnswers)
-                                .Select(x => string.Join(", ", x.Words))
-                                .ToList();
+                                .ConvertAll(x => string.Join(", ", x.Words));
                             string wordsProperAnswer = string.Join(", ", entry.Words);
                             if (!possibleAnswers.Contains(wordsProperAnswer))
                             {
@@ -134,8 +133,7 @@ namespace Lexica.Learning
                         case AnswerTypeEnum.Translations:
                             questionWords = entry.Words;
                             possibleAnswers = WordsSetOperator.GetRandomEntries(numOfPossibleAnswers)
-                                .Select(x => string.Join(", ", x.Translations))
-                                .ToList();
+                                .ConvertAll(x => string.Join(", ", x.Translations));
                             string translationsProperAnswer = string.Join(", ", entry.Translations);
                             if (!possibleAnswers.Contains(translationsProperAnswer))
                             {
@@ -268,11 +266,7 @@ namespace Lexica.Learning
             }
             string answerTypeKey = answerType.ToString("g");
             int currentValue = AnswersRegister[questionTypeEnum][entry.Id][answerTypeKey].CurrentValue;
-            if (currentValue < GetNumOfRequiredAnswers(questionTypeEnum))
-            {
-                return false;
-            }
-            return true;
+            return currentValue >= GetNumOfRequiredAnswers(questionTypeEnum);
         }
 
         public bool IsQuestionRepeated(QuestionInfo nextQuestionInfo)
@@ -327,7 +321,11 @@ namespace Lexica.Learning
             correctAnswers.Sort();
 
             bool result = true;
-            if (string.Join(',', answerWords).ToLower() == string.Join(',', correctAnswers).ToLower())
+            bool answersAreCorrect = string.Join(',', answerWords).Equals(
+                string.Join(',', correctAnswers),
+                StringComparison.InvariantCultureIgnoreCase
+            );
+            if (answersAreCorrect)
             {
                 UpdateAnswersRegister(1);
             }

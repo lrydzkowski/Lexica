@@ -25,11 +25,11 @@ namespace Lexica.Pronunciation.Api.WebDictionary
             UrlService = urlService;
         }
 
-        public WebDictionarySettings Settings { get; private set; }
+        public WebDictionarySettings Settings { get; }
 
-        public ILogger<IPronunciation> Logger { get; private set; }
+        public ILogger<IPronunciation> Logger { get; }
 
-        public UrlService UrlService { get; private set; }
+        public UrlService UrlService { get; }
 
         public async Task<bool> AudioExists(string word)
         {

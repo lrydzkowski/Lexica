@@ -2,9 +2,9 @@
 {
     public class GeneralValidationData
     {
-        public bool Mandatory { get; private set; }
+        public bool Mandatory { get; }
 
-        public string Name { get; private set; }
+        public string Name { get; }
 
         public GeneralValidationData(bool mandatory, string name)
         {
