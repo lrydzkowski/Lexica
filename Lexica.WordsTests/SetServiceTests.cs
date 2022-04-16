@@ -110,7 +110,7 @@ namespace Lexica.WordsTests
                     {
                         new Dictionary<string, string>() {
                             { "Line", "22" }, { "FileName", "too_long_translation_1.txt" }, { "Name", "Translation" },
-                            { "Value", "505050505050505050505050505050505050505050505050505050" }
+                            { "Value", "200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200" }
                         }
                     }
                 },
@@ -191,7 +191,7 @@ namespace Lexica.WordsTests
                         new Dictionary<string, string>() { { "Line", "23" }, { "FileName", "example_set_2.txt" } },
                         new Dictionary<string, string>() {
                             { "Line", "25" }, { "FileName", "example_set_2.txt" }, { "Name", "Translation" },
-                            { "Value", "strona wszczynająca spór sądowy5050505050505sądowy5050505050505sądowy5050505050505sądowy5050505050505" }
+                            { "Value", "200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200" }
                         },
                         new Dictionary<string, string>() {
                             { "Line", "13" }, { "FileName", "example_set_3.txt" }, { "Name", "Word" },
@@ -199,7 +199,7 @@ namespace Lexica.WordsTests
                         },
                         new Dictionary<string, string>() {
                             { "Line", "18" }, { "FileName", "example_set_3.txt" }, { "Name", "Translation" },
-                            { "Value", "zuchwałyWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW" }
+                            { "Value", "200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200" }
                         }
                     }
                 }
