@@ -2,6 +2,8 @@
 {
     public class LearningSettings
     {
+        public static string SectionName => "Learning";
+
         public int NumOfOpenQuestions { get; set; } = 2;
 
         public bool ResetAfterMistake { get; set; } = false;

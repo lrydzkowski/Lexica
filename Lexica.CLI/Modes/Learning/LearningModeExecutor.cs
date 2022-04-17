@@ -5,19 +5,20 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Lexica.CLI.Args;
-using Lexica.CLI.Core.Config;
 using Lexica.CLI.Core.Services;
 using Lexica.CLI.Executors;
 using Lexica.CLI.Modes.Learning.Models;
 using Lexica.CLI.Modes.Learning.Services;
 using Lexica.Core.Extensions;
 using Lexica.Core.IO;
-using Lexica.Core.Services;
 using Lexica.Learning;
+using Lexica.Learning.Config;
 using Lexica.Learning.Models;
 using Lexica.Learning.Services;
 using Lexica.Pronunciation;
+using Lexica.Pronunciation.Config;
 using Lexica.Words;
+using Lexica.Words.Config;
 using Lexica.Words.Services;
 using Lexica.Words.Validators;
 using Lexica.Words.Validators.Models;
@@ -28,7 +29,9 @@ namespace Lexica.CLI.Modes.Learning
     internal class LearningModeExecutor : IAsyncExecutor
     {
         public LearningModeExecutor(
-            ConfigService<AppSettings> configService,
+            WordsSettings wordsSettings,
+            LearningSettings learningSettings,
+            PronunciationApiSettings pronunciationApiSettings,
             ILogger<LearningModeExecutor> logger,
             JsonService jsonService,
             ILearningHistoryService learningHistoryService,
@@ -36,7 +39,9 @@ namespace Lexica.CLI.Modes.Learning
             ILogger<IPronunciation> pronunciationLogger,
             LearningModeConsoleService consoleService)
         {
-            ConfigService = configService;
+            WordsSettings = wordsSettings;
+            LearningSettings = learningSettings;
+            PronunciationApiSettings = pronunciationApiSettings;
             Logger = logger;
             JsonService = jsonService;
             LearningHistoryService = learningHistoryService;
@@ -45,7 +50,11 @@ namespace Lexica.CLI.Modes.Learning
             ConsoleService = consoleService;
         }
 
-        private ConfigService<AppSettings> ConfigService { get; }
+        public WordsSettings WordsSettings { get; }
+
+        public LearningSettings LearningSettings { get; }
+
+        public PronunciationApiSettings PronunciationApiSettings { get; }
 
         private ILogger<LearningModeExecutor> Logger { get; }
 
@@ -58,8 +67,6 @@ namespace Lexica.CLI.Modes.Learning
         private ILogger<IPronunciation> PronunciationLogger { get; }
 
         private LearningModeConsoleService ConsoleService { get; }
-
-        private AppSettings AppSettings { get; set; } = new AppSettings();
 
         private ModeEnum Mode { get; set; }
 
@@ -74,7 +81,6 @@ namespace Lexica.CLI.Modes.Learning
         public async Task ExecuteAsync(List<string>? args = null)
         {
             VerifyParameters(args);
-            VerifyConfiguration();
             ConsoleService.SetVersionInWindowTitle();
             ConsoleService.ClearConsole();
             LearningModeOperator modeOperator = GetLearningModeOperator();
@@ -91,7 +97,7 @@ namespace Lexica.CLI.Modes.Learning
                 if (Mode == ModeEnum.Spelling
                     && !await PronunciationAudioExists(modeOperator.CurrentQuestionInfo.Entry.Words))
                 {
-                    modeOperator.UpdateAnswersRegister(AppSettings.Learning?.NumOfOpenQuestions ?? 0);
+                    modeOperator.UpdateAnswersRegister(LearningSettings.NumOfOpenQuestions);
                     continue;
                 }
                 PlayPronunciationAudio(
@@ -195,15 +201,6 @@ namespace Lexica.CLI.Modes.Learning
             ConsoleService.ShowSummary();
         }
 
-        private void VerifyConfiguration()
-        {
-            AppSettings = ConfigService.Config;
-            if (Mode == ModeEnum.Spelling && AppSettings.PronunciationApi == null)
-            {
-                throw new ArgsException("There is no spelling configuration in appsettings.json.");
-            }
-        }
-
         private void VerifyParameters(List<string>? args = null)
         {
             if (args == null || args.Count == 0)
@@ -235,9 +232,7 @@ namespace Lexica.CLI.Modes.Learning
             var fileSources = new List<ISource>();
             for (int i = 0; i < FilePaths.Count; i++)
             {
-                string absolutePath = AppSettings.Words != null
-                    ? AppSettings.Words.SetsDirectoryPath
-                    : AppDomain.CurrentDomain.BaseDirectory;
+                string absolutePath = WordsSettings.SetsDirectoryPath ?? AppDomain.CurrentDomain.BaseDirectory;
                 if (FilePaths[i].StartsWith('.'))
                 {
                     absolutePath = AppDomain.CurrentDomain.BaseDirectory;
@@ -247,7 +242,7 @@ namespace Lexica.CLI.Modes.Learning
                 fileSources.Add(new FileSource(filePath));
             }
             var wordsSetOperator = new WordsSetOperator(setService, fileSources);
-            var learningModeOperator = new LearningModeOperator(wordsSetOperator, AppSettings.Learning, Mode);
+            var learningModeOperator = new LearningModeOperator(wordsSetOperator, LearningSettings, Mode);
             return learningModeOperator;
         }
 
@@ -284,10 +279,6 @@ namespace Lexica.CLI.Modes.Learning
             {
                 return;
             }
-            if (AppSettings.PronunciationApi == null)
-            {
-                return;
-            }
             _ = PronunciationService.PlayAsync(words.ToList())
                 .ContinueWith(
                     x => PronunciationLogger.LogError(
@@ -300,13 +291,13 @@ namespace Lexica.CLI.Modes.Learning
         private bool AudioCanBePlayedBeforeAnswer(AnswerTypeEnum answerType)
         {
             return Mode == ModeEnum.Spelling
-                || (AppSettings.Learning.PlayPronuncation.BeforeAnswer && answerType == AnswerTypeEnum.Translations);
+                || (LearningSettings.PlayPronuncation.BeforeAnswer && answerType == AnswerTypeEnum.Translations);
         }
 
         private bool AudioCanBePlayedAfterAnswer(AnswerTypeEnum answerType)
         {
             return Mode != ModeEnum.Spelling
-                && AppSettings.Learning.PlayPronuncation.AfterAnswer
+                && LearningSettings.PlayPronuncation.AfterAnswer
                 && answerType == AnswerTypeEnum.Words;
         }
 
@@ -318,7 +309,7 @@ namespace Lexica.CLI.Modes.Learning
             ResultStatus openQuestionsResultStatus,
             Dictionary<QuestionTypeEnum, Dictionary<string, AnswerRegister>> answersRegister)
         {
-            if (AppSettings.Learning.SaveDebugLogs)
+            if (LearningSettings.SaveDebugLogs)
             {
                 JsonSerializerOptions options = JsonService.GetJsonSerializerOptions(true, null);
                 string logData = JsonSerializer.Serialize(
@@ -339,8 +330,7 @@ namespace Lexica.CLI.Modes.Learning
 
         private bool ShouldResetMode(bool isAnswerCorrect, CommandEnum command)
         {
-            bool resetAfterMistake = AppSettings.Learning?.ResetAfterMistake ?? false;
-            return resetAfterMistake && !isAnswerCorrect && command != CommandEnum.Override;
+            return LearningSettings.ResetAfterMistake && !isAnswerCorrect && command != CommandEnum.Override;
         }
     }
 }

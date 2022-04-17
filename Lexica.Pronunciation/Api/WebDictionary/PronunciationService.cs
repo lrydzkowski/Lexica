@@ -8,6 +8,7 @@ using HtmlAgilityPack;
 using Lexica.Core.Extensions;
 using Lexica.Core.Services;
 using Lexica.Pronunciation.Api.WebDictionary.Config;
+using Lexica.Pronunciation.Config;
 using Microsoft.Extensions.Logging;
 using NAudio.Wave;
 
@@ -16,11 +17,11 @@ namespace Lexica.Pronunciation.Api.WebDictionary
     public class PronunciationService : IPronunciation
     {
         public PronunciationService(
-            WebDictionarySettings settings,
+            PronunciationApiSettings settings,
             ILogger<IPronunciation> logger,
             UrlService urlService)
         {
-            Settings = settings;
+            Settings = settings.WebDictionary;
             Logger = logger;
             UrlService = urlService;
         }

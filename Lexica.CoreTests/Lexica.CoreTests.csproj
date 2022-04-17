@@ -18,11 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Config\appsettings.schema.json" />
-    <EmbeddedResource Include="Resources\Config\appsettings1.wrong.json" />
-    <EmbeddedResource Include="Resources\Config\appsettings2.wrong.json" />
-    <EmbeddedResource Include="Resources\Config\appsettings3.wrong.json" />
-    <EmbeddedResource Include="Resources\Config\appsettings4.correct.json" />
     <EmbeddedResource Include="Resources\Multiple\Embedded\embedded_file1.txt" />
     <EmbeddedResource Include="Resources\Multiple\Embedded\embedded_file2.txt" />
   </ItemGroup>
