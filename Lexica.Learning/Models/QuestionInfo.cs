@@ -1,19 +1,15 @@
-﻿using Lexica.Core.Models;
-using Lexica.Words.Models;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Lexica.Words.Models;
 
 namespace Lexica.Learning.Models
 {
     public class QuestionInfo
     {
         public QuestionInfo(
-            Entry entry, 
-            QuestionTypeEnum questionType, 
-            AnswerTypeEnum answerType, 
+            Entry entry,
+            QuestionTypeEnum questionType,
+            AnswerTypeEnum answerType,
             List<string>? possibleAnswers)
         {
             Entry = entry;
@@ -22,13 +18,13 @@ namespace Lexica.Learning.Models
             PossibleAnswers = possibleAnswers;
         }
 
-        public Entry Entry { get; private set; }
+        public Entry Entry { get; }
 
-        public QuestionTypeEnum QuestionType { get; private set; }
+        public QuestionTypeEnum QuestionType { get; }
 
-        public AnswerTypeEnum AnswerType { get; private set; }
+        public AnswerTypeEnum AnswerType { get; }
 
-        public List<string>? PossibleAnswers { get; private set; }
+        public List<string>? PossibleAnswers { get; }
 
         public List<string> GetCorrectAnswers()
         {
@@ -38,6 +34,7 @@ namespace Lexica.Learning.Models
                 case AnswerTypeEnum.Translations:
                     correctWords = Entry.Translations;
                     break;
+
                 case AnswerTypeEnum.Words:
                     correctWords = Entry.Words;
                     break;

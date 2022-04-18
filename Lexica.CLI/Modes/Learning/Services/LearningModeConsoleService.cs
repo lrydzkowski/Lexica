@@ -1,14 +1,14 @@
-﻿using Lexica.CLI.Core.Services;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using Lexica.CLI.Core.Services;
 using Lexica.CLI.Modes.Learning.Models;
 using Lexica.Core.Extensions;
 using Lexica.Learning.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Lexica.CLI.Modes.Learning.Services
 {
-    class LearningModeConsoleService : IService
+    internal class LearningModeConsoleService : IService
     {
         public LearningModeConsoleService(BuildService buildService, VersionService versionService)
         {
@@ -16,9 +16,9 @@ namespace Lexica.CLI.Modes.Learning.Services
             VersionService = versionService;
         }
 
-        public BuildService BuildService { get; private set; }
+        public BuildService BuildService { get; }
 
-        public VersionService VersionService { get; private set; }
+        public VersionService VersionService { get; }
 
         public void SetVersionInWindowTitle()
         {
@@ -53,9 +53,11 @@ namespace Lexica.CLI.Modes.Learning.Services
                 case ModeEnum.Spelling:
                     lineAfterRendering = 6;
                     break;
+
                 case ModeEnum.OnlyOpen:
                     lineAfterRendering = 6;
                     break;
+
                 case ModeEnum.Full:
                     lineAfterRendering = 7;
                     break;
@@ -67,50 +69,48 @@ namespace Lexica.CLI.Modes.Learning.Services
             }
             else
             {
-                Console.Write(" (Enter) Next question;");
-                Console.Write(" o Override;");
-                Console.Write(" r Restart;");
-                Console.Write(" c Close;");
+                Console.Write(" (Enter) Next question; o Override; r Restart; c Close;".PadRight(80));
             }
             Console.WriteLine();
             Console.WriteLine();
             switch (mode)
             {
                 case ModeEnum.Full:
-                    Console.Write($"  Closed questions result: ".PadRight(27));
-                    Console.WriteLine(closedQuestionsResultStatus.ToString(leftPad: 4).PadRight(80));
-                    Console.Write($"  Open questions result: ".PadRight(27));
-                    Console.WriteLine(openQuestionsResultStatus.ToString(leftPad: 4).PadRight(80));
+                    Console.Write("  Closed questions result: ".PadRight(27));
+                    Console.WriteLine(closedQuestionsResultStatus.ToString(leftPad: 4).PadRight(80 - 27));
+                    Console.Write("  Open questions result: ".PadRight(27));
+                    Console.WriteLine(openQuestionsResultStatus.ToString(leftPad: 4).PadRight(80 - 27));
                     break;
+
                 default:
-                    Console.Write($"  Result: ".PadRight(27));
-                    Console.WriteLine(openQuestionsResultStatus.ToString(leftPad: 4).PadRight(80));
+                    Console.Write("  Result: ".PadRight(27));
+                    Console.WriteLine(openQuestionsResultStatus.ToString(leftPad: 4).PadRight(80 - 27));
                     break;
             }
-            Console.Write($"  Current question result: ".PadRight(27));
-            Console.WriteLine(currentQuestionResultStatus.ToString(leftPad: 4).PadRight(80));
+            Console.Write("  Current question result: ".PadRight(27));
+            Console.WriteLine(currentQuestionResultStatus.ToString(leftPad: 4).PadRight(80 - 27));
             Console.WriteLine();
             if (mode != ModeEnum.Spelling)
             {
                 var previousForegroundColor = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.Blue;
                 lineAfterRendering += ShowMultilineText(
-                    question.Content, 
-                    firstLineLeftIndendation: 2, 
-                    nextLinesLeftIndendation: 2, 
+                    question.Content,
+                    firstLineLeftIndendation: 2,
+                    nextLinesLeftIndendation: 2,
                     maxNumOfChars: 78
                 );
                 Console.ForegroundColor = previousForegroundColor;
             }
-            if (question.PossibleAnswers != null && question.PossibleAnswers.Count > 0)
+            if (question.PossibleAnswers?.Count > 0)
             {
                 for (int i = 0; i < question.PossibleAnswers.Count; i++)
                 {
                     Console.Write($"  {i + 1}. ");
                     lineAfterRendering += ShowMultilineText(
-                        question.PossibleAnswers[i], 
-                        firstLineLeftIndendation: 0, 
-                        nextLinesLeftIndendation: 5, 
+                        question.PossibleAnswers[i],
+                        firstLineLeftIndendation: 0,
+                        nextLinesLeftIndendation: 5,
                         maxNumOfChars: 75
                     );
                 }
@@ -154,7 +154,7 @@ namespace Lexica.CLI.Modes.Learning.Services
                 if (stringBuilder.Length > 0)
                 {
                     Console.Write("\b \b");
-                    stringBuilder.Length -= 1;
+                    stringBuilder.Length--;
                 }
                 return keyInfo;
             }
@@ -190,11 +190,7 @@ namespace Lexica.CLI.Modes.Learning.Services
                 return true;
             }
             var additionalChars = new List<char> { '.', ',', '-', ';', '\'', ' ' };
-            if (additionalChars.Contains(keyInfo.KeyChar))
-            {
-                return true;
-            }
-            return false;
+            return additionalChars.Contains(keyInfo.KeyChar);
         }
 
         private bool CanGetNextChar(ConsoleKeyInfo keyInfo)
@@ -212,23 +208,25 @@ namespace Lexica.CLI.Modes.Learning.Services
 
         public CommandEnum HandleCommand()
         {
-            do
+            while (true)
             {
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true);
                 switch (keyInfo.KeyChar)
                 {
                     case 'o':
                         return CommandEnum.Override;
+
                     case 'r':
                         return CommandEnum.Restart;
+
                     case 'c':
                         return CommandEnum.Close;
+
                     case '\n':
                     case '\r':
                         return CommandEnum.None;
                 }
             }
-            while (true);
         }
 
         public void PresentResult(
@@ -270,9 +268,9 @@ namespace Lexica.CLI.Modes.Learning.Services
                     Console.Write("  Correct answer is: ");
                     Console.ForegroundColor = ConsoleColor.Blue;
                     ShowMultilineText(
-                        correctAnswer, 
-                        firstLineLeftIndendation: 0, 
-                        nextLinesLeftIndendation: 21, 
+                        correctAnswer,
+                        firstLineLeftIndendation: 0,
+                        nextLinesLeftIndendation: 21,
                         maxNumOfChars: 59
                     );
                 }
@@ -281,7 +279,7 @@ namespace Lexica.CLI.Modes.Learning.Services
             {
                 Console.WriteLine();
                 Console.ForegroundColor = standardForegroundColor;
-                Console.Write($"  Translations: ");
+                Console.Write("  Translations: ");
                 Console.ForegroundColor = ConsoleColor.Blue;
                 ShowMultilineText(
                     translationsInfo,

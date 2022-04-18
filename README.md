@@ -1,7 +1,7 @@
 # Lexica 1.0.0
 
-English vocabulary learning software written in .NET Core 5 (C# console application). Application works only on
-Windows 10.
+English vocabulary learning software written in .NET Core 6 (C# console application). Application works only on
+Windows 10+.
 
 ## Table of contents
 

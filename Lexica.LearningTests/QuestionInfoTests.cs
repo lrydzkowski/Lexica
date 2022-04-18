@@ -1,8 +1,6 @@
-using Lexica.Core.Models;
+using System.Collections.Generic;
 using Lexica.Learning.Models;
 using Lexica.Words.Models;
-using System;
-using System.Collections.Generic;
 using Xunit;
 
 namespace Lexica.LearningTests
@@ -53,7 +51,7 @@ namespace Lexica.LearningTests
         {
             // Arrange
             var questionInfo1 = new QuestionInfo(entry, questionType, modeType, possibleAnswers1);
-            var questionInfo2 = new QuestionInfo(entry, questionType, modeType, possibleAnswers2 );
+            var questionInfo2 = new QuestionInfo(entry, questionType, modeType, possibleAnswers2);
 
             // Act
             bool result = questionInfo1.Equals(questionInfo2);

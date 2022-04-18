@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lexica.Learning.Models
 {
@@ -31,7 +27,6 @@ namespace Lexica.Learning.Models
                 PropertyInfo propertyInfo = GetPropertyInfo(propertyName);
                 propertyInfo.SetValue(this, value, null);
             }
-
         }
 
         public PropertyInfo GetPropertyInfo(string propertyName)

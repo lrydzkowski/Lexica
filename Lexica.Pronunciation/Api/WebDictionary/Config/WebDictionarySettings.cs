@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Lexica.Pronunciation.Api.WebDictionary.Config
+﻿namespace Lexica.Pronunciation.Api.WebDictionary.Config
 {
     public class WebDictionarySettings
     {

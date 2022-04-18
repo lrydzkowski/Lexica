@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Lexica.CLI.Executors
 {
-    interface IAsyncExecutor
+    internal interface IAsyncExecutor
     {
         Task ExecuteAsync(List<string>? args = null);
     }

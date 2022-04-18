@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Reflection.Exceptions;
-using System.Text;
 
 namespace Lexica.Core.IO
 {
     public class EmbeddedSource : ISource
     {
-        public string Name { get; private set; }
+        public string Name { get; }
 
-        public string Path { get; private set; }
+        public string Path { get; }
 
         public string Namespace
         {
@@ -21,7 +17,7 @@ namespace Lexica.Core.IO
             }
         }
 
-        public Assembly Assembly { get; private set; }
+        public Assembly Assembly { get; }
 
         public string? Contents { get; private set; }
 

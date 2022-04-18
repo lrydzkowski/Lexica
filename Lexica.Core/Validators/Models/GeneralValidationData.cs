@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Text;
-
-namespace Lexica.Core.Validators.Models
+﻿namespace Lexica.Core.Validators.Models
 {
     public class GeneralValidationData
     {
-        public bool Mandatory { get; private set; }
+        public bool Mandatory { get; }
 
-        public string Name { get; private set; }
+        public string Name { get; }
 
         public GeneralValidationData(bool mandatory, string name)
         {

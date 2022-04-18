@@ -1,11 +1,10 @@
-﻿using Lexica.CLI.Core.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
+using Lexica.CLI.Core.Services;
 
 namespace Lexica.CLI.Executors.General
 {
-    class Version : IExecutor
+    internal class Version : IExecutor
     {
         public Version(BuildService buildService, VersionService versionService)
         {
@@ -13,9 +12,9 @@ namespace Lexica.CLI.Executors.General
             VersionService = versionService;
         }
 
-        public BuildService BuildService { get; private set; }
+        public BuildService BuildService { get; }
 
-        public VersionService VersionService { get; private set; }
+        public VersionService VersionService { get; }
 
         public void Execute(List<string>? args = null)
         {

@@ -2,7 +2,7 @@
 
 namespace Lexica.CLI.Args
 {
-    class ArgsException : Exception
+    internal class ArgsException : Exception
     {
         public ArgsException()
         {

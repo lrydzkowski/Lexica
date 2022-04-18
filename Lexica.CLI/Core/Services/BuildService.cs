@@ -1,12 +1,10 @@
-﻿using Lexica.Core.IO;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Text;
+using Lexica.Core.IO;
 
 namespace Lexica.CLI.Core.Services
 {
-    class BuildService : IService
+    internal class BuildService : IService
     {
         public string GetBuild()
         {

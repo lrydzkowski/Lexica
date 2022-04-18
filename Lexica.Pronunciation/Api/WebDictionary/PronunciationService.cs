@@ -1,35 +1,36 @@
-﻿using Lexica.Core.Extensions;
-using Lexica.Core.Services;
-using Lexica.Pronunciation.Api.WebDictionary.Config;
-using Microsoft.Extensions.Logging;
-using NAudio.Wave;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using HtmlAgilityPack;
+using Lexica.Core.Extensions;
+using Lexica.Core.Services;
+using Lexica.Pronunciation.Api.WebDictionary.Config;
+using Lexica.Pronunciation.Config;
+using Microsoft.Extensions.Logging;
+using NAudio.Wave;
 
 namespace Lexica.Pronunciation.Api.WebDictionary
 {
     public class PronunciationService : IPronunciation
     {
         public PronunciationService(
-            WebDictionarySettings settings, 
+            PronunciationApiSettings settings,
             ILogger<IPronunciation> logger,
             UrlService urlService)
         {
-            Settings = settings;
+            Settings = settings.WebDictionary;
             Logger = logger;
             UrlService = urlService;
         }
 
-        public WebDictionarySettings Settings { get; private set; }
+        public WebDictionarySettings Settings { get; }
 
-        public ILogger<IPronunciation> Logger { get; private set; }
+        public ILogger<IPronunciation> Logger { get; }
 
-        public UrlService UrlService { get; private set; }
+        public UrlService UrlService { get; }
 
         public async Task<bool> AudioExists(string word)
         {
@@ -88,8 +89,10 @@ namespace Lexica.Pronunciation.Api.WebDictionary
             {
                 return null;
             }
-            using var webClient = new WebClient();
-            await webClient.DownloadFileTaskAsync(new Uri(mp3FileUrl), filePath);
+            using var httpClient = new HttpClient();
+            using var stream = await httpClient.GetStreamAsync(mp3FileUrl);
+            using var fileStream = new FileStream(filePath, FileMode.CreateNew);
+            await stream.CopyToAsync(fileStream);
             if (filePath == null || !File.Exists(filePath))
             {
                 return null;
@@ -119,15 +122,7 @@ namespace Lexica.Pronunciation.Api.WebDictionary
                 Logger.LogError(content);
                 return null;
             }
-
-            var rg = new Regex(@"/[^>=]+us_pron[^>]+\.mp3", RegexOptions.IgnoreCase);
-            MatchCollection matches = rg.Matches(content);
-            string? fileUrl = null;
-            foreach (Match match in matches)
-            {
-                fileUrl = match.Value;
-                break;
-            }
+            string? fileUrl = GetAudioFileUrlFromHtml(word, content);
             if (fileUrl == null)
             {
                 return null;
@@ -149,6 +144,40 @@ namespace Lexica.Pronunciation.Api.WebDictionary
         {
             string escapedWord = word.Replace(" ", "-");
             return Settings.UrlPath.Replace("{word}", escapedWord);
+        }
+
+        private static string? GetAudioFileUrlFromHtml(string word, string content)
+        {
+            string? fileUrl = null;
+            HtmlDocument htmlDoc = new();
+            htmlDoc.LoadHtml(content);
+            HtmlNodeCollection nodes = htmlDoc.DocumentNode.SelectNodes("//div[@class=\"pos-header dpos-h\"]");
+            foreach (HtmlNode node in nodes)
+            {
+                HtmlNode titleNode = node.SelectSingleNode(".//div[@class=\"di-title\"]/span/span");
+                if (titleNode == null)
+                {
+                    continue;
+                }
+                string? title = titleNode.InnerText?.Trim();
+                if (title != word)
+                {
+                    continue;
+                }
+                HtmlNode audioSourceNode = node.SelectSingleNode(".//span[@class=\"us dpron-i \"]//source[@type=\"audio/mpeg\"]");
+                if (audioSourceNode == null)
+                {
+                    continue;
+                }
+                string src = audioSourceNode.GetAttributeValue<string>("src", def: "");
+                if (string.IsNullOrEmpty(src))
+                {
+                    continue;
+                }
+                fileUrl = src;
+            }
+
+            return fileUrl;
         }
     }
 }

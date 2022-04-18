@@ -1,11 +1,9 @@
-﻿using Lexica.Core.IO;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Reflection.Exceptions;
-using System.Text;
+using Lexica.Core.IO;
 using Xunit;
 
 namespace CoreTests
@@ -62,9 +60,9 @@ namespace CoreTests
         {
             // Arrange
             var filesSource = new MultipleFilesSource(dirPath);
-            
+
             // Act
-            List<string> list = filesSource.GetContents().Select(x => x.GetContents()).ToList<string>();
+            List<string> list = filesSource.GetContents().ConvertAll(x => x.GetContents());
 
             // Assert
             Assert.Equal(expectedContents.Count, list.Count);
@@ -96,7 +94,7 @@ namespace CoreTests
             var filesSource = new MultipleFilesSource(dirPath);
 
             // Act
-            List<string> list = filesSource.GetContents().Select(x => x.Name).ToList<string>();
+            List<string> list = filesSource.GetContents().ConvertAll(x => x.Name);
 
             // Assert
             Assert.Equal(expectedNames.Count, list.Count);
@@ -123,17 +121,17 @@ namespace CoreTests
         [Theory]
         [MemberData(nameof(GetMultipleEmbeddedFilesCorrectPathParameters))]
         public void GetMultipleEmbeddedFiles_CorrectPath_ReturnsProperContents(
-            string dirPath, 
+            string dirPath,
             List<string> expectedContents)
         {
             // Arrange
             var embeddedSource = new MultipleEmbeddedSource(
-                dirPath, 
+                dirPath,
                 Assembly.GetExecutingAssembly()
             );
 
             // Act
-            List<string> list = embeddedSource.GetContents().Select(x => x.GetContents()).ToList<string>();
+            List<string> list = embeddedSource.GetContents().ConvertAll(x => x.GetContents());
 
             // Assert
             Assert.Equal(expectedContents.Count, list.Count);
@@ -160,7 +158,7 @@ namespace CoreTests
         [Theory]
         [MemberData(nameof(GetMultipleEmbeddedFilesCorrectNames))]
         public void GetMultipleEmbeddedFiles_CorrectPath_ReturnsProperNames(
-            string dirPath, 
+            string dirPath,
             List<string> expectedNames)
         {
             // Arrange
@@ -170,7 +168,7 @@ namespace CoreTests
             );
 
             // Act
-            List<string> list = embeddedSource.GetContents().Select(x => x.Name).ToList<string>();
+            List<string> list = embeddedSource.GetContents().ConvertAll(x => x.Name);
 
             // Assert
             Assert.Equal(expectedNames.Count, list.Count);

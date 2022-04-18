@@ -1,14 +1,12 @@
-﻿using Lexica.Core.Models;
+﻿using System.Collections.Generic;
+using Lexica.Core.Models;
 using Lexica.Core.Validators.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Lexica.Core.Validators
 {
     public class NumberValidator : IValidator<double?>
     {
-        public NumberValidationData ValidationData { get; private set; }
+        public NumberValidationData ValidationData { get; }
 
         public NumberValidator(NumberValidationData validationData)
         {
@@ -38,8 +36,8 @@ namespace Lexica.Core.Validators
                     new Error<Dictionary<string, string>>(
                         (int)ErrorCodesEnum.IsTooShort,
                         $"Value '{data}' is too small, it can't be smaller than {ValidationData.MinValue}.",
-                        new Dictionary<string, string>() { 
-                            { "Name", ValidationData.Name }, { "Value", ((double)data).ToString() } 
+                        new Dictionary<string, string>() {
+                            { "Name", ValidationData.Name }, { "Value", ((double)data).ToString() }
                         }
                     )
                 );
@@ -50,8 +48,8 @@ namespace Lexica.Core.Validators
                     new Error<Dictionary<string, string>>(
                         (int)ErrorCodesEnum.IsTooLong,
                         $"Value '{data}' is too big, it can't be bigger than {ValidationData.MaxValue}.",
-                        new Dictionary<string, string>() { 
-                            { "Name", ValidationData.Name }, { "Value", ((double)data).ToString() } 
+                        new Dictionary<string, string>() {
+                            { "Name", ValidationData.Name }, { "Value", ((double)data).ToString() }
                         }
                     )
                 );

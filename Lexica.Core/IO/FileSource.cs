@@ -1,18 +1,14 @@
-﻿using Lexica.Core.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 
 namespace Lexica.Core.IO
 {
     public class FileSource : ISource
     {
-        public string Name { get; private set; }
+        public string Name { get; }
 
         private string _path = "";
-        public string Path 
+
+        public string Path
         {
             get
             {

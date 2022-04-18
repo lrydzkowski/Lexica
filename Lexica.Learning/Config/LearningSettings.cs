@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Lexica.Learning.Config
+﻿namespace Lexica.Learning.Config
 {
     public class LearningSettings
     {
+        public static string SectionName => "Learning";
+
         public int NumOfOpenQuestions { get; set; } = 2;
 
         public bool ResetAfterMistake { get; set; } = false;

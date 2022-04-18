@@ -1,11 +1,11 @@
-﻿using Lexica.CLI.Core.Services;
-using Microsoft.Extensions.DependencyInjection;
-using System;
+﻿using System;
 using System.Linq;
+using Lexica.CLI.Core.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Lexica.CLI.Core.Extensions
 {
-    static class ServiceCollectionExtensions
+    internal static class ServiceCollectionExtensions
     {
         public static void AddCoreModuleServices(this IServiceCollection services)
         {

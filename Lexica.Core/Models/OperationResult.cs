@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Lexica.Core.Models
 {
@@ -101,6 +99,7 @@ namespace Lexica.Core.Models
                 case MergeModeEnum.Overwrite:
                     Data = result.Data;
                     break;
+
                 case MergeModeEnum.OverwriteIfNull:
                     if (Data == null)
                     {

@@ -1,11 +1,11 @@
-﻿using Dapper;
-using Lexica.Learning.Services;
-using System.Data;
+﻿using System.Data;
 using System.Threading.Tasks;
+using Dapper;
+using Lexica.Learning.Services;
 
 namespace Lexica.Database.Services
 {
-    class LearningHistoryService : ILearningHistoryService
+    internal class LearningHistoryService : ILearningHistoryService
     {
         public LearningHistoryService(IDbConnection dbConnection)
         {
@@ -15,33 +15,33 @@ namespace Lexica.Database.Services
         public IDbConnection DbConnection { get; }
 
         public async Task SaveRecordToDbAsync(
-            string namespaceName, 
+            string namespaceName,
             string fileName,
             string mode,
-            string question, 
+            string question,
             string questionType,
-            string answer, 
-            string properAnswer, 
+            string answer,
+            string properAnswer,
             bool isCorrect)
         {
             await DbConnection.ExecuteAsync(
                 @"insert into answer (
-                    folder_path, 
-                    set_file_name, 
-                    mode, 
-                    question, 
+                    folder_path,
+                    set_file_name,
+                    mode,
+                    question,
                     question_type,
-                    answer, 
-                    proper_answer, 
+                    answer,
+                    proper_answer,
                     is_correct
                 ) values (
-                    @folder_path, 
-                    @set_file_name, 
-                    @mode, 
+                    @folder_path,
+                    @set_file_name,
+                    @mode,
                     @question,
-                    @question_type, 
+                    @question_type,
                     @answer,
-                    @proper_answer, 
+                    @proper_answer,
                     @is_correct
                 )",
                 new

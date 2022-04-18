@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.Encodings.Web;
+﻿using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Unicode;
 
 namespace Lexica.CLI.Core.Services
 {
-    class JsonService : IService
+    internal class JsonService : IService
     {
         public JsonSerializerOptions GetJsonSerializerOptions(
             bool writeIndented = false,

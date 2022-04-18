@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace Lexica.Core.IO
 {
     public class MultipleFilesSource : IMultipleSource
     {
         private string _directoryPath = "";
+
         public string DirectoryPath
         {
             get

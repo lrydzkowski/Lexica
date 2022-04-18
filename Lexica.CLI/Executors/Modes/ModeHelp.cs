@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Lexica.CLI.Executors.Modes
 {
-    class ModeHelp : IExecutor
+    internal class ModeHelp : IExecutor
     {
         public void Execute(List<string>? args = null)
         {

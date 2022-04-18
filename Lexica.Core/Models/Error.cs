@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Lexica.Core.Models
+﻿namespace Lexica.Core.Models
 {
     public class Error
     {
-        public int Code { get; private set; }
+        public int Code { get; }
 
-        public string Message { get; private set; }
+        public string Message { get; }
 
         public Error(int code, string message)
         {

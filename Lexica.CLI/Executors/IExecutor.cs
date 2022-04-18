@@ -2,7 +2,7 @@
 
 namespace Lexica.CLI.Executors
 {
-    interface IExecutor
+    internal interface IExecutor
     {
         void Execute(List<string>? args = null);
     }

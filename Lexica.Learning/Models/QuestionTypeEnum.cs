@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Lexica.Learning.Models
+﻿namespace Lexica.Learning.Models
 {
     public enum QuestionTypeEnum
     {

@@ -1,17 +1,15 @@
-﻿using Lexica.CLI.Args.Models;
-using Lexica.CLI.Core.Services;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Threading.Tasks;
+using Lexica.CLI.Args.Models;
 using Lexica.CLI.Executors;
 using Lexica.Core.IO;
 using Lexica.Core.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 
 namespace Lexica.CLI.Args
 {
-    static class ArgsHandler
+    internal static class ArgsHandler
     {
         public static async Task RunAsync(string[] args, IServiceProvider servicesProvider)
         {
@@ -27,7 +25,7 @@ namespace Lexica.CLI.Args
             var commandsToExecute = new List<Command>();
             foreach (string arg in args)
             {
-                Command? command = commands.Where(x => x.Name == arg || x.Shortcut == arg).FirstOrDefault();
+                Command? command = commands.Find(x => x.Name == arg || x.Shortcut == arg);
                 if (commandsToExecute.Count == 0 && command == null)
                 {
                     throw new ArgsException($"Argument {arg} isn't handled.");

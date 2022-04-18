@@ -1,27 +1,27 @@
-﻿using Lexica.CLI.Args;
+﻿using System;
+using System.Threading.Tasks;
+using Lexica.CLI.Args;
 using Lexica.CLI.Core;
-using Lexica.CLI.Core.Config;
 using Lexica.CLI.Core.Extensions;
 using Lexica.CLI.Executors.Extensions;
 using Lexica.Core.Extensions;
-using Lexica.Core.Services;
-using Lexica.Database;
 using Lexica.Database.Extensions;
+using Lexica.Learning.Config;
 using Lexica.Pronunciation;
-using Microsoft.EntityFrameworkCore;
+using Lexica.Pronunciation.Config;
+using Lexica.Words.Config;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using NLog;
 using NLog.Extensions.Logging;
-using System;
-using System.Reflection;
-using System.Threading.Tasks;
 
 namespace Lexica.CLI
 {
-    class Program
+    internal class Program
     {
-        static async Task Main(string[] args)
+        private static async Task Main(string[] args)
         {
             var logger = LogManager.GetCurrentClassLogger();
             try
@@ -51,7 +51,7 @@ namespace Lexica.CLI
             }
             finally
             {
-                // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault 
+                // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault
                 // on Linux)
                 LogManager.Shutdown();
                 Console.ReadLine();
@@ -63,16 +63,13 @@ namespace Lexica.CLI
         {
             var services = new ServiceCollection();
             AddNLogService(services);
-            ConfigService<AppSettings> configService = AddConfigService(services);
-            AddPronunciationService(services, configService);
+            AddConfigServices(services);
+            AddPronunciationService(services);
             services.AddExecutorServices();
             services.AddCoreModuleServices();
             services.AddDatabaseServices();
             services.AddCoreLibraryServices();
-
-            IServiceProvider serviceProvider = services.BuildServiceProvider();
-
-            return serviceProvider;
+            return services.BuildServiceProvider();
         }
 
         private static void AddNLogService(ServiceCollection services)
@@ -85,23 +82,37 @@ namespace Lexica.CLI
             });
         }
 
-        private static ConfigService<AppSettings> AddConfigService(ServiceCollection services)
+        private static void AddConfigServices(ServiceCollection services)
         {
-            ConfigService<AppSettings> configService = ConfigService<AppSettings>.Get(
-                "appsettings", Assembly.GetExecutingAssembly()
-            );
-            services.AddSingleton(configService);
-            return configService;
+            IConfigurationBuilder configurationBuilder = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+            if (IsDevelopment())
+            {
+                configurationBuilder = configurationBuilder.AddUserSecrets<Program>();
+            }
+            IConfiguration configuration = configurationBuilder.Build();
+            AddConfigService<WordsSettings>(services, configuration, WordsSettings.SectionName);
+            AddConfigService<LearningSettings>(services, configuration, LearningSettings.SectionName);
+            AddConfigService<PronunciationApiSettings>(services, configuration, PronunciationApiSettings.SectionName);
         }
 
-        private static void AddPronunciationService(
-            ServiceCollection services, 
-            ConfigService<AppSettings> configService)
+        private static bool IsDevelopment()
         {
-            services.AddSingleton(
-                configService.Get().PronunciationApi?.WebDictionary
-                ?? new Pronunciation.Api.WebDictionary.Config.WebDictionarySettings()
-            );
+            string? environmentName = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT");
+            return environmentName == "Development";
+        }
+
+        private static void AddConfigService<T>(
+            ServiceCollection services,
+            IConfiguration configuration,
+            string sectionName) where T : class
+        {
+            services.Configure<T>(configuration.GetSection(sectionName));
+            services.AddSingleton(resolver => resolver.GetRequiredService<IOptions<T>>().Value);
+        }
+
+        private static void AddPronunciationService(ServiceCollection services)
+        {
             services.AddSingleton<IPronunciation, Pronunciation.Api.WebDictionary.PronunciationService>();
         }
     }

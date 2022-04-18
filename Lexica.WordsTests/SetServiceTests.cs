@@ -1,12 +1,12 @@
-﻿using Lexica.Core.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Reflection.Exceptions;
+using Lexica.Core.IO;
 using Lexica.Core.Models;
 using Lexica.Words.Services;
 using Lexica.Words.Validators;
 using Lexica.Words.Validators.Models;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Reflection.Exceptions;
 using Xunit;
 
 namespace Lexica.WordsTests
@@ -27,7 +27,6 @@ namespace Lexica.WordsTests
 
             // Assert
             ResourceNotFoundException ex = Assert.Throws<ResourceNotFoundException>(action);
-
         }
 
         public static IEnumerable<object[]> LoadSetValidationErrorsParameters()
@@ -91,9 +90,9 @@ namespace Lexica.WordsTests
                     },
                     new List<Dictionary<string, string>>()
                     {
-                        new Dictionary<string, string>() { 
-                            { "Line", "30" }, { "FileName", "too_long_word_1.txt" }, { "Name", "Word" }, 
-                            { "Value", "505050505050505050505050505050505050505050505050505050" } 
+                        new Dictionary<string, string>() {
+                            { "Line", "30" }, { "FileName", "too_long_word_1.txt" }, { "Name", "Word" },
+                            { "Value", "505050505050505050505050505050505050505050505050505050" }
                         }
                     }
                 },
@@ -111,7 +110,7 @@ namespace Lexica.WordsTests
                     {
                         new Dictionary<string, string>() {
                             { "Line", "22" }, { "FileName", "too_long_translation_1.txt" }, { "Name", "Translation" },
-                            { "Value", "505050505050505050505050505050505050505050505050505050" }
+                            { "Value", "200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200" }
                         }
                     }
                 },
@@ -192,7 +191,7 @@ namespace Lexica.WordsTests
                         new Dictionary<string, string>() { { "Line", "23" }, { "FileName", "example_set_2.txt" } },
                         new Dictionary<string, string>() {
                             { "Line", "25" }, { "FileName", "example_set_2.txt" }, { "Name", "Translation" },
-                            { "Value", "strona wszczynająca spór sądowy5050505050505sądowy5050505050505sądowy5050505050505sądowy5050505050505" }
+                            { "Value", "200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200" }
                         },
                         new Dictionary<string, string>() {
                             { "Line", "13" }, { "FileName", "example_set_3.txt" }, { "Name", "Word" },
@@ -200,7 +199,7 @@ namespace Lexica.WordsTests
                         },
                         new Dictionary<string, string>() {
                             { "Line", "18" }, { "FileName", "example_set_3.txt" }, { "Name", "Translation" },
-                            { "Value", "zuchwałyWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW" }
+                            { "Value", "200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200200" }
                         }
                     }
                 }
@@ -210,8 +209,8 @@ namespace Lexica.WordsTests
         [Theory]
         [MemberData(nameof(LoadSetValidationErrorsParameters))]
         public void LoadSet_ValidationErrors_ReturnsFalseResult(
-            List<string> filesPaths, 
-            List<Enum> errorCodes, 
+            List<string> filesPaths,
+            List<Enum> errorCodes,
             List<Dictionary<string, string>> errorDetails)
         {
             // Arrange

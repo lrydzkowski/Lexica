@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Text.Json;
-using System.Text.RegularExpressions;
 
 namespace Lexica.Core.Extensions
 {
@@ -28,25 +26,22 @@ namespace Lexica.Core.Extensions
 
         public static string RemoveInvalidFileNameChars(this string str)
         {
-            return string.Join("", str.Split(Path.GetInvalidFileNameChars()));
+            return string.Concat(str.Split(Path.GetInvalidFileNameChars()));
         }
 
         public static bool OrdinalContains(this string str, string value, bool ignoreCase = false)
         {
-            return str != null
-                && str.Contains(value, ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
+            return str?.Contains(value, ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal) == true;
         }
 
         public static bool OrdinalStartsWith(this string str, string value, bool ignoreCase = false)
         {
-            return str != null 
-                && str.StartsWith(value, ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
+            return str?.StartsWith(value, ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal) == true;
         }
 
         public static bool OrdinalEndsWith(this string str, string value, bool ignoreCase = false)
         {
-            return str != null 
-                && str.EndsWith(value, ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
+            return str?.EndsWith(value, ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal) == true;
         }
 
         public static List<string> Split(this string str, int chunkLength, bool wholeWords = true)
@@ -76,10 +71,7 @@ namespace Lexica.Core.Extensions
                         if (word.Length > chunkLength)
                         {
                             List<string> wordParts = word.Split(chunkLength, false);
-                            foreach (string wordPart in wordParts)
-                            {
-                                result.Add(wordPart);
-                            }
+                            result.AddRange(wordParts);
                             continue;
                         }
                         if (sb.Length + word.Length > chunkLength)

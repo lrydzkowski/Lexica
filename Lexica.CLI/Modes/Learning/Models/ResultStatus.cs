@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Lexica.CLI.Modes.Learning.Models
+﻿namespace Lexica.CLI.Modes.Learning.Models
 {
-    class ResultStatus
+    internal class ResultStatus
     {
         public ResultStatus(int numOfCorrectAnswers, int numOfQuestions)
         {
@@ -14,9 +8,9 @@ namespace Lexica.CLI.Modes.Learning.Models
             NumOfQuestions = numOfQuestions;
         }
 
-        public int NumOfCorrectAnswers { get; private set; }
+        public int NumOfCorrectAnswers { get; }
 
-        public int NumOfQuestions { get; private set; }
+        public int NumOfQuestions { get; }
 
         public override string ToString()
         {

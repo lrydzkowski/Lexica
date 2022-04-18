@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Lexica.Core.Validators.Models
+﻿namespace Lexica.Core.Validators.Models
 {
     public class NumberValidationData : GeneralValidationData
     {
-        public long MinValue { get; private set; }
+        public long MinValue { get; }
 
-        public long MaxValue { get; private set; }
+        public long MaxValue { get; }
 
         public NumberValidationData(long minValue, long maxValue, bool mandatory, string name) : base(mandatory, name)
         {

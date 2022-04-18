@@ -1,16 +1,11 @@
-﻿using Lexica.Core.IO;
-using Microsoft.Extensions.Configuration;
-using System.Text.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
+﻿using System.Text.Json;
+using Lexica.Core.IO;
 
 namespace Lexica.Core.Data
 {
-    class JsonSource<T> : IDataSource<T> where T : class
+    internal class JsonSource<T> : IDataSource<T> where T : class
     {
-        private ISource Source { get; set; }
+        private ISource Source { get; }
 
         private T? Data { get; set; }
 
@@ -30,11 +25,7 @@ namespace Lexica.Core.Data
 
         public T? Get()
         {
-            if (Data == null)
-            {
-                return Load();
-            }
-            return Data;
+            return Data ?? Load();
         }
     }
 }

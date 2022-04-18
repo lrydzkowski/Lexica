@@ -29,7 +29,7 @@
               "Name": "spelling",
               "Shortcut": "s",
               "ExecutorClass": "Lexica.CLI.Modes.Learning.LearningModeExecutor",
-              "AddNameToArguments":  true
+              "AddNameToArguments": true
             },
             {
               "Name": "full",

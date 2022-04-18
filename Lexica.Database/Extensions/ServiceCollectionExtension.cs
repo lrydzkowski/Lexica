@@ -1,8 +1,8 @@
-﻿using Lexica.Database.Services;
+﻿using System.Data;
+using System.Data.SQLite;
+using Lexica.Database.Services;
 using Lexica.Learning.Services;
 using Microsoft.Extensions.DependencyInjection;
-using System.Data;
-using System.Data.SQLite;
 
 namespace Lexica.Database.Extensions
 {
@@ -10,7 +10,7 @@ namespace Lexica.Database.Extensions
     {
         public static void AddDatabaseServices(this IServiceCollection services)
         {
-            services.AddTransient<IDbConnection>(db => new SQLiteConnection(@"Data Source=.\\lexica.db"));
+            services.AddTransient<IDbConnection>(_ => new SQLiteConnection(@"Data Source=.\\lexica.db"));
             services.AddTransient<ILearningHistoryService, LearningHistoryService>();
         }
     }

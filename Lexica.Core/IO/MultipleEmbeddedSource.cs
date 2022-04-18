@@ -1,16 +1,14 @@
-﻿using Lexica.Core.Extensions;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
+using Lexica.Core.Extensions;
 
 namespace Lexica.Core.IO
 {
     public class MultipleEmbeddedSource : IMultipleSource
     {
-        public string Path { get; private set; }
+        public string Path { get; }
 
-        public Assembly Assembly { get; private set; }
+        public Assembly Assembly { get; }
 
         public MultipleEmbeddedSource(string path, Assembly? assembly = null)
         {
