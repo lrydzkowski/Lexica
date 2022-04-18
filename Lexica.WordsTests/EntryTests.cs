@@ -1,5 +1,5 @@
-﻿using Lexica.Words.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Lexica.Words.Models;
 using Xunit;
 
 namespace Lexica.WordsTests

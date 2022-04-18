@@ -1,14 +1,14 @@
-﻿using Lexica.Core.Exceptions;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Text;
+using Lexica.Core.Exceptions;
 using Lexica.Core.IO;
 using Lexica.Core.Models;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.Text;
 
 namespace Lexica.Core.Services
 {

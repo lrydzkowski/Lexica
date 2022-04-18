@@ -1,7 +1,7 @@
-﻿using Lexica.Core.IO;
+﻿using System.Collections.Generic;
+using Lexica.Core.IO;
 using Lexica.Core.Models;
 using Lexica.Words.Models;
-using System.Collections.Generic;
 
 namespace Lexica.Words.Services
 {

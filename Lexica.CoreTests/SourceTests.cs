@@ -1,9 +1,9 @@
-﻿using Lexica.Core.IO;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Reflection.Exceptions;
+using Lexica.Core.IO;
 using Xunit;
 
 namespace CoreTests

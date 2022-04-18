@@ -1,9 +1,9 @@
-﻿using Lexica.Core.Models;
-using Lexica.Core.Validators;
-using Lexica.Words.Validators.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Lexica.Core.Models;
+using Lexica.Core.Validators;
+using Lexica.Words.Validators.Models;
 
 namespace Lexica.Words.Validators
 {

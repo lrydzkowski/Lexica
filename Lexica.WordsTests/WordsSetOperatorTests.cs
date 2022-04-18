@@ -1,12 +1,12 @@
-﻿using Lexica.Core.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
+using Lexica.Core.IO;
 using Lexica.Words;
 using Lexica.Words.Models;
 using Lexica.Words.Services;
 using Lexica.Words.Validators;
 using Lexica.Words.Validators.Models;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
 using Xunit;
 
 namespace Lexica.WordsTests

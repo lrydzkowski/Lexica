@@ -1,6 +1,6 @@
+using System.Collections.Generic;
 using Lexica.Learning.Models;
 using Lexica.Words.Models;
-using System.Collections.Generic;
 using Xunit;
 
 namespace Lexica.LearningTests

@@ -1,8 +1,8 @@
-﻿using Lexica.Database.Services;
+﻿using System.Data;
+using System.Data.SQLite;
+using Lexica.Database.Services;
 using Lexica.Learning.Services;
 using Microsoft.Extensions.DependencyInjection;
-using System.Data;
-using System.Data.SQLite;
 
 namespace Lexica.Database.Extensions
 {

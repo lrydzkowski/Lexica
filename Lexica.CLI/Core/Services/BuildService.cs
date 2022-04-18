@@ -1,6 +1,6 @@
-﻿using Lexica.Core.IO;
-using System;
+﻿using System;
 using System.IO;
+using Lexica.Core.IO;
 
 namespace Lexica.CLI.Core.Services
 {

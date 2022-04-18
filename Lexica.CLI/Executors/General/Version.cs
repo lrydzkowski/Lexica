@@ -1,6 +1,6 @@
-﻿using Lexica.CLI.Core.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Lexica.CLI.Core.Services;
 
 namespace Lexica.CLI.Executors.General
 {

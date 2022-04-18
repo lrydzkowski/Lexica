@@ -1,6 +1,6 @@
-﻿using Lexica.Core.Extensions;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
+using Lexica.Core.Extensions;
 
 namespace Lexica.Core.IO
 {

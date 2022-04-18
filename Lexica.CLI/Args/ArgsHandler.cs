@@ -1,11 +1,11 @@
-﻿using Lexica.CLI.Args.Models;
-using Lexica.CLI.Executors;
-using Lexica.Core.IO;
-using Lexica.Core.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
+using Lexica.CLI.Args.Models;
+using Lexica.CLI.Executors;
+using Lexica.Core.IO;
+using Lexica.Core.Services;
 
 namespace Lexica.CLI.Args
 {

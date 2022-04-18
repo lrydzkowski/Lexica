@@ -1,5 +1,5 @@
-﻿using Lexica.Core.IO;
-using System.Text.Json;
+﻿using System.Text.Json;
+using Lexica.Core.IO;
 
 namespace Lexica.Core.Data
 {

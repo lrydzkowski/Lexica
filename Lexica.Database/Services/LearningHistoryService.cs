@@ -1,7 +1,7 @@
-﻿using Dapper;
-using Lexica.Learning.Services;
-using System.Data;
+﻿using System.Data;
 using System.Threading.Tasks;
+using Dapper;
+using Lexica.Learning.Services;
 
 namespace Lexica.Database.Services
 {

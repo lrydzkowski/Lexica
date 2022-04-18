@@ -1,7 +1,7 @@
-﻿using Lexica.Core.Extensions;
+﻿using System.Collections.Generic;
+using Lexica.Core.Extensions;
 using Lexica.Core.Models;
 using Lexica.Core.Validators.Models;
-using System.Collections.Generic;
 
 namespace Lexica.Core.Validators
 {
