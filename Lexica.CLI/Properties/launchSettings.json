@@ -2,7 +2,10 @@
   "profiles": {
     "Lexica.CLI": {
       "commandName": "Project",
-      "commandLineArgs": "run --mode full .\\Assets\\Examples\\set_1.txt"
+      "commandLineArgs": "run --mode full .\\Assets\\Examples\\set_1.txt",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
     }
   }
 }

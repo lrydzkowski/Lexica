@@ -84,13 +84,22 @@ namespace Lexica.CLI
 
         private static void AddConfigServices(ServiceCollection services)
         {
-            IConfiguration configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddUserSecrets<Program>()
-                .Build();
+            IConfigurationBuilder configurationBuilder = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+            if (IsDevelopment())
+            {
+                configurationBuilder = configurationBuilder.AddUserSecrets<Program>();
+            }
+            IConfiguration configuration = configurationBuilder.Build();
             AddConfigService<WordsSettings>(services, configuration, WordsSettings.SectionName);
             AddConfigService<LearningSettings>(services, configuration, LearningSettings.SectionName);
             AddConfigService<PronunciationApiSettings>(services, configuration, PronunciationApiSettings.SectionName);
+        }
+
+        private static bool IsDevelopment()
+        {
+            string? environmentName = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT");
+            return environmentName == "Development";
         }
 
         private static void AddConfigService<T>(
